@@ -5,20 +5,9 @@ namespace mtge {
 	Skybox *Map::skybox = nullptr;
 	std::vector<Chunk*> Map::chunks = {};
 
-	//Private
-	glm::vec3 Map::getCurrentChunkPosition(glm::vec3 cameraPosition) {
-		glm::vec3 currentChunkPosition(0.0f, 0.0f, 0.0f);
-		currentChunkPosition.x = round(cameraPosition.x / ((float)mtge::DEFAULT_CHUNK_WIDTH * CUBE_SIZE)) * (float)mtge::DEFAULT_CHUNK_WIDTH * CUBE_SIZE;
-		currentChunkPosition.z = round(cameraPosition.z / ((float)mtge::DEFAULT_CHUNK_DEPTH * CUBE_SIZE)) * (float)mtge::DEFAULT_CHUNK_DEPTH * CUBE_SIZE;
-		return currentChunkPosition;
-	}
-
 	//Public
 	void Map::setShader(Shader *shader) {
 		Map::shader = shader;
-	}
-	void Map::newChunk(glm::vec3 pos, Texture *cubeTextures[], const unsigned int CHUNK_WIDTH, const unsigned int CHUNK_DEPTH) {
-		chunks.push_back(new Chunk(pos, shader, cubeTextures, CHUNK_WIDTH, CHUNK_DEPTH));
 	}
 	void Map::newSkybox(Texture *texture) {
 		skybox = new Skybox(shader, texture);
