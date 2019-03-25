@@ -1,6 +1,5 @@
 #include "Clock.h"
 
-//This is a new comment.
 namespace mtge {
 	//Public
 	void Clock::setCurrent() {
