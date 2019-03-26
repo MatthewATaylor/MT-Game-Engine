@@ -12,6 +12,9 @@ namespace mtge {
 	void Map::newSkybox(Texture *texture) {
 		skybox = new Skybox(shader, texture);
 	}
+	void Map::newChunk(Chunk *chunk) {
+		chunks.push_back(chunk);
+	}
 
 	void Map::deleteAllChunks() {
 		for (unsigned int i = 0; i < chunks.size(); i++) {
@@ -22,6 +25,10 @@ namespace mtge {
 	}
 	void Map::deleteSkybox() {
 		delete skybox;
+	}
+	void Map::clearContents() {
+		deleteAllChunks();
+		deleteSkybox();
 	}
 
 	void Map::drawChunks() {

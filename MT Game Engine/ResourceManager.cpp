@@ -34,7 +34,6 @@ namespace mtge {
 	}
 	void ResourceManager::end() {
 		glfwTerminate();
-		mtge::Map::deleteAllChunks();
-		mtge::Map::deleteSkybox();
+		mtge::Map::clearContents();
 	}
 }
