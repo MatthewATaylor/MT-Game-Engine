@@ -32,8 +32,4 @@ namespace mtge {
 		}
 		return 0;
 	}
-	void ResourceManager::end() {
-		glfwTerminate();
-		mtge::Map::clearContents();
-	}
 }

@@ -23,11 +23,9 @@ namespace mtge {
 
 		static void setShader(Shader *shader);
 		static void newSkybox(Texture *texture);
-		static void newChunk(Chunk *chunk);
 
 		static void deleteAllChunks();
 		static void deleteSkybox();
-		static void clearContents();
 
 		static void drawChunks();
 		static void drawSkybox();

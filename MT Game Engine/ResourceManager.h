@@ -12,6 +12,5 @@ namespace mtge {
 	public:
 		static bool glfwStart(int majorOpenGLVersion, int minorOpenGLVersion, GLFWwindow **window, const char *windowTitle, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);
 		static bool glewStart();
-		static void end();
 	};
 }
