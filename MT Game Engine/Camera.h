@@ -33,7 +33,7 @@ namespace mtge {
 		void rotate(GLFWwindow *window, double xPos, double yPos);
 		void zoom(GLFWwindow *window, double xOffset, double yOffset);
 		float getFieldOfView();
-		glm::mat4 viewMatrix();
+		glm::mat4 getViewMatrix();
 		glm::vec3 getPosition();
 	};
 }

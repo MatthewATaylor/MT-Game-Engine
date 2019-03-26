@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Chunk.h"
 #include "Shader.h"
@@ -27,7 +28,7 @@ namespace mtge {
 		static void deleteAllChunks();
 		static void deleteSkybox();
 
-		static void drawChunks();
-		static void drawSkybox();
+		static void drawChunks(unsigned int projectionLocation, unsigned int viewLocation, glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
+		static void drawSkybox(unsigned int projectionLocation, unsigned int viewLocation, glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
 	};
 }
