@@ -2,7 +2,7 @@
 
 namespace mtge {
 	//Public
-	bool ResourceManager::glfwStart(int majorOpenGLVersion, int minorOpenGLVersion, GLFWwindow **window, const char *windowTitle) {
+	bool ResourceManager::glfwStart(int majorOpenGLVersion, int minorOpenGLVersion, GLFWwindow **window, const char *windowTitle, const int SCREEN_WIDTH, const int SCREEN_HEIGHT) {
 		//GLFW Setup
 		if (!glfwInit()) {
 			std::cout << "ERROR: GLFW FAILED TO INITIALIZE" << std::endl;
@@ -13,7 +13,7 @@ namespace mtge {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		//Window Setup
-		*window = glfwCreateWindow(mtge::SCREEN_WIDTH, mtge::SCREEN_HEIGHT, windowTitle, NULL, NULL);
+		*window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, windowTitle, NULL, NULL);
 		if (!window) {
 			std::cout << "ERROR: WINDOW FAILED TO INITIALIZE" << std::endl;
 			glfwTerminate();

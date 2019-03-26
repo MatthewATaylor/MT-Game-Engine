@@ -51,7 +51,7 @@ namespace mtge {
 	const char *Shape::getName() {
 		return NAME;
 	}
-	bool Shape::collision(glm::vec3 cameraPosition, const glm::vec3 CAMERA_DIMENSIONS) {
+	bool Shape::collision(glm::vec3 position, glm::vec3 dimensions) {
 		return false;
 	}
 

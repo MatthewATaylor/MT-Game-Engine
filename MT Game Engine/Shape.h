@@ -42,7 +42,7 @@ namespace mtge {
 		void rotate(glm::vec3 rotationAngles);
 		void scale(glm::vec3 scaleDimensions);
 		const char *getName();
-		virtual bool collision(glm::vec3 cameraPosition, const glm::vec3 CAMERA_DIMENSIONS);
+		virtual bool collision(glm::vec3 position, glm::vec3 dimensions);
 		virtual void draw() = 0;
 	};
 }

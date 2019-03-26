@@ -7,29 +7,33 @@
 #include <GLFW/glfw3.h>
 
 #include "Clock.h"
-#include "GlobalConstants.h"
 
 namespace mtge {
 	class Camera {
 	protected:
 		const glm::vec3 UP_VECTOR = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 cameraPosition;
-		glm::vec3 cameraFront;
+		glm::vec3 position;
+		glm::vec3 front;
+		glm::vec3 totalMovement;
 		Clock clock;
-		float previousMouseX = (float)SCREEN_WIDTH / 2.0f;
-		float previousMouseY = (float)SCREEN_HEIGHT / 2.0f;
+		float previousMouseX = 0.0f;
+		float previousMouseY = 0.0f;
 		float pitch;
 		float yaw;
 		bool firstMouseEntrance = true;
 		float fieldOfView = 45.0f;
+		float movementSize = 0.0f;
+		bool beganMotion = false;
+
+		void controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection);
 
 	public:
-		Camera(glm::vec3 cameraPosition, glm::vec3 cameraFront);
-		virtual void move(GLFWwindow *window);
+		Camera(glm::vec3 position, glm::vec3 front);
+		virtual void move(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
 		void rotate(GLFWwindow *window, double xPos, double yPos);
 		void zoom(GLFWwindow *window, double xOffset, double yOffset);
 		float getFieldOfView();
 		glm::mat4 viewMatrix();
-		glm::vec3 getCameraPosition();
+		glm::vec3 getPosition();
 	};
 }

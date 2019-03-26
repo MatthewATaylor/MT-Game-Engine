@@ -6,7 +6,7 @@ namespace mtge {
 		this->position = position;
 	}
 
-	//Private
+	//Protected
 	void Chunk::clearShapeVector() {
 		for (unsigned int i = 0; i < shapes.size(); i++) {
 			delete shapes[i];
@@ -38,10 +38,10 @@ namespace mtge {
 			}
 		}
 	}
-	int Chunk::collision(glm::vec3 cameraPosition, const glm::vec3 DIMENSIONS) {
+	int Chunk::collision(glm::vec3 position, glm::vec3 dimensions) {
 		if (visible) {
 			for (unsigned int i = 0; i < shapes.size(); i++) {
-				if (shapes[i]->collision(cameraPosition, DIMENSIONS)) {
+				if (shapes[i]->collision(position, dimensions)) {
 					return i;
 				}
 			}

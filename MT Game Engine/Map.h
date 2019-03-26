@@ -11,13 +11,10 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Skybox.h"
-#include "GlobalConstants.h"
 
 namespace mtge {
 	class Map {
 	private:
-		static const int CHUNK_RENDER_DISTANCE_MULTIPLIER = 4;
-
 		static Shader *shader;
 		static Skybox *skybox;
 

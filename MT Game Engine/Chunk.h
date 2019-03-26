@@ -9,8 +9,10 @@
 namespace mtge {
 	class Chunk {
 	private:
-		glm::vec3 position;
 		bool visible = true;
+
+	protected:
+		glm::vec3 position;
 
 		void clearShapeVector();
 
@@ -22,7 +24,7 @@ namespace mtge {
 		void deleteShape(unsigned int index);
 		void setVisible(bool visible);
 		void draw();
-		int collision(glm::vec3 cameraPosition, const glm::vec3 DIMENSIONS);
+		int collision(glm::vec3 position, glm::vec3 dimensions);
 		glm::vec3 getPosition();
 		virtual void clearContents();
 	};

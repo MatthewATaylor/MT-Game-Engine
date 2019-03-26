@@ -5,103 +5,92 @@ namespace mtge {
 	Player::Player(glm::vec3 position, const glm::vec3 DIMENSIONS) : Camera(position, glm::vec3(0.0f, 0.0f, -1.0f)), DIMENSIONS(DIMENSIONS) {}
 
 	//Private
-	void Player::applyGravity(glm::vec3 *totalMovement, float movementSize) {
-		const float GRAVITY_ADDER = 0.35f;
-		const float MAX_GRAVITY = 4.0f;
-		gravitySpeed += GRAVITY_ADDER * movementSize;
-
-		if (gravitySpeed >= MAX_GRAVITY) {
-			gravitySpeed = MAX_GRAVITY;
-		}
-
-		totalMovement->y -= gravitySpeed * movementSize;
-	}
-	void Player::manageCollisionX(glm::vec3 *totalMovement) {
+	void Player::manageCollisionX() {
 		for (unsigned int i = 0; i < Map::chunks.size(); i++) {
 			Chunk *currentChunk = Map::chunks[i];
-			int collisionValue = currentChunk->collision(cameraPosition, DIMENSIONS);
+			int collisionValue = currentChunk->collision(position, DIMENSIONS);
 			if (collisionValue >= 0) {
 				Shape *currentShape = currentChunk->shapes[collisionValue];
-				if (totalMovement->x > 0) {
-					cameraPosition.x = currentShape->translatedPos.x - 0.5f * currentShape->scaledDimensions.x - 0.5f * DIMENSIONS.x;
+				if (totalMovement.x > 0) {
+					position.x = currentShape->translatedPos.x - 0.5f * currentShape->scaledDimensions.x - 0.5f * DIMENSIONS.x;
 				}
-				else if (totalMovement->x < 0) {
-					cameraPosition.x = currentShape->translatedPos.x + 0.5f * currentShape->scaledDimensions.x + 0.5f * DIMENSIONS.x;
+				else if (totalMovement.x < 0) {
+					position.x = currentShape->translatedPos.x + 0.5f * currentShape->scaledDimensions.x + 0.5f * DIMENSIONS.x;
 				}
 			}
 		}
 	}
-	void Player::manageCollisionY(glm::vec3 *totalMovement, bool *onGround) {
+	void Player::manageCollisionY() {
 		bool bottomCollision = false;
 		for (unsigned int i = 0; i < Map::chunks.size(); i++) {
 			Chunk *currentChunk = Map::chunks[i];
-			int collisionValue = currentChunk->collision(cameraPosition, DIMENSIONS);
+			int collisionValue = currentChunk->collision(position, DIMENSIONS);
 			if (collisionValue >= 0) {
 				Shape *currentShape = currentChunk->shapes[collisionValue];
-				if (totalMovement->y > 0) {
-					cameraPosition.y = currentShape->translatedPos.y - 0.5f * currentShape->scaledDimensions.y;
+				if (totalMovement.y > 0) {
+					position.y = currentShape->translatedPos.y - 0.5f * currentShape->scaledDimensions.y;
 				}
-				else if (totalMovement->y < 0) {
-					cameraPosition.y = currentShape->translatedPos.y + 0.5f * currentShape->scaledDimensions.y + DIMENSIONS.y;
-					gravitySpeed = START_GRAVITY_SPEED;
+				else if (totalMovement.y < 0) {
+					position.y = currentShape->translatedPos.y + 0.5f * currentShape->scaledDimensions.y + DIMENSIONS.y;
+					gravitySpeed = startGravitySpeed;
 					bottomCollision = true;
 				}
 			}
 		}
-		*onGround = bottomCollision;
+		onGround = bottomCollision;
 	}
-	void Player::manageCollisionZ(glm::vec3 *totalMovement) {
+	void Player::manageCollisionZ() {
 		for (unsigned int i = 0; i < Map::chunks.size(); i++) {
 			Chunk *currentChunk = Map::chunks[i];
-			int collisionValue = currentChunk->collision(cameraPosition, DIMENSIONS);
+			int collisionValue = currentChunk->collision(position, DIMENSIONS);
 			if (collisionValue >= 0) {
 				Shape *currentShape = currentChunk->shapes[collisionValue];
-				if (totalMovement->z > 0) {
-					cameraPosition.z = currentShape->translatedPos.z - 0.5f * currentShape->scaledDimensions.z - 0.5f * DIMENSIONS.z;
+				if (totalMovement.z > 0) {
+					position.z = currentShape->translatedPos.z - 0.5f * currentShape->scaledDimensions.z - 0.5f * DIMENSIONS.z;
 				}
-				else if (totalMovement->z < 0) {
-					cameraPosition.z = currentShape->translatedPos.z + 0.5f * currentShape->scaledDimensions.z + 0.5f * DIMENSIONS.z;
+				else if (totalMovement.z < 0) {
+					position.z = currentShape->translatedPos.z + 0.5f * currentShape->scaledDimensions.z + 0.5f * DIMENSIONS.z;
 				}
 			}
 		}
 	}
+	void Player::applyGravity() {
+		gravitySpeed += gravityAddend * movementSize;
+
+		if (gravitySpeed >= maxGravity) {
+			gravitySpeed = maxGravity;
+		}
+
+		totalMovement.y -= gravitySpeed * movementSize;
+	}
 
 	//Public
-	void Player::move(GLFWwindow *window) {
-		if (!beganMotion) {
-			clock.setPrevious();
-			beganMotion = true;
-		}
+	void Player::setCanApplyCollisions(bool canApplyCollisions) {
+		this->canApplyCollisions = canApplyCollisions;
+	}
+	void Player::setCanApplyGravity(bool canApplyGravity) {
+		this->canApplyGravity = canApplyGravity;
+	}
+	void Player::setGravityParams(float startGravitySpeed, float gravityAddend, float maxGravity) {
+		this->startGravitySpeed = startGravitySpeed;
+		gravitySpeed = startGravitySpeed;
 
-		const float SPEED = 3.5f;
-		const float JUMP_SIZE = -0.5f;
-
-		clock.setCurrent();
-		float movementSize = clock.getTimeChange() * SPEED;
-		clock.setPrevious();
-
-		glm::vec3 movementDirection = glm::vec3(cameraFront.x, 0.0f, cameraFront.z);
-		glm::vec3 totalMovement = glm::vec3(0.0f, 0.0f, 0.0f);
-
-		static bool onGround = false;
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			totalMovement += movementDirection * movementSize;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			totalMovement -= movementDirection * movementSize;
-		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			totalMovement -= glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			totalMovement += glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
-		}
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && onGround) {
-			gravitySpeed = JUMP_SIZE;
+		this->gravityAddend = gravityAddend;
+		this->maxGravity = maxGravity;
+	}
+	void Player::jump(GLFWwindow *window, float jumpSize, int jumpKey) {
+		if ((glfwGetKey(window, jumpKey) == GLFW_PRESS) && onGround) {
+			gravitySpeed = jumpSize;
 			onGround = false;
 		}
-		applyGravity(&totalMovement, movementSize);
+	}
+	void Player::move(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+		glm::vec3 movementDirection = glm::vec3(front.x, 0.0f, front.z);
+		controlMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
+
+		if (canApplyGravity) {
+			applyGravity();
+		}
 
 		//Normalize X/Z Plane Velocities
 		float movementAngle = atan2(totalMovement.z, totalMovement.x);
@@ -110,22 +99,24 @@ namespace mtge {
 		totalMovement.x *= ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0);
 		totalMovement.z *= ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0);
 
-		cameraPosition.y += totalMovement.y;
-		manageCollisionY(&totalMovement, &onGround);
+		if (canApplyCollisions) {
+			position.y += totalMovement.y;
+			manageCollisionY();
 
-		cameraPosition.x += totalMovement.x;
-		manageCollisionX(&totalMovement);
+			position.x += totalMovement.x;
+			manageCollisionX();
 
-		cameraPosition.z += totalMovement.z;
-		manageCollisionZ(&totalMovement);
-	}
-	void Player::checkReset(GLFWwindow *window) {
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-			gravitySpeed = START_GRAVITY_SPEED;
-			cameraPosition = glm::vec3(0.0f, START_Y, 0.0f);
+			position.z += totalMovement.z;
+			manageCollisionZ();
+		}
+		else {
+			position += totalMovement;
 		}
 	}
-	void Player::moveDebug(GLFWwindow *window) {
-		Camera::move(window);
+	void Player::checkReset(GLFWwindow *window, float resetHeight) {
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+			gravitySpeed = startGravitySpeed;
+			position = glm::vec3(0.0f, resetHeight, 0.0f);
+		}
 	}
 }
