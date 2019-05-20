@@ -89,6 +89,21 @@ namespace mtge {
 		return x * otherVec.x + y * otherVec.y + z * otherVec.z;
 	}
 	template<typename T>
+	Vec3<T> Vec3<T>::cross(const Vec3<T> &otherVec) const {
+		//	[i				j				k		  ]
+		//	[x				y				z		  ]
+		//	[otherVec.x		otherVec.y		otherVec.z]
+
+		//i[y(otherVec.z) - z(otherVec.y)] - j[x(otherVec.z) - z(otherVec.x)] + k[x(otherVec.y) - y(otherVec.x)]
+
+		T newX = y * otherVec.z - z * otherVec.y;
+		T newY = -(x * otherVec.z - z * otherVec.x);
+		T newZ = x * otherVec.y - y * otherVec.x;
+		Vec3<T> vectorResult(newX, newY, newZ);
+		return vectorResult;
+
+	}
+	template<typename T>
 	T Vec3<T>::magSquared() const {
 		return x * x + y * y + z * z;
 	}

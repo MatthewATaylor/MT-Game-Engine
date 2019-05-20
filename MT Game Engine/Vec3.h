@@ -36,6 +36,7 @@ namespace mtge {
 		friend std::ostream &operator<<<T>(std::ostream &outputStream, const Vec3<T> &vec);
 
 		T dot(const Vec3<T> &otherVec) const;
+		Vec3<T> cross(const Vec3<T> &otherVec) const;
 		T magSquared() const;
 		T mag() const;
 	};

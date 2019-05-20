@@ -59,14 +59,7 @@ namespace mtge {
 	};
 
 	//Constructor
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[], bool renderedSides[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, "CUBE") {
-		for (unsigned int i = 0; i < 6; i++) {
-			this->textures[i] = textures[i];
-			this->renderedSides[i] = renderedSides[i];
-		}
-		textureLocation = glGetUniformLocation(shader->shaderProgramID, "texture1");
-	}
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, "CUBE") {
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, Shape::Type::CUBE) {
 		for (unsigned int i = 0; i < 6; i++) {
 			this->textures[i] = textures[i];
 			this->renderedSides[i] = 1;
@@ -97,6 +90,11 @@ namespace mtge {
 
 				glDrawArrays(GL_TRIANGLES, i, 6);
 			}
+		}
+	}
+	void Cube::setRenderedSides(bool renderedSides[6]) {
+		for (unsigned int i = 0; i < 6; i++) {
+			this->renderedSides[i] = renderedSides[i];
 		}
 	}
 }

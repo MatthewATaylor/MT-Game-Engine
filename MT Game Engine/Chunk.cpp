@@ -27,14 +27,14 @@ namespace mtge {
 	}
 	void Chunk::draw() {
 		if (visible) {
-			const char *prevShapeName = "";
+			Shape::Type prevShapeType = Shape::Type::UNDEFINED;
 			for (unsigned int i = 0; i < shapes.size(); i++) {
-				const char *shapeName = shapes[i]->getName();
-				if (strcmp(shapeName, prevShapeName) != 0) {
+				Shape::Type shapeType = shapes[i]->getType();
+				if (shapeType != prevShapeType) {
 					shapes[i]->updateBuffers();
 				}
 				shapes[i]->draw();
-				prevShapeName = shapeName;
+				prevShapeType = shapeType;
 			}
 		}
 	}
@@ -54,4 +54,5 @@ namespace mtge {
 	void Chunk::clearContents() {
 		clearShapeVector();
 	}
+	void Chunk::setRenderArea() {}
 }

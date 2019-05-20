@@ -27,5 +27,6 @@ namespace mtge {
 		int collision(glm::vec3 position, glm::vec3 dimensions);
 		glm::vec3 getPosition();
 		virtual void clearContents();
+		virtual void setRenderArea();
 	};
 }
