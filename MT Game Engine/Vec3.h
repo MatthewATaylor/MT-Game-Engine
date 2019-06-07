@@ -1,14 +1,13 @@
 #pragma once
 
-#include <iostream>
-#include <cmath>
+#include <ostream>
 
 namespace mtge {
 	template<typename T>
 	class Vec3;
 
 	template<typename T>
-	std::ostream &operator<<(std::ostream &outputStream, const Vec3<T> &otherVec);
+	std::ostream &operator<<(std::ostream &outputStream, const Vec3<T> &vec);
 
 	template<typename T>
 	class Vec3 {
