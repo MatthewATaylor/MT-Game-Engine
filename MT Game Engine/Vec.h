@@ -41,4 +41,5 @@ namespace mtge {
 #include "Vec.inl"
 
 //Template Specializations
+#include "Vec_2.h"
 #include "Vec_3.h"

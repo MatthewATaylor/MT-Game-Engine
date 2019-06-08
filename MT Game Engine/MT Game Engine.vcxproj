@@ -149,6 +149,7 @@
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mat4x4.h" />
     <ClInclude Include="Player.h" />
@@ -160,12 +161,16 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec.h" />
+    <ClInclude Include="Vec_2.h" />
     <ClInclude Include="Vec_3.h" />
+    <ClInclude Include="Vec_4.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mat4x4.inl" />
     <None Include="Vec.inl" />
+    <None Include="Vec_2.inl" />
     <None Include="Vec_3.inl" />
+    <None Include="Vec_4.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -113,6 +113,15 @@
     <ClInclude Include="Vec_3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec_2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mat4x4.inl">
@@ -122,6 +131,12 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="Vec_3.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Vec_2.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Vec_4.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
