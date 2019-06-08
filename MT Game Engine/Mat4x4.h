@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ostream>
 
 #include "Vec4.h"
@@ -12,6 +14,8 @@ namespace mtge {
 	template<typename T>
 	class Mat4x4 {
 	private:
+		static const unsigned int SIZE = 4;
+
 		template<typename LambdaType>
 		void forAllElements(LambdaType lambda) const;
 
@@ -19,10 +23,10 @@ namespace mtge {
 		void forAllElementsMutable(LambdaType lambda);
 
 	public:
-		T elements[4][4];
+		T elements[SIZE][SIZE];
 
 		Mat4x4();
-		Mat4x4(T elements[4][4]);
+		Mat4x4(T elements[SIZE][SIZE]);
 
 		Mat4x4<T> &operator=(const Mat4x4<T> &otherMat);
 		Mat4x4<T> &operator+=(const Mat4x4<T> &otherMat);

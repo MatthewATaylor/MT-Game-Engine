@@ -9,7 +9,7 @@ namespace mtge {
 		});
 	}
 	template<typename T>
-	Mat4x4<T>::Mat4x4(T elements[4][4]) {
+	Mat4x4<T>::Mat4x4(T elements[SIZE][SIZE]) {
 		forAllElementsMutable([&](int row, int col) -> void {
 			this->elements[row][col] = elements[row][col];
 		});
@@ -19,8 +19,8 @@ namespace mtge {
 	template<typename T>
 	template<typename LambdaType>
 	void Mat4x4<T>::forAllElements(LambdaType lambda) const{
-		for (unsigned int i = 0; i < 4; i++) {
-			for (unsigned int j = 0; j < 4; j++) {
+		for (unsigned int i = 0; i < SIZE; i++) {
+			for (unsigned int j = 0; j < SIZE; j++) {
 				lambda(i, j);
 			}
 		}
@@ -28,8 +28,8 @@ namespace mtge {
 	template<typename T>
 	template<typename LambdaType>
 	void Mat4x4<T>::forAllElementsMutable(LambdaType lambda) {
-		for (unsigned int i = 0; i < 4; i++) {
-			for (unsigned int j = 0; j < 4; j++) {
+		for (unsigned int i = 0; i < SIZE; i++) {
+			for (unsigned int j = 0; j < SIZE; j++) {
 				lambda(i, j);
 			}
 		}
@@ -61,7 +61,7 @@ namespace mtge {
 	Mat4x4<T> &Mat4x4<T>::operator*=(const Mat4x4<T> &otherMat) {
 		forAllElementsMutable([&](int row, int col) -> void {
 			T newElement = 0;
-			for (unsigned int i = 0; i < 4; i++) {
+			for (unsigned int i = 0; i < SIZE; i++) {
 				newElement += elements[row][i] * otherMat.elements[i][col];
 			}
 			elements[row][col] = newElement;
@@ -86,8 +86,8 @@ namespace mtge {
 	}
 	template<typename T>
 	Vec4<T> Mat4x4<T>::operator*(Vec4<T> &vec) const {
-		T vecElements[4] = { vec.x, vec.y, vec.z, vec.w };
-		T newVecElements[4];
+		T vecElements[SIZE] = { vec.x, vec.y, vec.z, vec.w };
+		T newVecElements[SIZE];
 
 		forAllElements([&](int row, int col) -> void {
 			newVecElements[row] += elements[row][col] * vecElements[col];
@@ -99,26 +99,27 @@ namespace mtge {
 
 	template<typename T>
 	bool Mat4x4<T>::operator==(const Mat4x4<T> &otherMat) const {
-		bool allElementsEqual = true;
-		forAllElements([&](int row, int col) -> void {
-			if (elements[row][col] != otherMat.elements[row][col]) {
-				allElementsEqual = false;
+		for (unsigned int i = 0; i < SIZE; i++) {
+			for (unsigned int j = 0; j < SIZE; j++) {
+				if (elements[i][j] != otherMat.elements[i][j]) {
+					return false;
+				}
 			}
-		});
-		return allElementsEqual;
+		}
+		return true;
 	}
 
 	template<typename T>
 	std::ostream &operator<<(std::ostream &outputStream, const Mat4x4<T> &mat) {
 		outputStream << "[";
-		for (unsigned int i = 1; i <= 4; i++) {
-			for (unsigned int j = 1; j <= 4; j++) {
+		for (unsigned int i = 1; i <= Mat4x4<T>::SIZE; i++) {
+			for (unsigned int j = 1; j <= Mat4x4<T>::SIZE; j++) {
 				outputStream << mat.get(i, j);
-				if (j < 4) {
+				if (j < Mat4x4<T>::SIZE) {
 					outputStream << "  ";
 				}
 			}
-			if (i < 4) {
+			if (i < Mat4x4<T>::SIZE) {
 				outputStream << std::endl << " ";
 			}
 		}

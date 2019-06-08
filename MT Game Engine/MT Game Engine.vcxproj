@@ -159,15 +159,13 @@
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Vec2.h" />
-    <ClInclude Include="Vec3.h" />
-    <ClInclude Include="Vec4.h" />
+    <ClInclude Include="Vec.h" />
+    <ClInclude Include="Vec_3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mat4x4.inl" />
-    <None Include="Vec2.inl" />
-    <None Include="Vec3.inl" />
-    <None Include="Vec4.inl" />
+    <None Include="Vec.inl" />
+    <None Include="Vec_3.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
