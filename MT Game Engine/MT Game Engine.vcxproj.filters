@@ -113,9 +113,6 @@
     <ClInclude Include="Vec_3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Header.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Vec_2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
