@@ -150,7 +150,7 @@
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="Mat4x4.h" />
+    <ClInclude Include="Mat.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Pyramid.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -165,7 +165,7 @@
     <ClInclude Include="Vec_4.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Mat4x4.inl" />
+    <None Include="Mat.inl" />
     <None Include="Vec.inl" />
     <None Include="Vec_2.inl" />
     <None Include="Vec_3.inl" />
