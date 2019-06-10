@@ -15,9 +15,9 @@ namespace mtge {
 		bool renderedSides[6];
 
 	public:
-		Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[], bool renderedSides[]);
 		Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[]);
-		bool collision(glm::vec3 cameraPosition, const glm::vec3 CAMERA_DIMENSIONS);
+		bool collision(glm::vec3 position, glm::vec3 dimensions);
 		void draw();
+		void setRenderedSides(bool renderedSides[6]);
 	};
 }

@@ -2,31 +2,43 @@
 
 namespace mtge {
 	//Constructor
-	Camera::Camera(glm::vec3 cameraPosition, glm::vec3 cameraFront) {
-		this->cameraPosition = cameraPosition;
-		this->cameraFront = cameraFront;
+	Camera::Camera(glm::vec3 position, glm::vec3 front) {
+		this->position = position;
+		this->front = front;
+	}
+
+	//Protected
+	void Camera::controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection) {
+		if (!beganMotion) {
+			clock.setPrevious();
+			beganMotion = true;
+		}
+		
+		clock.setCurrent();
+		movementSize = clock.getTimeChange() * speed;
+		clock.setPrevious();
+
+		totalMovement = glm::vec3(0.0f, 0.0f, 0.0f);
+
+		if (glfwGetKey(window, forwardKey) == GLFW_PRESS) {
+			totalMovement += movementDirection * movementSize;
+		}
+		if (glfwGetKey(window, reverseKey) == GLFW_PRESS) {
+			totalMovement -= movementDirection * movementSize;
+		}
+		if (glfwGetKey(window, leftKey) == GLFW_PRESS) {
+			totalMovement -= glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
+		}
+		if (glfwGetKey(window, rightKey) == GLFW_PRESS) {
+			totalMovement += glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
+		}
 	}
 
 	//Public
-	void Camera::move(GLFWwindow *window) {
-		const float SPEED = 3.5f;
+	void Camera::move(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+		controlMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, front);
 
-		clock.setCurrent();
-		float movementSize = clock.getTimeChange() * SPEED;
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			cameraPosition += cameraFront * movementSize;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			cameraPosition -= cameraFront * movementSize;
-		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			cameraPosition -= glm::normalize(glm::cross(cameraFront, UP_VECTOR)) * movementSize;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			cameraPosition += glm::normalize(glm::cross(cameraFront, UP_VECTOR)) * movementSize;
-		}
-		clock.setPrevious();
+		position += totalMovement;
 	}
 	void Camera::rotate(GLFWwindow *window, double xPos, double yPos) {
 		const float MOUSE_SENSITIVITY = 0.05f;
@@ -54,7 +66,7 @@ namespace mtge {
 		facing.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
 		facing.y = sin(glm::radians(pitch));
 		facing.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-		cameraFront = glm::normalize(facing);
+		front = glm::normalize(facing);
 
 		previousMouseX = (float)xPos;
 		previousMouseY = (float)yPos;
@@ -77,10 +89,10 @@ namespace mtge {
 	float Camera::getFieldOfView() {
 		return fieldOfView;
 	}
-	glm::mat4 Camera::viewMatrix() {
-		return glm::lookAt(cameraPosition, cameraPosition + cameraFront, UP_VECTOR);
+	glm::mat4 Camera::getViewMatrix() {
+		return glm::lookAt(position, position + front, UP_VECTOR);
 	}
-	glm::vec3 Camera::getCameraPosition() {
-		return cameraPosition;
+	glm::vec3 Camera::getPosition() {
+		return position;
 	}
 }

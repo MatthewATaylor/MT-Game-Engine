@@ -59,14 +59,7 @@ namespace mtge {
 	};
 
 	//Constructor
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[], bool renderedSides[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, "CUBE") {
-		for (unsigned int i = 0; i < 6; i++) {
-			this->textures[i] = textures[i];
-			this->renderedSides[i] = renderedSides[i];
-		}
-		textureLocation = glGetUniformLocation(shader->shaderProgramID, "texture1");
-	}
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, "CUBE") {
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, Shape::Type::CUBE) {
 		for (unsigned int i = 0; i < 6; i++) {
 			this->textures[i] = textures[i];
 			this->renderedSides[i] = 1;
@@ -75,13 +68,13 @@ namespace mtge {
 	}
 
 	//Public
-	bool Cube::collision(glm::vec3 cameraPosition, const glm::vec3 CAMERA_DIMENSIONS) {
-		if (cameraPosition.x + 0.5f * CAMERA_DIMENSIONS.x > translatedPos.x - 0.5f * scaledDimensions.x &&
-			cameraPosition.x - 0.5f * CAMERA_DIMENSIONS.x < translatedPos.x + 0.5f * scaledDimensions.x &&
-			cameraPosition.y > translatedPos.y - 0.5f * scaledDimensions.y &&
-			cameraPosition.y - CAMERA_DIMENSIONS.y < translatedPos.y + 0.499999f * scaledDimensions.y &&
-			cameraPosition.z + 0.5f * CAMERA_DIMENSIONS.z > translatedPos.z - 0.5f * scaledDimensions.z &&
-			cameraPosition.z - 0.5f * CAMERA_DIMENSIONS.z < translatedPos.z + 0.5f * scaledDimensions.z) {
+	bool Cube::collision(glm::vec3 position, glm::vec3 dimensions) {
+		if (position.x + 0.5f * dimensions.x > translatedPos.x - 0.5f * scaledDimensions.x &&
+			position.x - 0.5f * dimensions.x < translatedPos.x + 0.5f * scaledDimensions.x &&
+			position.y > translatedPos.y - 0.5f * scaledDimensions.y &&
+			position.y - dimensions.y < translatedPos.y + 0.499999f * scaledDimensions.y &&
+			position.z + 0.5f * dimensions.z > translatedPos.z - 0.5f * scaledDimensions.z &&
+			position.z - 0.5f * dimensions.z < translatedPos.z + 0.5f * scaledDimensions.z) {
 
 			return true;
 		}
@@ -97,6 +90,11 @@ namespace mtge {
 
 				glDrawArrays(GL_TRIANGLES, i, 6);
 			}
+		}
+	}
+	void Cube::setRenderedSides(bool renderedSides[6]) {
+		for (unsigned int i = 0; i < 6; i++) {
+			this->renderedSides[i] = renderedSides[i];
 		}
 	}
 }
