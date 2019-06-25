@@ -14,6 +14,24 @@ namespace mtge {
 			this->elements[row][col] = elements[row][col];
 		});
 	}
+	template<typename T, unsigned int ROWS, unsigned int COLS>
+	Mat<T, ROWS, COLS>::Mat(MatType matType) {
+		if (matType == MatType::ZERO) {
+			forAllElementsMutable([&](int row, int col) -> void {
+				elements[row][col] = 0;
+			});
+		}
+		else if (matType == MatType::IDENTITY) {
+			forAllElementsMutable([&](int row, int col) -> void {
+				if (row == col) {
+					elements[row][col] = 1;
+				}
+				else {
+					elements[row][col] = 0;
+				}
+			});
+		}
+	}
 
 	//Private
 	template<typename T, unsigned int ROWS, unsigned int COLS>

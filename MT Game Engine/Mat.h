@@ -5,6 +5,11 @@
 #include "Vec.h"
 
 namespace mtge {
+	enum class MatType {
+		ZERO,
+		IDENTITY
+	};
+
 	template<typename T, unsigned int ROWS, unsigned int COLS>
 	class Mat;
 
@@ -25,6 +30,7 @@ namespace mtge {
 
 		Mat();
 		Mat(T elements[ROWS][COLS]);
+		Mat(MatType matType);
 
 		Mat<T, ROWS, COLS> &operator=(const Mat<T, ROWS, COLS> &otherMat);
 		Mat<T, ROWS, COLS> &operator+=(const Mat<T, ROWS, COLS> &otherMat);
