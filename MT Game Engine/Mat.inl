@@ -161,7 +161,7 @@ namespace mtge {
 	Mat<T, COLS, ROWS> Mat<T, ROWS, COLS>::altMajorOrder() const {
 		T newElements[COLS][ROWS];
 		for (unsigned int i = 0; i < ROWS; i++) {
-			for (int j = 0; j < COLS; j++) {
+			for (unsigned int j = 0; j < COLS; j++) {
 				newElements[j][i] = elements[i][j];
 			}
 		}
