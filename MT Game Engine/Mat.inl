@@ -148,8 +148,24 @@ namespace mtge {
 	T Mat<T, ROWS, COLS>::get(unsigned int row, unsigned int col) const {
 		return elements[row - 1][col - 1];
 	}
+	template <typename T, unsigned int ROWS, unsigned int COLS>
+	T *Mat<T, ROWS, COLS>::getPtr() {
+		return &(elements[0][0]);
+	}
 	template<typename T, unsigned int ROWS, unsigned int COLS>
 	void Mat<T, ROWS, COLS>::set(unsigned int row, unsigned int col, T newElement) {
 		elements[row - 1][col - 1] = newElement;
+	}
+
+	template<typename T, unsigned int ROWS, unsigned int COLS>
+	Mat<T, COLS, ROWS> Mat<T, ROWS, COLS>::altMajorOrder() const {
+		T newElements[COLS][ROWS];
+		for (unsigned int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				newElements[j][i] = elements[i][j];
+			}
+		}
+		Mat<T, COLS, ROWS> newMat(newElements);
+		return newMat;
 	}
 }

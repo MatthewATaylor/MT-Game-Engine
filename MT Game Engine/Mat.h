@@ -47,7 +47,10 @@ namespace mtge {
 		friend std::ostream &operator<<<T, ROWS, COLS>(std::ostream &outputStream, const Mat<T, ROWS, COLS> &mat);
 
 		T get(unsigned int row, unsigned int col) const;
+		T *getPtr();
 		void set(unsigned int row, unsigned int col, T newElement);
+
+		Mat<T, COLS, ROWS> altMajorOrder() const;
 	};
 };
 
