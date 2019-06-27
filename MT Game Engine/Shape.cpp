@@ -2,7 +2,7 @@
 
 namespace mtge {
 	//Constructor
-	Shape::Shape(glm::vec3 pos, glm::vec3 dimensions, const float *VERTICES, const unsigned int VERTICES_SIZE, Shader *shader, const bool POSITION_ONLY_VERTICES, const Shape::Type TYPE) : VERTICES_SIZE(VERTICES_SIZE), POSITION_ONLY_VERTICES(POSITION_ONLY_VERTICES), TYPE(TYPE) {
+	Shape::Shape(glm::vec3 pos, glm::vec3 dimensions, const float *VERTICES, const unsigned int VERTICES_SIZE, Shader *shader, const bool POSITION_ONLY_VERTICES, const ShapeType TYPE) : VERTICES_SIZE(VERTICES_SIZE), POSITION_ONLY_VERTICES(POSITION_ONLY_VERTICES), TYPE(TYPE) {
 		this->pos = pos;
 		this->dimensions = dimensions;
 		this->VERTICES = VERTICES;
@@ -48,7 +48,7 @@ namespace mtge {
 		scaledDimensions = dimensions * scaleDimensions;
 		model = glm::scale(model, dimensions * scaleDimensions);
 	}
-	const Shape::Type Shape::getType() {
+	const ShapeType Shape::getType() {
 		return TYPE;
 	}
 	bool Shape::collision(glm::vec3 position, glm::vec3 dimensions) {

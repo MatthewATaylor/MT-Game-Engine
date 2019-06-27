@@ -58,7 +58,7 @@ namespace mtge {
 	};
 
 	//Constructor
-	Skybox::Skybox(Shader *shader, Texture *texture) : Shape(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), VERTICES, VERTICES_SIZE, shader, true, Shape::Type::SKYBOX) {
+	Skybox::Skybox(Shader *shader, Texture *texture) : Shape(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), VERTICES, VERTICES_SIZE, shader, true, ShapeType::SKYBOX) {
 		this->texture = texture;
 		textureLocation = glGetUniformLocation(shader->shaderProgramID, "skybox");
 	}

@@ -27,9 +27,9 @@ namespace mtge {
 	}
 	void Chunk::draw() {
 		if (visible) {
-			Shape::Type prevShapeType = Shape::Type::UNDEFINED;
+			ShapeType prevShapeType = ShapeType::UNDEFINED;
 			for (unsigned int i = 0; i < shapes.size(); i++) {
-				Shape::Type shapeType = shapes[i]->getType();
+				ShapeType shapeType = shapes[i]->getType();
 				if (shapeType != prevShapeType) {
 					shapes[i]->updateBuffers();
 				}
