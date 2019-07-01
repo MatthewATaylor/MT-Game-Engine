@@ -1,8 +1,6 @@
 #pragma once
 
-#include <math.h>
-
-#include "Map.h"
+#include "WorldMap.h"
 #include "Camera.h"
 
 namespace mtge {
@@ -27,8 +25,9 @@ namespace mtge {
 		void setCanApplyCollisions(bool canApplyCollisions);
 		void setCanApplyGravity(bool canApplyGravity);
 		void setGravityParams(float startGravitySpeed, float gravityAddend, float maxGravity);
-		void jump(GLFWwindow *window, float jumpSize, int jumpKey);
-		void move(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
-		void checkReset(GLFWwindow *window, float resetHeight);
+		void controlJump(GLFWwindow *window, float jumpSize, int jumpKey);
+		void controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
+		void controlReset(GLFWwindow *window, float resetHeight);
 	};
 }
+

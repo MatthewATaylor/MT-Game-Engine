@@ -8,7 +8,7 @@ namespace mtge {
 	}
 
 	//Protected
-	void Camera::controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection) {
+	void Camera::controlRawMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection) {
 		if (!beganMotion) {
 			clock.setPrevious();
 			beganMotion = true;
@@ -35,12 +35,13 @@ namespace mtge {
 	}
 
 	//Public
-	void Camera::move(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
-		controlMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, front);
+	void Camera::controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, front);
 
 		position += totalMovement;
 	}
-	void Camera::rotate(GLFWwindow *window, double xPos, double yPos) {
+	void Camera::controlRotation(GLFWwindow *window, double xPos, double yPos) {
+
 		const float MOUSE_SENSITIVITY = 0.05f;
 
 		if (firstMouseEntrance) {
@@ -71,7 +72,7 @@ namespace mtge {
 		previousMouseX = (float)xPos;
 		previousMouseY = (float)yPos;
 	}
-	void Camera::zoom(GLFWwindow *window, double xOffset, double yOffset) {
+	void Camera::controlZoom(GLFWwindow *window, double xOffset, double yOffset) {
 		const float SCROLL_SENSITIVITY = 0.7f;
 		const float MAX_FOV = 45.0f;
 
@@ -83,9 +84,9 @@ namespace mtge {
 		}
 		if (fieldOfView >= MAX_FOV) {
 			fieldOfView = MAX_FOV;
-
 		}
 	}
+	
 	float Camera::getFieldOfView() {
 		return fieldOfView;
 	}

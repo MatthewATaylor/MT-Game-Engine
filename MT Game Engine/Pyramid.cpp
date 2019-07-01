@@ -26,7 +26,7 @@ namespace mtge {
 		for (unsigned int i = 0; i < 4; i++) {
 			this->textures[i] = textures[i];
 		}
-		textureLocation = glGetUniformLocation(shader->shaderProgramID, "texture1");
+		textureLocation = shader->getUniformLocation("texture1");
 	}
 
 	//Public

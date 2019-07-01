@@ -6,50 +6,56 @@ namespace mtge {
 
 	//Private
 	void Player::manageCollisionX() {
-		for (unsigned int i = 0; i < Map::chunks.size(); i++) {
-			Chunk *currentChunk = Map::chunks[i];
-			int collisionValue = currentChunk->collision(position, DIMENSIONS);
-			if (collisionValue >= 0) {
-				Shape *currentShape = currentChunk->shapes[collisionValue];
-				if (totalMovement.x > 0) {
-					position.x = currentShape->translatedPos.x - 0.5f * currentShape->scaledDimensions.x - 0.5f * DIMENSIONS.x;
-				}
-				else if (totalMovement.x < 0) {
-					position.x = currentShape->translatedPos.x + 0.5f * currentShape->scaledDimensions.x + 0.5f * DIMENSIONS.x;
+		for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
+			RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
+			if (currentRenderablesSet->getIsVisible()) {
+				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
+				if (collisionValue >= 0) {
+					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
+					if (totalMovement.x > 0) {
+						position.x = currentShape->translatedPos.x - 0.5f * currentShape->scaledDimensions.x - 0.5f * DIMENSIONS.x;
+					}
+					else if (totalMovement.x < 0) {
+						position.x = currentShape->translatedPos.x + 0.5f * currentShape->scaledDimensions.x + 0.5f * DIMENSIONS.x;
+					}
 				}
 			}
 		}
 	}
 	void Player::manageCollisionY() {
 		bool bottomCollision = false;
-		for (unsigned int i = 0; i < Map::chunks.size(); i++) {
-			Chunk *currentChunk = Map::chunks[i];
-			int collisionValue = currentChunk->collision(position, DIMENSIONS);
-			if (collisionValue >= 0) {
-				Shape *currentShape = currentChunk->shapes[collisionValue];
-				if (totalMovement.y > 0) {
-					position.y = currentShape->translatedPos.y - 0.5f * currentShape->scaledDimensions.y;
-				}
-				else if (totalMovement.y < 0) {
-					position.y = currentShape->translatedPos.y + 0.5f * currentShape->scaledDimensions.y + DIMENSIONS.y;
-					gravitySpeed = startGravitySpeed;
-					bottomCollision = true;
+		for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
+			RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
+			if (currentRenderablesSet->getIsVisible()) {
+				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
+				if (collisionValue >= 0) {
+					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
+					if (totalMovement.y > 0) {
+						position.y = currentShape->translatedPos.y - 0.5f * currentShape->scaledDimensions.y;
+					}
+					else if (totalMovement.y < 0) {
+						position.y = currentShape->translatedPos.y + 0.5f * currentShape->scaledDimensions.y + DIMENSIONS.y;
+						gravitySpeed = startGravitySpeed;
+						bottomCollision = true;
+					}
 				}
 			}
 		}
 		onGround = bottomCollision;
 	}
 	void Player::manageCollisionZ() {
-		for (unsigned int i = 0; i < Map::chunks.size(); i++) {
-			Chunk *currentChunk = Map::chunks[i];
-			int collisionValue = currentChunk->collision(position, DIMENSIONS);
-			if (collisionValue >= 0) {
-				Shape *currentShape = currentChunk->shapes[collisionValue];
-				if (totalMovement.z > 0) {
-					position.z = currentShape->translatedPos.z - 0.5f * currentShape->scaledDimensions.z - 0.5f * DIMENSIONS.z;
-				}
-				else if (totalMovement.z < 0) {
-					position.z = currentShape->translatedPos.z + 0.5f * currentShape->scaledDimensions.z + 0.5f * DIMENSIONS.z;
+		for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
+			RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
+			if (currentRenderablesSet->getIsVisible()) {
+				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
+				if (collisionValue >= 0) {
+					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
+					if (totalMovement.z > 0) {
+						position.z = currentShape->translatedPos.z - 0.5f * currentShape->scaledDimensions.z - 0.5f * DIMENSIONS.z;
+					}
+					else if (totalMovement.z < 0) {
+						position.z = currentShape->translatedPos.z + 0.5f * currentShape->scaledDimensions.z + 0.5f * DIMENSIONS.z;
+					}
 				}
 			}
 		}
@@ -57,7 +63,7 @@ namespace mtge {
 	void Player::applyGravity() {
 		gravitySpeed += gravityAddend * movementSize;
 
-		if (gravitySpeed >= maxGravity) {
+		if (gravitySpeed > maxGravity) {
 			gravitySpeed = maxGravity;
 		}
 
@@ -78,15 +84,15 @@ namespace mtge {
 		this->gravityAddend = gravityAddend;
 		this->maxGravity = maxGravity;
 	}
-	void Player::jump(GLFWwindow *window, float jumpSize, int jumpKey) {
+	void Player::controlJump(GLFWwindow *window, float jumpSize, int jumpKey) {
 		if ((glfwGetKey(window, jumpKey) == GLFW_PRESS) && onGround) {
 			gravitySpeed = jumpSize;
 			onGround = false;
 		}
 	}
-	void Player::move(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+	void Player::controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
 		glm::vec3 movementDirection = glm::vec3(front.x, 0.0f, front.z);
-		controlMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
+		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
 
 		if (canApplyGravity) {
 			applyGravity();
@@ -113,7 +119,7 @@ namespace mtge {
 			position += totalMovement;
 		}
 	}
-	void Player::checkReset(GLFWwindow *window, float resetHeight) {
+	void Player::controlReset(GLFWwindow *window, float resetHeight) {
 		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
 			gravitySpeed = startGravitySpeed;
 			position = glm::vec3(0.0f, resetHeight, 0.0f);

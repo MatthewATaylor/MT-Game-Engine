@@ -17,9 +17,11 @@ namespace mtge {
 		unsigned int shaderProgramID;
 
 		Shader(const char* vertexShaderSource, const char* fragmentShaderSource);
+
 		void useShaderProgram();
 		void setBoolUniform(unsigned int location, bool newValue);
 		void setIntUniform(unsigned int location, int newValue);
 		void setFloatUniform(unsigned int location, float newValue);
+		unsigned int getUniformLocation(const char *uniformName);
 	};
 }

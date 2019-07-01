@@ -90,4 +90,7 @@ namespace mtge {
 	void Shader::setFloatUniform(unsigned int location, float newValue) {
 		glUniform1f(location, newValue);
 	}
+	unsigned int Shader::getUniformLocation(const char *uniformName) {
+		return glGetUniformLocation(shaderProgramID, uniformName);
+	}
 }
