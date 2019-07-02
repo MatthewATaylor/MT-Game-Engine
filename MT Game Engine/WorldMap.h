@@ -12,8 +12,13 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Skybox.h"
+#include "ResourceManager.h"
 
 namespace mtge {
+	enum class RenderMode {
+		SHAPE, SKYBOX
+	};
+
 	class WorldMap {
 	private:
 		static Shader *shader;
@@ -21,7 +26,7 @@ namespace mtge {
 		static std::vector<RenderablesSet*> renderablesSets;
 
 	public:
-		static void setShader(Shader *shader);
+		static void setRenderMode(RenderMode renderMode);
 		static void setSkyboxTexture(Texture *texture);
 		static unsigned int getNumRenderablesSets();
 		static void appendRenderablesSet(RenderablesSet *renderablesSet);
@@ -31,8 +36,8 @@ namespace mtge {
 		static void clearRenderablesSets();
 		static void deleteSkybox();
 
-		static void drawRenderablesSets(glm::mat4 projectionMatrix, unsigned int shapeProjectionLocation, glm::mat4 viewMatrix, unsigned int shapeViewLocation);
-		static void drawSkybox(glm::mat4 projectionMatrix, unsigned int skyboxProjectionLocation, glm::mat4 viewMatrix, unsigned int skyboxViewLocation);
+		static void drawRenderablesSets(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
+		static void drawSkybox(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
 
 		static void specifyRenderablesSetsRenderAreas();
 	};

@@ -6,8 +6,13 @@ namespace mtge {
 	std::vector<RenderablesSet*> WorldMap::renderablesSets = {};
 
 	//Public
-	void WorldMap::setShader(Shader *shader) {
-		WorldMap::shader = shader;
+	void WorldMap::setRenderMode(RenderMode renderMode) {
+		if (renderMode == RenderMode::SHAPE) {
+			shader = &ResourceManager::shapeShader;
+		}
+		else if (renderMode == RenderMode::SKYBOX) {
+			shader = &ResourceManager::skyboxShader;
+		}
 	}
 	void WorldMap::setSkyboxTexture(Texture *texture) {
 		WorldMap::skybox = new Skybox(shader, texture);
@@ -36,20 +41,20 @@ namespace mtge {
 		delete skybox;
 	}
 
-	void WorldMap::drawRenderablesSets(glm::mat4 projectionMatrix, unsigned int shapeProjectionLocation, glm::mat4 viewMatrix, unsigned int shapeViewLocation) {
+	void WorldMap::drawRenderablesSets(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
 		shader->useShaderProgram();
-		glUniformMatrix4fv(shapeProjectionLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-		glUniformMatrix4fv(shapeViewLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+		glUniformMatrix4fv(ResourceManager::shapeShader.getUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		glUniformMatrix4fv(ResourceManager::shapeShader.getUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		for (unsigned int i = 0; i < renderablesSets.size(); i++) {
 			renderablesSets[i]->drawAllShapes();
 		}
 	}
-	void WorldMap::drawSkybox(glm::mat4 projectionMatrix, unsigned int skyboxProjectionLocation, glm::mat4 viewMatrix, unsigned int skyboxViewLocation) {
+	void WorldMap::drawSkybox(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
 		glDepthFunc(GL_LEQUAL);
 		shader->useShaderProgram();
-		glUniformMatrix4fv(skyboxProjectionLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		glUniformMatrix4fv(ResourceManager::skyboxShader.getUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		viewMatrix = glm::mat4(glm::mat3(viewMatrix));
-		glUniformMatrix4fv(skyboxViewLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+		glUniformMatrix4fv(ResourceManager::skyboxShader.getUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		skybox->updateBuffers();
 		skybox->draw();
 		glDepthFunc(GL_LESS);

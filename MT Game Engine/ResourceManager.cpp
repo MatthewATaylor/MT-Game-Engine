@@ -1,6 +1,9 @@
 #include "ResourceManager.h"
 
 namespace mtge {
+	Shader ResourceManager::shapeShader("Resources/Shaders/Shape.vs.glsl", "Resources/Shaders/Shape.fs.glsl");
+	Shader ResourceManager::skyboxShader("Resources/Shaders/Skybox.vs.glsl", "Resources/Shaders/Skybox.fs.glsl");
+
 	//Public
 	bool ResourceManager::startGLFW(int majorOpenGLVersion, int minorOpenGLVersion) {
 		//GLFW Setup

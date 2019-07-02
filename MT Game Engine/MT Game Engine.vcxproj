@@ -166,6 +166,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Mat.inl" />
+    <None Include="Resources\Shaders\Shape.fs.glsl" />
+    <None Include="Resources\Shaders\Shape.vs.glsl" />
+    <None Include="Resources\Shaders\Skybox.fs.glsl" />
+    <None Include="Resources\Shaders\Skybox.vs.glsl" />
     <None Include="Vec.inl" />
     <None Include="Vec_2.inl" />
     <None Include="Vec_3.inl" />
