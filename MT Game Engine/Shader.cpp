@@ -4,8 +4,11 @@ namespace mtge {
 	//Constructor
 	Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource) {
 		readShaderFiles(vertexShaderSource, fragmentShaderSource);
+		projectionLocation = getUniformLocation("projection");
+		viewLocation = getUniformLocation("view");
+		modelLocation = getUniformLocation("model");
 	}
-
+	
 	//Private
 	void Shader::checkShaderErrors(unsigned int ID, const char *errorType) {
 		int success;
@@ -70,16 +73,16 @@ namespace mtge {
 		glAttachShader(shaderProgramID, vertexShaderID);
 		glAttachShader(shaderProgramID, fragmentShaderID);
 		glLinkProgram(shaderProgramID);
-		this->shaderProgramID = shaderProgramID;
-		checkShaderErrors(shaderProgramID, "PROGRAM");
+		this->ID = shaderProgramID;
+		checkShaderErrors(ID, "PROGRAM");
 
 		glDeleteShader(vertexShaderID);
 		glDeleteShader(fragmentShaderID);
 	}
 
 	//Public
-	void Shader::useShaderProgram() {
-		glUseProgram(shaderProgramID);
+	void Shader::useProgram() {
+		glUseProgram(ID);
 	}
 	void Shader::setBoolUniform(unsigned int location, bool newValue) {
 		glUniform1i(location, (int)newValue);
@@ -90,7 +93,20 @@ namespace mtge {
 	void Shader::setFloatUniform(unsigned int location, float newValue) {
 		glUniform1f(location, newValue);
 	}
+
 	unsigned int Shader::getUniformLocation(const char *uniformName) {
-		return glGetUniformLocation(shaderProgramID, uniformName);
+		return glGetUniformLocation(ID, uniformName);
+	}
+	unsigned int Shader::getID() {
+		return ID;
+	}
+	unsigned int Shader::getProjectionLocation() {
+		return projectionLocation;
+	}
+	unsigned int Shader::getViewLocation() {
+		return viewLocation;
+	}
+	unsigned int Shader::getModelLocation() {
+		return modelLocation;
 	}
 }

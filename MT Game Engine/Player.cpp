@@ -13,10 +13,10 @@ namespace mtge {
 				if (collisionValue >= 0) {
 					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
 					if (totalMovement.x > 0) {
-						position.x = currentShape->translatedPos.x - 0.5f * currentShape->scaledDimensions.x - 0.5f * DIMENSIONS.x;
+						position.x = currentShape->getCenterPosition().x - 0.5f * currentShape->getDimensions().x - 0.5f * DIMENSIONS.x;
 					}
 					else if (totalMovement.x < 0) {
-						position.x = currentShape->translatedPos.x + 0.5f * currentShape->scaledDimensions.x + 0.5f * DIMENSIONS.x;
+						position.x = currentShape->getCenterPosition().x + 0.5f * currentShape->getDimensions().x + 0.5f * DIMENSIONS.x;
 					}
 				}
 			}
@@ -31,10 +31,10 @@ namespace mtge {
 				if (collisionValue >= 0) {
 					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
 					if (totalMovement.y > 0) {
-						position.y = currentShape->translatedPos.y - 0.5f * currentShape->scaledDimensions.y;
+						position.y = currentShape->getCenterPosition().y - 0.5f * currentShape->getDimensions().y;
 					}
 					else if (totalMovement.y < 0) {
-						position.y = currentShape->translatedPos.y + 0.5f * currentShape->scaledDimensions.y + DIMENSIONS.y;
+						position.y = currentShape->getCenterPosition().y + 0.5f * currentShape->getDimensions().y + DIMENSIONS.y;
 						gravitySpeed = startGravitySpeed;
 						bottomCollision = true;
 					}
@@ -51,10 +51,10 @@ namespace mtge {
 				if (collisionValue >= 0) {
 					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
 					if (totalMovement.z > 0) {
-						position.z = currentShape->translatedPos.z - 0.5f * currentShape->scaledDimensions.z - 0.5f * DIMENSIONS.z;
+						position.z = currentShape->getCenterPosition().z - 0.5f * currentShape->getDimensions().z - 0.5f * DIMENSIONS.z;
 					}
 					else if (totalMovement.z < 0) {
-						position.z = currentShape->translatedPos.z + 0.5f * currentShape->scaledDimensions.z + 0.5f * DIMENSIONS.z;
+						position.z = currentShape->getCenterPosition().z + 0.5f * currentShape->getDimensions().z + 0.5f * DIMENSIONS.z;
 					}
 				}
 			}

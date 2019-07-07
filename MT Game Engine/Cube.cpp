@@ -69,12 +69,12 @@ namespace mtge {
 
 	//Public
 	bool Cube::collision(glm::vec3 position, glm::vec3 dimensions) {
-		if (position.x + 0.5f * dimensions.x > translatedPos.x - 0.5f * scaledDimensions.x &&
-			position.x - 0.5f * dimensions.x < translatedPos.x + 0.5f * scaledDimensions.x &&
-			position.y > translatedPos.y - 0.5f * scaledDimensions.y &&
-			position.y - dimensions.y < translatedPos.y + 0.499999f * scaledDimensions.y &&
-			position.z + 0.5f * dimensions.z > translatedPos.z - 0.5f * scaledDimensions.z &&
-			position.z - 0.5f * dimensions.z < translatedPos.z + 0.5f * scaledDimensions.z) {
+		if (position.x + 0.5f * dimensions.x > getCenterPosition().x - 0.5f * getDimensions().x &&
+			position.x - 0.5f * dimensions.x < getCenterPosition().x + 0.5f * getDimensions().x &&
+			position.y > getCenterPosition().y - 0.5f * getDimensions().y &&
+			position.y - dimensions.y < getCenterPosition().y + 0.499999f * getDimensions().y &&
+			position.z + 0.5f * dimensions.z > getCenterPosition().z - 0.5f * getDimensions().z &&
+			position.z - 0.5f * dimensions.z < getCenterPosition().z + 0.5f * getDimensions().z) {
 
 			return true;
 		}

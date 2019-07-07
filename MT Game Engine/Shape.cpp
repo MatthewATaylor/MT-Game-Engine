@@ -2,13 +2,13 @@
 
 namespace mtge {
 	//Constructor
-	Shape::Shape(glm::vec3 pos, glm::vec3 dimensions, const float *VERTICES, const unsigned int VERTICES_SIZE, Shader *shader, const bool POSITION_ONLY_VERTICES, const ShapeType TYPE) : VERTICES_SIZE(VERTICES_SIZE), POSITION_ONLY_VERTICES(POSITION_ONLY_VERTICES), TYPE(TYPE) {
-		this->pos = pos;
+	Shape::Shape(glm::vec3 centerPosition, glm::vec3 dimensions, const float *VERTICES, const unsigned int VERTICES_SIZE, Shader *shader, const bool POSITION_ONLY_VERTICES, const ShapeType TYPE) : VERTICES_SIZE(VERTICES_SIZE), POSITION_ONLY_VERTICES(POSITION_ONLY_VERTICES), TYPE(TYPE) {
+		this->centerPosition = centerPosition;
 		this->dimensions = dimensions;
 		this->VERTICES = VERTICES;
 		this->shader = shader;
 		setBuffers();
-		modelLocation = glGetUniformLocation(shader->shaderProgramID, "model");
+		modelLocation = shader->getModelLocation();
 		transformInit();
 	}
 
@@ -28,7 +28,10 @@ namespace mtge {
 
 	//Protected
 	void Shape::transform() {
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+		//if (transformed) {
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+		//}
+		transformed = false;
 	}
 
 	//Public
@@ -36,20 +39,29 @@ namespace mtge {
 		buffer->updateBuffer();
 	}
 	void Shape::translate(glm::vec3 translation) {
-		translatedPos = pos + translation;
-		model = glm::translate(model, pos + translation);
+		transformed = true;
+		centerPosition += translation;
+		model = glm::translate(model, centerPosition);
 	}
 	void Shape::rotate(glm::vec3 rotationAngles) {
+		transformed = true;
 		model = glm::rotate(model, rotationAngles.x, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, rotationAngles.y, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, rotationAngles.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 	void Shape::scale(glm::vec3 scaleDimensions) {
-		scaledDimensions = dimensions * scaleDimensions;
-		model = glm::scale(model, dimensions * scaleDimensions);
+		transformed = true;
+		dimensions *= scaleDimensions;
+		model = glm::scale(model, dimensions);
 	}
 	const ShapeType Shape::getType() {
 		return TYPE;
+	}
+	glm::vec3 Shape::getCenterPosition() {
+		return centerPosition;
+	}
+	glm::vec3 Shape::getDimensions() {
+		return dimensions;
 	}
 	bool Shape::collision(glm::vec3 position, glm::vec3 dimensions) {
 		return false;

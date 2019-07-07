@@ -77,7 +77,7 @@ namespace mtge {
 		loadCubemap(skyboxTexturesChar, target, textureParamX, textureParamY, textureParamZ, textureParamMin, textureParamMag, colorFormat, totalChannels);
 	}
 	void Texture::setUniform(Shader* shader, unsigned int location, int textureNum) {
-		shader->useShaderProgram();
+		shader->useProgram();
 		shader->setIntUniform(location, textureNum);
 	}
 	void Texture::activate(GLenum textureNum) {

@@ -1,8 +1,8 @@
 #include "ResourceManager.h"
 
 namespace mtge {
-	Shader ResourceManager::shapeShader("Resources/Shaders/Shape.vs.glsl", "Resources/Shaders/Shape.fs.glsl");
-	Shader ResourceManager::skyboxShader("Resources/Shaders/Skybox.vs.glsl", "Resources/Shaders/Skybox.fs.glsl");
+	Shader *ResourceManager::shapeShader = nullptr;
+	Shader *ResourceManager::skyboxShader = nullptr;
 
 	//Public
 	bool ResourceManager::startGLFW(int majorOpenGLVersion, int minorOpenGLVersion) {
@@ -36,5 +36,13 @@ namespace mtge {
 			return 1;
 		}
 		return 0;
+	}
+	void ResourceManager::initMTGE(const char *shapeVertexShaderPath, const char *shapeFragmentShaderPath, const char *skyboxVertexShaderPath, const char *skyboxFragmentShaderPath) {
+		shapeShader = new Shader(shapeVertexShaderPath, shapeFragmentShaderPath);
+		skyboxShader = new Shader(skyboxVertexShaderPath, skyboxFragmentShaderPath);
+	}
+	void ResourceManager::freeResources() {
+		delete shapeShader;
+		delete skyboxShader;
 	}
 }

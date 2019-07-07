@@ -8,10 +8,10 @@ namespace mtge {
 	//Public
 	void WorldMap::setRenderMode(RenderMode renderMode) {
 		if (renderMode == RenderMode::SHAPE) {
-			shader = &ResourceManager::shapeShader;
+			shader = ResourceManager::shapeShader;
 		}
 		else if (renderMode == RenderMode::SKYBOX) {
-			shader = &ResourceManager::skyboxShader;
+			shader = ResourceManager::skyboxShader;
 		}
 	}
 	void WorldMap::setSkyboxTexture(Texture *texture) {
@@ -42,19 +42,19 @@ namespace mtge {
 	}
 
 	void WorldMap::drawRenderablesSets(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
-		shader->useShaderProgram();
-		glUniformMatrix4fv(ResourceManager::shapeShader.getUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-		glUniformMatrix4fv(ResourceManager::shapeShader.getUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
+		shader->useProgram();
+		glUniformMatrix4fv(ResourceManager::shapeShader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		glUniformMatrix4fv(ResourceManager::shapeShader->getViewLocation(), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		for (unsigned int i = 0; i < renderablesSets.size(); i++) {
 			renderablesSets[i]->drawAllShapes();
 		}
 	}
 	void WorldMap::drawSkybox(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
 		glDepthFunc(GL_LEQUAL);
-		shader->useShaderProgram();
-		glUniformMatrix4fv(ResourceManager::skyboxShader.getUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		shader->useProgram();
+		glUniformMatrix4fv(ResourceManager::skyboxShader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		viewMatrix = glm::mat4(glm::mat3(viewMatrix));
-		glUniformMatrix4fv(ResourceManager::skyboxShader.getUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
+		glUniformMatrix4fv(ResourceManager::skyboxShader->getViewLocation(), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		skybox->updateBuffers();
 		skybox->draw();
 		glDepthFunc(GL_LESS);
