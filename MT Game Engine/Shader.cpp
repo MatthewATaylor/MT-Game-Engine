@@ -22,7 +22,7 @@ namespace mtge {
 
 		if (!success) {
 			glGetShaderInfoLog(ID, 512, NULL, infoLog);
-			std::cout << "ERROR: " << errorType << " SHADER UNSUCCESSFUL\n" << infoLog << std::endl;
+			std::cout << "ERROR: " << errorType << " SHADER FAILED TO COMPILE"  << std::endl << infoLog << std::endl;
 		}
 	}
 	void Shader::readShaderFiles(const char* vertexShaderSource, const char* fragmentShaderSource) {
@@ -50,7 +50,7 @@ namespace mtge {
 			fragmentReadString = fragmentStream.str();
 		}
 		catch (const std::ifstream::failure e) {
-			std::cout << "ERROR: SHADER FILES COULD NOT BE READ" << std::endl;
+			std::cout << "ERROR [FUNCTION: readShaderFiles]: SHADER FILES COULD NOT BE READ" << std::endl;
 		}
 
 		const char* vertexShader = vertexReadString.c_str();
