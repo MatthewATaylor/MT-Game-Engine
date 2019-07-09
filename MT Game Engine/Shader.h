@@ -9,6 +9,10 @@
 #include <GL/glew.h>
 
 namespace mtge {
+	enum class ShaderType {
+		VERTEX, FRAGMENT
+	};
+
 	class Shader {
 	private:
 		unsigned int ID;
@@ -16,7 +20,8 @@ namespace mtge {
 		unsigned int viewLocation;
 		unsigned int modelLocation;
 
-		void checkShaderErrors(unsigned int ID, const char *errorType);
+		void checkShaderCompileErrors(unsigned int ID, ShaderType shaderType);
+		void checkShaderLinkErrors(unsigned int ID);
 		void readShaderFiles(const char* vertexShaderSource, const char* fragmentShaderSource);
 
 	public:

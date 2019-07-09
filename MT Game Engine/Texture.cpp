@@ -78,7 +78,7 @@ namespace mtge {
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else {
-			std::cout << "ERROR: TEXTURE FAILED TO LOAD" << std::endl;
+			std::cout << "ERROR [FUNCTION: load2D]: TEXTURE FAILED TO LOAD" << std::endl << std::endl;
 		}
 		stbi_image_free(data);
 
@@ -108,7 +108,7 @@ namespace mtge {
 				glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 			}
 			else {
-				std::cout << "ERROR: TEXTURE FAILED TO LOAD" << std::endl;
+				std::cout << "ERROR [FUNCTION: loadCubemap]: TEXTURE FAILED TO LOAD" << std::endl << std::endl;
 			}
 			stbi_image_free(data);
 		}

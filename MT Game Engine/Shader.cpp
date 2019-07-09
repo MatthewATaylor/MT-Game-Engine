@@ -10,19 +10,30 @@ namespace mtge {
 	}
 	
 	//Private
-	void Shader::checkShaderErrors(unsigned int ID, const char *errorType) {
+	void Shader::checkShaderCompileErrors(unsigned int ID, ShaderType shaderType) {
+		const int ERROR_BUFFER_SIZE = 512;
 		int success;
-		char infoLog[512];
-		if (errorType == "PROGRAM") {
-			glGetProgramiv(ID, GL_LINK_STATUS, &success);
-		}
-		else {
-			glGetShaderiv(ID, GL_COMPILE_STATUS, &success);
-		}
+		char infoLog[ERROR_BUFFER_SIZE];
+		glGetShaderiv(ID, GL_COMPILE_STATUS, &success);
 
 		if (!success) {
-			glGetShaderInfoLog(ID, 512, NULL, infoLog);
-			std::cout << "ERROR: " << errorType << " SHADER FAILED TO COMPILE"  << std::endl << infoLog << std::endl;
+			glGetShaderInfoLog(ID, ERROR_BUFFER_SIZE, 0, infoLog);
+			const char *shaderTypeStr = "[UNDEFINED SHADER TYPE]";
+			if (shaderType == ShaderType::VERTEX) {
+				shaderTypeStr = "VERTEX";
+			}
+			else if (shaderType == ShaderType::FRAGMENT) {
+				shaderTypeStr = "FRAGMENT";
+			}
+			std::cout << "ERROR: " << shaderTypeStr << " SHADER FAILED TO COMPILE"  << std::endl << infoLog << std::endl;
+		}
+	}
+	void Shader::checkShaderLinkErrors(unsigned int ID) {
+		int success;
+		glGetProgramiv(ID, GL_LINK_STATUS, &success);
+
+		if (!success) {
+			std::cout << "ERROR: SHADERS FAILED TO LINK" << std::endl << std::endl;
 		}
 	}
 	void Shader::readShaderFiles(const char* vertexShaderSource, const char* fragmentShaderSource) {
@@ -50,7 +61,7 @@ namespace mtge {
 			fragmentReadString = fragmentStream.str();
 		}
 		catch (const std::ifstream::failure e) {
-			std::cout << "ERROR [FUNCTION: readShaderFiles]: SHADER FILES COULD NOT BE READ" << std::endl;
+			std::cout << "ERROR [FUNCTION: readShaderFiles]: SHADER FILES COULD NOT BE READ" << std::endl << std::endl;
 		}
 
 		const char* vertexShader = vertexReadString.c_str();
@@ -60,13 +71,13 @@ namespace mtge {
 		unsigned int vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexShaderID, 1, &vertexShader, NULL);
 		glCompileShader(vertexShaderID);
-		checkShaderErrors(vertexShaderID, "VERTEX");
+		checkShaderCompileErrors(vertexShaderID, ShaderType::VERTEX);
 
 		//Compile Fragment Shader
 		unsigned int fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragmentShaderID, 1, &fragmentShader, NULL);
 		glCompileShader(fragmentShaderID);
-		checkShaderErrors(fragmentShaderID, "FRAGMENT");
+		checkShaderCompileErrors(fragmentShaderID, ShaderType::FRAGMENT);
 
 		//Link Shaders
 		unsigned int shaderProgramID = glCreateProgram();
@@ -74,7 +85,7 @@ namespace mtge {
 		glAttachShader(shaderProgramID, fragmentShaderID);
 		glLinkProgram(shaderProgramID);
 		this->ID = shaderProgramID;
-		checkShaderErrors(ID, "PROGRAM");
+		checkShaderLinkErrors(ID);
 
 		glDeleteShader(vertexShaderID);
 		glDeleteShader(fragmentShaderID);

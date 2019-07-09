@@ -8,7 +8,7 @@ namespace mtge {
 	bool ResourceManager::startGLFW(int majorOpenGLVersion, int minorOpenGLVersion) {
 		//GLFW Setup
 		if (!glfwInit()) {
-			std::cout << "ERROR [FUNCTION: startGLFW]: GLFW FAILED TO INITIALIZE" << std::endl;
+			std::cout << "ERROR [FUNCTION: startGLFW]: GLFW FAILED TO INITIALIZE" << std::endl << std::endl;
 			return 1;
 		}
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, majorOpenGLVersion);
@@ -20,7 +20,7 @@ namespace mtge {
 	bool ResourceManager::initWindow(GLFWwindow **window, const char *windowTitle, const int SCREEN_WIDTH, const int SCREEN_HEIGHT) {
 		*window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, windowTitle, 0, 0);
 		if (!window) {
-			std::cout << "ERROR [FUNCTION: initWindow]: WINDOW FAILED TO INITIALIZE" << std::endl;
+			std::cout << "ERROR [FUNCTION: initWindow]: WINDOW FAILED TO INITIALIZE" << std::endl << std::endl;
 			glfwTerminate();
 			return 1;
 		}
@@ -31,7 +31,7 @@ namespace mtge {
 	bool ResourceManager::startGLEW() {
 		GLenum error = glewInit();
 		if (error != GLEW_OK) {
-			std::cout << "ERROR [FUNCTION: startGLEW]: GLEW FAILED TO INITIALIZE" << std::endl;
+			std::cout << "ERROR [FUNCTION: startGLEW]: GLEW FAILED TO INITIALIZE" << std::endl << std::endl;
 			glfwTerminate();
 			return 1;
 		}
