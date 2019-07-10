@@ -75,4 +75,10 @@ namespace mtge {
 		delete shapeShader;
 		delete skyboxShader;
 	}
+	Shader *ResourceManager::getShapeShaderPtr() {
+		return shapeShader;
+	}
+	Shader *ResourceManager::getSkyboxShaderPtr() {
+		return skyboxShader;
+	}
 }
