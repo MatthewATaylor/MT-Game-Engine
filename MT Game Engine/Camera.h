@@ -2,11 +2,14 @@
 
 #include <iostream>
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Clock.h"
+#include "Window.h"
+#include "ResourceManager.h"
 
 namespace mtge {
 	class Camera {
@@ -25,13 +28,13 @@ namespace mtge {
 		float movementSize = 0.0f;
 		bool beganMotion = false;
 
-		void controlRawMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection);
+		void controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection);
 
 	public:
 		Camera(glm::vec3 position, glm::vec3 front);
-		virtual void controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
-		void controlRotation(GLFWwindow *window, double xPos, double yPos);
-		void controlZoom(GLFWwindow *window, double xOffset, double yOffset);
+		virtual void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
+		void controlRotation(double xPos, double yPos);
+		void controlZoom(double xOffset, double yOffset);
 		float getFieldOfView();
 		glm::mat4 getViewMatrix();
 		glm::vec3 getPosition();

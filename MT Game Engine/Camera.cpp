@@ -8,7 +8,7 @@ namespace mtge {
 	}
 
 	//Protected
-	void Camera::controlRawMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection) {
+	void Camera::controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection) {
 		if (!beganMotion) {
 			clock.setPrevious();
 			beganMotion = true;
@@ -19,29 +19,28 @@ namespace mtge {
 		clock.setPrevious();
 
 		totalMovement = glm::vec3(0.0f, 0.0f, 0.0f);
-
-		if (glfwGetKey(window, forwardKey) == GLFW_PRESS) {
+		
+		if (glfwGetKey(window->getPtr_GLFW(), forwardKey) == GLFW_PRESS) {
 			totalMovement += movementDirection * movementSize;
 		}
-		if (glfwGetKey(window, reverseKey) == GLFW_PRESS) {
+		if (glfwGetKey(window->getPtr_GLFW(), reverseKey) == GLFW_PRESS) {
 			totalMovement -= movementDirection * movementSize;
 		}
-		if (glfwGetKey(window, leftKey) == GLFW_PRESS) {
+		if (glfwGetKey(window->getPtr_GLFW(), leftKey) == GLFW_PRESS) {
 			totalMovement -= glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
 		}
-		if (glfwGetKey(window, rightKey) == GLFW_PRESS) {
+		if (glfwGetKey(window->getPtr_GLFW(), rightKey) == GLFW_PRESS) {
 			totalMovement += glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
 		}
 	}
 
 	//Public
-	void Camera::controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+	void Camera::controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
 		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, front);
 
 		position += totalMovement;
 	}
-	void Camera::controlRotation(GLFWwindow *window, double xPos, double yPos) {
-
+	void Camera::controlRotation(double xPos, double yPos) {
 		const float MOUSE_SENSITIVITY = 0.05f;
 
 		if (firstMouseEntrance) {
@@ -72,7 +71,7 @@ namespace mtge {
 		previousMouseX = (float)xPos;
 		previousMouseY = (float)yPos;
 	}
-	void Camera::controlZoom(GLFWwindow *window, double xOffset, double yOffset) {
+	void Camera::controlZoom(double xOffset, double yOffset) {
 		const float SCROLL_SENSITIVITY = 0.7f;
 		const float MAX_FOV = 45.0f;
 
@@ -86,7 +85,6 @@ namespace mtge {
 			fieldOfView = MAX_FOV;
 		}
 	}
-	
 	float Camera::getFieldOfView() {
 		return fieldOfView;
 	}

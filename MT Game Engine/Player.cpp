@@ -84,13 +84,13 @@ namespace mtge {
 		this->gravityAddend = gravityAddend;
 		this->maxGravity = maxGravity;
 	}
-	void Player::controlJump(GLFWwindow *window, float jumpSize, int jumpKey) {
-		if ((glfwGetKey(window, jumpKey) == GLFW_PRESS) && onGround) {
+	void Player::controlJump(Window *window, float jumpSize, int jumpKey) {
+		if ((glfwGetKey(window->getPtr_GLFW(), jumpKey) == GLFW_PRESS) && onGround) {
 			gravitySpeed = jumpSize;
 			onGround = false;
 		}
 	}
-	void Player::controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+	void Player::controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
 		glm::vec3 movementDirection = glm::vec3(front.x, 0.0f, front.z);
 		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
 
@@ -119,8 +119,8 @@ namespace mtge {
 			position += totalMovement;
 		}
 	}
-	void Player::controlReset(GLFWwindow *window, float resetHeight) {
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+	void Player::controlReset(Window *window, float resetHeight) {
+		if (glfwGetKey(window->getPtr_GLFW(), GLFW_KEY_R) == GLFW_PRESS) {
 			gravitySpeed = startGravitySpeed;
 			position = glm::vec3(0.0f, resetHeight, 0.0f);
 		}

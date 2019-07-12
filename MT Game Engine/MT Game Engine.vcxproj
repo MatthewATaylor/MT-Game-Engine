@@ -131,6 +131,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="RenderablesSet.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="STB_Image.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="Window.cpp" />
     <ClCompile Include="WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +150,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Mat.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Pyramid.h" />
@@ -162,6 +165,7 @@
     <ClInclude Include="Vec_2.h" />
     <ClInclude Include="Vec_3.h" />
     <ClInclude Include="Vec_4.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="WorldMap.h" />
   </ItemGroup>
   <ItemGroup>

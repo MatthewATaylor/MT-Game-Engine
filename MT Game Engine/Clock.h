@@ -14,6 +14,6 @@ namespace mtge {
 		void setCurrent();
 		void setPrevious();
 		float getTimeChange();
-		void printFPS();
+		void printFPS(float printDelay_Seconds);
 	};
 }

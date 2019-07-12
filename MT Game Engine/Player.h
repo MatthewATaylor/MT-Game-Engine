@@ -2,6 +2,8 @@
 
 #include "WorldMap.h"
 #include "Camera.h"
+#include "Window.h"
+#include "ResourceManager.h"
 
 namespace mtge {
 	class Player : public Camera {
@@ -25,9 +27,9 @@ namespace mtge {
 		void setCanApplyCollisions(bool canApplyCollisions);
 		void setCanApplyGravity(bool canApplyGravity);
 		void setGravityParams(float startGravitySpeed, float gravityAddend, float maxGravity);
-		void controlJump(GLFWwindow *window, float jumpSize, int jumpKey);
-		void controlMotion(GLFWwindow *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
-		void controlReset(GLFWwindow *window, float resetHeight);
+		void controlJump(Window *window, float jumpSize, int jumpKey);
+		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
+		void controlReset(Window *window, float resetHeight);
 	};
 }
 
