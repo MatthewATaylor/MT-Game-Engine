@@ -15,10 +15,6 @@
 #include "ResourceManager.h"
 
 namespace mtge {
-	enum class RenderMode {
-		SHAPE, SKYBOX
-	};
-
 	class WorldMap {
 	private:
 		static Shader *shader;
@@ -26,7 +22,6 @@ namespace mtge {
 		static std::vector<RenderablesSet*> renderablesSets;
 
 	public:
-		static void setRenderMode(RenderMode renderMode);
 		static void setSkyboxTexture(Texture *texture);
 		static unsigned int getNumRenderablesSets();
 		static void appendRenderablesSet(RenderablesSet *renderablesSet);

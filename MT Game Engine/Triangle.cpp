@@ -9,7 +9,7 @@ namespace mtge {
 	};
 
 	//Constructor
-	Triangle::Triangle(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *texture) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, true, ShapeType::TRIANGLE) {
+	Triangle::Triangle(glm::vec3 pos, glm::vec3 dimensions, Texture *texture) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, true, ShapeType::TRIANGLE) {
 		this->texture = texture;
 		textureLocation = shader->getUniformLocation("texture1");
 	}

@@ -6,16 +6,8 @@ namespace mtge {
 	std::vector<RenderablesSet*> WorldMap::renderablesSets = {};
 
 	//Public
-	void WorldMap::setRenderMode(RenderMode renderMode) {
-		if (renderMode == RenderMode::SHAPE) {
-			shader = ResourceManager::getShapeShaderPtr();
-		}
-		else if (renderMode == RenderMode::SKYBOX) {
-			shader = ResourceManager::getSkyboxShaderPtr();
-		}
-	}
 	void WorldMap::setSkyboxTexture(Texture *texture) {
-		WorldMap::skybox = new Skybox(shader, texture);
+		WorldMap::skybox = new Skybox(texture);
 	}
 	unsigned int WorldMap::getNumRenderablesSets() {
 		return renderablesSets.size();
@@ -26,7 +18,7 @@ namespace mtge {
 	RenderablesSet *WorldMap::getRenderablesSetPtr(unsigned int index) {
 		return renderablesSets[index];
 	}
-
+	
 	void WorldMap::eraseRenderablesSet(unsigned int index) {
 		delete renderablesSets[index];
 		renderablesSets.erase(renderablesSets.begin() + index);
@@ -42,7 +34,11 @@ namespace mtge {
 	}
 
 	void WorldMap::drawRenderablesSets(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
-		shader->useProgram();
+		if (shader != ResourceManager::getShapeShaderPtr()) {
+			shader = ResourceManager::getShapeShaderPtr();
+			shader->useProgram();
+		}
+		
 		glUniformMatrix4fv(ResourceManager::getShapeShaderPtr()->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		glUniformMatrix4fv(ResourceManager::getShapeShaderPtr()->getViewLocation(), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		for (unsigned int i = 0; i < renderablesSets.size(); i++) {
@@ -50,8 +46,12 @@ namespace mtge {
 		}
 	}
 	void WorldMap::drawSkybox(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
+		if (shader != ResourceManager::getSkyboxShaderPtr()) {
+			shader = ResourceManager::getSkyboxShaderPtr();
+			shader->useProgram();
+		}
+
 		glDepthFunc(GL_LEQUAL);
-		shader->useProgram();
 		glUniformMatrix4fv(ResourceManager::getSkyboxShaderPtr()->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		viewMatrix = glm::mat4(glm::mat3(viewMatrix));
 		glUniformMatrix4fv(ResourceManager::getSkyboxShaderPtr()->getViewLocation(), 1, GL_FALSE, glm::value_ptr(viewMatrix));

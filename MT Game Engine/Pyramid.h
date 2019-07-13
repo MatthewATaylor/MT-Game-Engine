@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 #include "Texture.h"
+#include "ResourceManager.h"
 
 namespace mtge {
 	class Pyramid : public Shape {
@@ -11,7 +12,7 @@ namespace mtge {
 		Texture *textures[4];
 
 	public:
-		Pyramid(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *texture[]);
+		Pyramid(glm::vec3 pos, glm::vec3 dimensions, Texture *texture[]);
 		void draw();
 	};
 }

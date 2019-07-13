@@ -22,7 +22,7 @@ namespace mtge {
 	};
 
 	//Constructor
-	Pyramid::Pyramid(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, ShapeType::PYRAMID) {
+	Pyramid::Pyramid(glm::vec3 pos, glm::vec3 dimensions, Texture *textures[]) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::PYRAMID) {
 		for (unsigned int i = 0; i < 4; i++) {
 			this->textures[i] = textures[i];
 		}

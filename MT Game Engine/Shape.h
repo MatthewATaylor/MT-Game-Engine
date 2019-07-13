@@ -34,7 +34,7 @@ namespace mtge {
 		Shader *shader = nullptr;
 		unsigned int textureLocation;
 
-		Shape(glm::vec3 position, glm::vec3 dimensions, const float *VERTICES, const unsigned int VERTICES_SIZE, Shader *shader, const bool POSITION_ONLY_VERTICES, const ShapeType TYPE);
+		Shape(glm::vec3 position, glm::vec3 dimensions, Shader *shader, const float *VERTICES, const unsigned int VERTICES_SIZE, const bool POSITION_ONLY_VERTICES, const ShapeType TYPE);
 		void transform();
 
 	public:

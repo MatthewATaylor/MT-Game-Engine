@@ -59,7 +59,7 @@ namespace mtge {
 	};
 
 	//Constructor
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *textures[]) : Shape(pos, dimensions, VERTICES, VERTICES_SIZE, shader, false, ShapeType::CUBE) {
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textures[]) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE) {
 		for (unsigned int i = 0; i < 6; i++) {
 			this->textures[i] = textures[i];
 			this->renderedSides[i] = 1;

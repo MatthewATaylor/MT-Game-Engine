@@ -5,6 +5,7 @@
 
 #include "Texture.h"
 #include "Shape.h"
+#include "ResourceManager.h"
 
 namespace mtge {
 	class Triangle : public Shape {
@@ -14,7 +15,7 @@ namespace mtge {
 		Texture *texture;
 
 	public:
-		Triangle(glm::vec3 pos, glm::vec3 dimensions, Shader *shader, Texture *texture);
+		Triangle(glm::vec3 pos, glm::vec3 dimensions, Texture *texture);
 		void draw();
 	};
 }

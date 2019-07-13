@@ -2,7 +2,7 @@
 
 namespace mtge {
 	//Constructor
-	Shape::Shape(glm::vec3 centerPosition, glm::vec3 dimensions, const float *VERTICES, const unsigned int VERTICES_SIZE, Shader *shader, const bool POSITION_ONLY_VERTICES, const ShapeType TYPE) : VERTICES_SIZE(VERTICES_SIZE), POSITION_ONLY_VERTICES(POSITION_ONLY_VERTICES), TYPE(TYPE) {
+	Shape::Shape(glm::vec3 centerPosition, glm::vec3 dimensions, Shader *shader, const float *VERTICES, const unsigned int VERTICES_SIZE, const bool POSITION_ONLY_VERTICES, const ShapeType TYPE) : VERTICES_SIZE(VERTICES_SIZE), POSITION_ONLY_VERTICES(POSITION_ONLY_VERTICES), TYPE(TYPE) {
 		this->centerPosition = centerPosition;
 		this->dimensions = dimensions;
 		this->VERTICES = VERTICES;
