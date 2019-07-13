@@ -12,7 +12,6 @@ namespace mtge {
 	private:
 		GLFWwindow *window;
 		bool resizable = false;
-		bool shouldClose = false;
 
 	public:
 		Window(const char *windowTitle, const int SCREEN_WIDTH, const int SCREEN_HEIGHT);

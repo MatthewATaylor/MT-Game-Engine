@@ -29,7 +29,7 @@ namespace mtge {
 		}
 	}
 	void Window::setShouldClose(bool shouldClose) {
-		this->shouldClose = shouldClose;
+		glfwSetWindowShouldClose(window, shouldClose);
 	}
 	bool Window::getResizeable() {
 		return resizable;
