@@ -135,6 +135,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="RenderablesSet.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Shape.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Pyramid.h" />
     <ClInclude Include="RenderablesSet.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Shape.h" />
