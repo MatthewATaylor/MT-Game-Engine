@@ -10,9 +10,10 @@ namespace mtge {
 	private:
 		GLFWwindow *window;
 
+		static void frameBufferSizeCallback(GLFWwindow *window, int width, int height);
+
 	public:
 		Window(const char *windowTitle, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, bool resizable);
-		static void frameBufferSizeCallback(GLFWwindow *window, int width, int height);
 		void setShouldClose(bool shouldClose);
 		bool getShouldClose();
 		GLFWwindow *getPtr_GLFW();

@@ -1,10 +1,6 @@
 #include "Input.h"
 
 namespace mtge {
-	void mouseCursorCallback(GLFWwindow *window, double xPos, double yPos) {
-		Input::getMouseCursorControlFunction()(xPos, yPos);
-	}
-
 	const int Input::GLFW_KEY_LIST[Input::NUM_KEYS] = {
 		GLFW_KEY_UNKNOWN,
 		GLFW_KEY_CAPS_LOCK, GLFW_KEY_NUM_LOCK, GLFW_KEY_SCROLL_LOCK,
@@ -23,10 +19,19 @@ namespace mtge {
 	};
 
 	CursorType Input::cursorType = CursorType::UNDEFINED;
+	double Input::mouseX = 0.0;
+	double Input::mouseY = 0.0;
 
-	void(*Input::mouseCursorControlFunction)(double, double) = nullptr;
+	//Private
+	void Input::mouseCursorCallback(GLFWwindow *window, double xPos, double yPos) {
+		mouseX = xPos;
+		mouseY = yPos;
+	}
 
 	//Public
+	void Input::initCursorInput(Window *window) {
+		glfwSetCursorPosCallback(window->getPtr_GLFW(), mouseCursorCallback);
+	}
 	bool Input::keyPressed(Window *window, Key key) {
 		return (glfwGetKey(window->getPtr_GLFW(), GLFW_KEY_LIST[(int)key]) == GLFW_PRESS);
 	}
@@ -48,14 +53,13 @@ namespace mtge {
 		glfwSetInputMode(window->getPtr_GLFW(), GLFW_CURSOR, cursorType_GLFW);
 		Input::cursorType = cursorType;
 	}
-	void Input::setMouseCursorControlFunction(Window *window, void(*mouseCursorControlFunction)(double, double)) {
-		Input::mouseCursorControlFunction = mouseCursorControlFunction;
-		glfwSetCursorPosCallback(window->getPtr_GLFW(), mouseCursorCallback);
-	}
 	CursorType Input::getCursorType() {
 		return cursorType;
 	}
-	void(*Input::getMouseCursorControlFunction())(double, double) {
-		return mouseCursorControlFunction;
+	double Input::getMouseX() {
+		return mouseX;
+	}
+	double Input::getMouseY() {
+		return mouseY;
 	}
 }

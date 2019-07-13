@@ -24,10 +24,12 @@ namespace mtge {
 		glScissor(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
-	//Public
+	//Private
 	void Window::frameBufferSizeCallback(GLFWwindow *window, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
+
+	//Public
 	void Window::setShouldClose(bool shouldClose) {
 		glfwSetWindowShouldClose(window, shouldClose);
 	}

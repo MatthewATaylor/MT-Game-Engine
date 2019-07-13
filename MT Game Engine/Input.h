@@ -6,8 +6,6 @@
 #include "Window.h"
 
 namespace mtge {
-	void mouseCursorCallback(GLFWwindow *window, double xPos, double yPos);
-
 	enum class Key {
 		UNDEFINED,
 		CAPS_LOCK, NUM_LOCK, SCROLL_LOCK,
@@ -33,17 +31,21 @@ namespace mtge {
 		const static int GLFW_KEY_LIST[NUM_KEYS];
 
 		static CursorType cursorType;
+		static double mouseX;
+		static double mouseY;
 
-		static void(*mouseCursorControlFunction)(double, double);
+		static void mouseCursorCallback(GLFWwindow *window, double xPos, double yPos);
 
 	public:
+		static void initCursorInput(Window *window);
+
 		static bool keyPressed(Window *window, Key key);
 		static void pollInput();
 
 		static void setCursorType(Window *window, CursorType cursorType);
-		static void setMouseCursorControlFunction(Window *window, void(*mouseCursorControlFunction)(double, double));
 
 		static CursorType getCursorType();
-		static void(*getMouseCursorControlFunction())(double, double);
+		static double getMouseX();
+		static double getMouseY();
 	};
 }
