@@ -67,4 +67,9 @@ namespace mtge {
 		return glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 	void RenderablesSet::specifyRenderArea() {}
+
+	//Destructor
+	RenderablesSet::~RenderablesSet() {
+		clearShapes();
+	}
 }

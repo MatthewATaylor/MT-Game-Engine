@@ -32,5 +32,7 @@ namespace mtge {
 		virtual bool hasPosition();
 		virtual glm::vec3 getPosition();
 		virtual void specifyRenderArea();
+
+		~RenderablesSet();
 	};
 }
