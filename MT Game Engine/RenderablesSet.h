@@ -3,6 +3,9 @@
 #include <vector>
 
 #include "Shape.h"
+#include "Cube.h"
+#include "Pyramid.h"
+#include "Triangle.h"
 
 namespace mtge {
 	class RenderablesSet {

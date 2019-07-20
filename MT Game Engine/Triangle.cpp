@@ -13,6 +13,10 @@ namespace mtge {
 		this->texture = texture;
 		textureLocation = shader->getUniformLocation("texture1");
 	}
+	Triangle::Triangle(const Triangle &triangle) : Shape(triangle.getCenterPosition(), triangle.getDimensions(), triangle.shader, VERTICES, VERTICES_SIZE, triangle.POSITION_ONLY_VERTICES, ShapeType::TRIANGLE) {
+		texture = triangle.texture;
+		textureLocation = triangle.textureLocation;
+	}
 
 	//Public
 	void Triangle::draw() {

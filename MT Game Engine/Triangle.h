@@ -16,6 +16,7 @@ namespace mtge {
 
 	public:
 		Triangle(glm::vec3 pos, glm::vec3 dimensions, Texture *texture);
+		Triangle(const Triangle &triangle);
 		void draw();
 	};
 }

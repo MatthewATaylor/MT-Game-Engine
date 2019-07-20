@@ -18,7 +18,6 @@ namespace mtge {
 		Buffer *buffer;
 		const float *VERTICES = nullptr;
 		const unsigned int VERTICES_SIZE;
-		const bool POSITION_ONLY_VERTICES;
 		const ShapeType TYPE;
 		unsigned int modelLocation;
 		glm::mat4 model = glm::mat4(1.0f);
@@ -31,6 +30,7 @@ namespace mtge {
 		void deleteBuffers();
 
 	protected:
+		const bool POSITION_ONLY_VERTICES;
 		Shader *shader = nullptr;
 		unsigned int textureLocation;
 
@@ -42,9 +42,9 @@ namespace mtge {
 		void translate(glm::vec3 translation);
 		void rotate(glm::vec3 rotationAngles);
 		void scale(glm::vec3 scaleDimensions);
-		const ShapeType getType();
-		glm::vec3 getCenterPosition();
-		glm::vec3 getDimensions();
+		const ShapeType getType() const;
+		glm::vec3 getCenterPosition() const;
+		glm::vec3 getDimensions() const;
 
 		virtual bool collision(glm::vec3 position, glm::vec3 dimensions);
 

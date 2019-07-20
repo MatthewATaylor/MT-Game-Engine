@@ -16,7 +16,17 @@ namespace mtge {
 		return shapes[index];
 	}
 	void RenderablesSet::appendShape(Shape *shape) {
-		shapes.push_back(shape);
+		Shape *newShape;
+		if (shape->getType() == ShapeType::CUBE) {
+			newShape = new Cube(*dynamic_cast<Cube*>(shape));
+		}
+		else if (shape->getType() == ShapeType::PYRAMID) {
+			newShape = new Pyramid(*dynamic_cast<Pyramid*>(shape));
+		}
+		else if (shape->getType() == ShapeType::TRIANGLE) {
+			newShape = new Triangle(*dynamic_cast<Triangle*>(shape));
+		}
+		shapes.push_back(newShape);
 	}
 
 	void RenderablesSet::eraseShape(unsigned int index) {

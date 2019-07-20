@@ -13,6 +13,7 @@ namespace mtge {
 
 	public:
 		Pyramid(glm::vec3 pos, glm::vec3 dimensions, Texture *texture[]);
+		Pyramid(const Pyramid &pyramid);
 		void draw();
 	};
 }

@@ -54,13 +54,13 @@ namespace mtge {
 		dimensions *= scaleDimensions;
 		model = glm::scale(model, dimensions);
 	}
-	const ShapeType Shape::getType() {
+	const ShapeType Shape::getType() const {
 		return TYPE;
 	}
-	glm::vec3 Shape::getCenterPosition() {
+	glm::vec3 Shape::getCenterPosition() const {
 		return centerPosition;
 	}
-	glm::vec3 Shape::getDimensions() {
+	glm::vec3 Shape::getDimensions() const {
 		return dimensions;
 	}
 	bool Shape::collision(glm::vec3 position, glm::vec3 dimensions) {

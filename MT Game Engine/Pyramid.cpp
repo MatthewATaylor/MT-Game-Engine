@@ -28,6 +28,12 @@ namespace mtge {
 		}
 		textureLocation = shader->getUniformLocation("texture1");
 	}
+	Pyramid::Pyramid(const Pyramid &pyramid) : Shape(pyramid.getCenterPosition(), pyramid.getDimensions(), pyramid.shader, VERTICES, VERTICES_SIZE, pyramid.POSITION_ONLY_VERTICES, ShapeType::PYRAMID) {
+		for (unsigned int i = 0; i < 4; i++) {
+			textures[i] = pyramid.textures[i];
+		}
+		textureLocation = pyramid.textureLocation;
+	}
 
 	//Public
 	void Pyramid::draw() {

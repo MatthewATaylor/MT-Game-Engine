@@ -66,6 +66,13 @@ namespace mtge {
 		}
 		textureLocation = shader->getUniformLocation("texture1");
 	}
+	Cube::Cube(const Cube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE) {
+		for (unsigned int i = 0; i < 6; i++) {
+			textures[i] = cube.textures[i];
+			renderedSides[i] = cube.renderedSides[i];
+		}
+		textureLocation = cube.textureLocation;
+	}
 
 	//Public
 	bool Cube::collision(glm::vec3 position, glm::vec3 dimensions) {
