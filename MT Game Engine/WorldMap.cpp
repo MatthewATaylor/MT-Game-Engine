@@ -15,17 +15,27 @@ namespace mtge {
 	void WorldMap::appendRenderablesSet(RenderablesSet *renderablesSet) {
 		renderablesSets.push_back(renderablesSet);
 	}
+	void WorldMap::appendRenderablesSet(RenderablesSet *renderablesSet, bool deletable) {
+		if (deletable) {
+			renderablesSet->setDeletable(true);
+		}
+		renderablesSets.push_back(renderablesSet);
+	}
 	RenderablesSet *WorldMap::getRenderablesSetPtr(unsigned int index) {
 		return renderablesSets[index];
 	}
 	
 	void WorldMap::eraseRenderablesSet(unsigned int index) {
-		delete renderablesSets[index];
+		if (renderablesSets[index]->getDeletable()) {
+			delete renderablesSets[index];
+		}
 		renderablesSets.erase(renderablesSets.begin() + index);
 	}
 	void WorldMap::clearRenderablesSets() {
 		for (unsigned int i = 0; i < renderablesSets.size(); i++) {
-			delete renderablesSets[i];
+			if (renderablesSets[i]->getDeletable()) {
+				delete renderablesSets[i];
+			}
 		}
 		renderablesSets.clear();
 	}

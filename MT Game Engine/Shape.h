@@ -24,6 +24,7 @@ namespace mtge {
 		glm::vec3 centerPosition;
 		glm::vec3 dimensions;
 		bool transformed = false;
+		bool deletable = false;
 
 		void transformInit();
 		void setBuffers();
@@ -42,6 +43,8 @@ namespace mtge {
 		void translate(glm::vec3 translation);
 		void rotate(glm::vec3 rotationAngles);
 		void scale(glm::vec3 scaleDimensions);
+		void setDeletable(bool deletable);
+		bool getDeletable() const;
 		const ShapeType getType() const;
 		glm::vec3 getCenterPosition() const;
 		glm::vec3 getDimensions() const;

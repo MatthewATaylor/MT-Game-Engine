@@ -11,8 +11,7 @@ namespace mtge {
 	class RenderablesSet {
 	private:
 		bool isVisible = true;
-
-	protected:
+		bool deletable = false;
 		std::vector<Shape*> shapes = {};
 
 	public:
@@ -22,6 +21,7 @@ namespace mtge {
 		unsigned int getNumShapes();
 		Shape *getShapePtr(unsigned int index);
 		void appendShape(Shape *shape);
+		void appendShape(Shape *shape, bool deletable);
 		
 		void eraseShape(unsigned int index);
 		void clearShapes();
@@ -32,8 +32,11 @@ namespace mtge {
 		bool checkSingleShapeCollision(unsigned int index, glm::vec3 position, glm::vec3 dimensions);
 		int checkAllShapeCollisions(glm::vec3 position, glm::vec3 dimensions);
 
+		void setDeletable(bool deletable);
+		bool getDeletable() const;
+
 		virtual bool hasPosition();
-		virtual glm::vec3 getPosition();
+		virtual glm::vec3 getPosition() const;
 		virtual void specifyRenderArea();
 
 		~RenderablesSet();

@@ -54,6 +54,12 @@ namespace mtge {
 		dimensions *= scaleDimensions;
 		model = glm::scale(model, dimensions);
 	}
+	void Shape::setDeletable(bool deletable) {
+		this->deletable = deletable;
+	}
+	bool Shape::getDeletable() const {
+		return deletable;
+	}
 	const ShapeType Shape::getType() const {
 		return TYPE;
 	}

@@ -25,6 +25,7 @@ namespace mtge {
 		static void setSkyboxTexture(Texture *texture);
 		static unsigned int getNumRenderablesSets();
 		static void appendRenderablesSet(RenderablesSet *renderablesSet);
+		static void appendRenderablesSet(RenderablesSet *renderablesSet, bool deletable);
 		static RenderablesSet *getRenderablesSetPtr(unsigned int index);
 
 		static void eraseRenderablesSet(unsigned int index);

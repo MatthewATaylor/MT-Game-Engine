@@ -16,26 +16,26 @@ namespace mtge {
 		return shapes[index];
 	}
 	void RenderablesSet::appendShape(Shape *shape) {
-		Shape *newShape;
-		if (shape->getType() == ShapeType::CUBE) {
-			newShape = new Cube(*dynamic_cast<Cube*>(shape));
+		shapes.push_back(shape);
+	}
+	void RenderablesSet::appendShape(Shape *shape, bool deletable) {
+		if (deletable) {
+			shape->setDeletable(true);
 		}
-		else if (shape->getType() == ShapeType::PYRAMID) {
-			newShape = new Pyramid(*dynamic_cast<Pyramid*>(shape));
-		}
-		else if (shape->getType() == ShapeType::TRIANGLE) {
-			newShape = new Triangle(*dynamic_cast<Triangle*>(shape));
-		}
-		shapes.push_back(newShape);
+		shapes.push_back(shape);
 	}
 
 	void RenderablesSet::eraseShape(unsigned int index) {
-		delete shapes[index];
+		if (shapes[index]->getDeletable()) {
+			delete shapes[index];
+		}
 		shapes.erase(shapes.begin() + index);
 	}
 	void RenderablesSet::clearShapes() {
 		for (unsigned int i = 0; i < shapes.size(); i++) {
-			delete shapes[i];
+			if (shapes[i]->getDeletable()) {
+				delete shapes[i];
+			}
 		}
 		shapes.clear();
 	}
@@ -70,10 +70,17 @@ namespace mtge {
 		return -1;
 	}
 
+	void RenderablesSet::setDeletable(bool deletable) {
+		this->deletable = deletable;
+	}
+	bool RenderablesSet::getDeletable() const {
+		return deletable;
+	}
+
 	bool RenderablesSet::hasPosition() {
 		return false;
 	}
-	glm::vec3 RenderablesSet::getPosition() {
+	glm::vec3 RenderablesSet::getPosition() const {
 		return glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 	void RenderablesSet::specifyRenderArea() {}
