@@ -12,11 +12,11 @@ namespace mtge {
 	private:
 		static const float VERTICES[];
 		static const unsigned int VERTICES_SIZE = sizeof(float) * 288;
-		Texture *textures[6];
+		Texture *texture;
 		bool renderedSides[6];
 
 	public:
-		Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textures[]);
+		Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture);
 		Cube(const Cube &cube);
 		bool collision(glm::vec3 position, glm::vec3 dimensions);
 		void draw();
