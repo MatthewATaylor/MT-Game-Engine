@@ -142,6 +142,7 @@
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="STB_Image.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureAtlasSegment.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WorldMap.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureAtlasSegment.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="Vec_2.h" />
