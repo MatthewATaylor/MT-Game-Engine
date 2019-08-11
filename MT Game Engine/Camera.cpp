@@ -88,10 +88,10 @@ namespace mtge {
 	float Camera::getFieldOfView() {
 		return fieldOfView;
 	}
-	glm::mat4 Camera::getViewMatrix() {
-		return glm::lookAt(position, position + front, UP_VECTOR);
-	}
 	glm::vec3 Camera::getPosition() {
 		return position;
+	}
+	glm::mat4 Camera::getViewMatrix() {
+		return glm::lookAt(position, position + front, UP_VECTOR);
 	}
 }

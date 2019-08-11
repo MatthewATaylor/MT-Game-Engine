@@ -2,7 +2,7 @@
 
 namespace mtge {
 	//Constructor
-	Player::Player(glm::vec3 position, const glm::vec3 DIMENSIONS) : Camera(position, glm::vec3(0.0f, 0.0f, -1.0f)), DIMENSIONS(DIMENSIONS) {}
+	Player::Player(glm::vec3 position, const glm::vec3 DIMENSIONS) : Camera(position, glm::vec3(0.0f, 0.0f, 1.0f)), DIMENSIONS(DIMENSIONS) {}
 
 	//Private
 	void Player::manageCollisionX() {
@@ -31,10 +31,11 @@ namespace mtge {
 				if (collisionValue >= 0) {
 					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
 					if (totalMovement.y > 0) {
-						position.y = currentShape->getCenterPosition().y - 0.5f * currentShape->getDimensions().y;
+						position.y = currentShape->getCenterPosition().y - 0.5f * currentShape->getDimensions().y - 0.5f * DIMENSIONS.y;
+						gravitySpeed = 0.0f;
 					}
 					else if (totalMovement.y < 0) {
-						position.y = currentShape->getCenterPosition().y + 0.5f * currentShape->getDimensions().y + DIMENSIONS.y;
+						position.y = currentShape->getCenterPosition().y + 0.5f * currentShape->getDimensions().y + 0.5f * DIMENSIONS.y;
 						gravitySpeed = startGravitySpeed;
 						bottomCollision = true;
 					}
@@ -124,5 +125,9 @@ namespace mtge {
 			gravitySpeed = startGravitySpeed;
 			position = glm::vec3(0.0f, resetHeight, 0.0f);
 		}
+	}
+	glm::mat4 Player::getViewMatrix() {
+		glm::vec3 eye = glm::vec3(position.x, position.y + 0.4f * DIMENSIONS.y, position.z);
+		return glm::lookAt(eye, eye + front, UP_VECTOR);
 	}
 }

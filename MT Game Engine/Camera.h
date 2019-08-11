@@ -36,7 +36,7 @@ namespace mtge {
 		void controlRotation(double xPos, double yPos);
 		void controlZoom(double xOffset, double yOffset);
 		float getFieldOfView();
-		glm::mat4 getViewMatrix();
 		glm::vec3 getPosition();
+		virtual glm::mat4 getViewMatrix();
 	};
 }
