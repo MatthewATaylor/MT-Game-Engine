@@ -6,14 +6,13 @@
 #include "Texture.h"
 #include "Shape.h"
 #include "ResourceManager.h"
+#include "TextureAtlasSegment.h"
 
 namespace mtge {
 	class Cube : public Shape {
 	private:
 		static const unsigned int NUM_VERTICES = 288;
 		static const unsigned int VERTICES_SIZE = sizeof(float) * NUM_VERTICES;
-		const float TEXTURE_S_OFFSET;
-		const float TEXTURE_T_OFFSET;
 		const float VERTICES[NUM_VERTICES] = {
 			//Positions-----------Colors---------------Texture---------------------------------------------
 			//Triangle 1, Front
@@ -70,14 +69,14 @@ namespace mtge {
 			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  0.50f + TEXTURE_S_OFFSET,  0.50f + TEXTURE_T_OFFSET,  //Bottom Right
 			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.50f + TEXTURE_S_OFFSET,  0.75f + TEXTURE_T_OFFSET,  //Top Right
 		};
-		Texture *texture;
-		bool renderedSides[6];
+		Texture *texture = nullptr;
+		TextureAtlasSegment textureAtlasSegment;
 
 	public:
 		Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture);
+		Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment textureAtlasSegment);
 		Cube(const Cube &cube);
 		bool collision(glm::vec3 position, glm::vec3 dimensions);
 		void draw();
-		void setRenderedSides(bool renderedSides[6]);
 	};
 }

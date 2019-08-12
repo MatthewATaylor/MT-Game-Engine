@@ -2,17 +2,15 @@
 
 namespace mtge {
 	//Constructor
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), TEXTURE_S_OFFSET(0.0f), TEXTURE_T_OFFSET(0.0f) {
-		for (unsigned int i = 0; i < 6; i++) {
-			this->renderedSides[i] = 1;
-		}
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), textureAtlasSegment(0, 4, 4, 4) {
 		this->texture = texture;
 		textureLocation = shader->getUniformLocation("texture1");
 	}
-	Cube::Cube(const Cube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE), TEXTURE_S_OFFSET(cube.TEXTURE_S_OFFSET), TEXTURE_T_OFFSET(cube.TEXTURE_T_OFFSET) {
-		for (unsigned int i = 0; i < 6; i++) {
-			renderedSides[i] = cube.renderedSides[i];
-		}
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment textureAtlasSegment) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), textureAtlasSegment(textureAtlasSegment) {
+		texture = textureAtlas;
+		textureLocation = shader->getUniformLocation("texture1");
+	}
+	Cube::Cube(const Cube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE), textureAtlasSegment(cube.textureAtlasSegment) {
 		texture = cube.texture;
 		textureLocation = cube.textureLocation;
 	}
@@ -36,10 +34,5 @@ namespace mtge {
 		texture->setUniform(shader, textureLocation, 0);
 		texture->activate(GL_TEXTURE0);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
-	void Cube::setRenderedSides(bool renderedSides[6]) {
-		for (unsigned int i = 0; i < 6; i++) {
-			this->renderedSides[i] = renderedSides[i];
-		}
 	}
 }
