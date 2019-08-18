@@ -2,15 +2,15 @@
 
 namespace mtge {
 	//Constructor
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), textureAtlasSegment(0, 4, 4, 4) {
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(0, 0, 4, 4) {
 		this->texture = texture;
 		textureLocation = shader->getUniformLocation("texture1");
 	}
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment textureAtlasSegment) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), textureAtlasSegment(textureAtlasSegment) {
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment textureAtlasSegment) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(textureAtlasSegment) {
 		texture = textureAtlas;
 		textureLocation = shader->getUniformLocation("texture1");
 	}
-	Cube::Cube(const Cube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE), textureAtlasSegment(cube.textureAtlasSegment) {
+	Cube::Cube(const Cube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE), texAS(cube.texAS) {
 		texture = cube.texture;
 		textureLocation = cube.textureLocation;
 	}
