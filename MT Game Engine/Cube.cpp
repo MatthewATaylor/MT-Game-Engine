@@ -2,17 +2,23 @@
 
 namespace mtge {
 	//Constructor
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(0, 0, 4, 4) {
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *texture) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(0, 0, 4, 4), USES_ATLAS(false) {
 		this->texture = texture;
 		textureLocation = shader->getUniformLocation("texture1");
 	}
-	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment textureAtlasSegment) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(textureAtlasSegment) {
+	Cube::Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment textureAtlasSegment) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(textureAtlasSegment), USES_ATLAS(true) {
 		texture = textureAtlas;
 		textureLocation = shader->getUniformLocation("texture1");
+		texture->setUniform(shader, textureLocation, 0);
+		texture->activate(GL_TEXTURE0);
 	}
-	Cube::Cube(const Cube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE), texAS(cube.texAS) {
+	Cube::Cube(const Cube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE), texAS(cube.texAS), USES_ATLAS(cube.USES_ATLAS) {
 		texture = cube.texture;
 		textureLocation = cube.textureLocation;
+		if (USES_ATLAS) {
+			texture->setUniform(shader, textureLocation, 0);
+			texture->activate(GL_TEXTURE0);
+		}
 	}
 
 	//Public
@@ -31,8 +37,10 @@ namespace mtge {
 	void Cube::draw() {
 		glEnable(GL_CULL_FACE);
 		transform();
-		texture->setUniform(shader, textureLocation, 0);
-		texture->activate(GL_TEXTURE0);
+		if (!USES_ATLAS) {
+			texture->setUniform(shader, textureLocation, 0);
+			texture->activate(GL_TEXTURE0);
+		}
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 }

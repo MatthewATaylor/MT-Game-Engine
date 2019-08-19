@@ -17,61 +17,63 @@ namespace mtge {
 		Texture *texture = nullptr;
 		const TextureAtlasSegment texAS;
 
+		const bool USES_ATLAS;
+
 		const float VERTICES[NUM_VERTICES] = {
 			//Positions-----------Colors---------------Texture---------------------------------------------------------------------
 			//Triangle 1, Front
-			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(2),  //Top Left
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(1),  //Bottom Left
-			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(1),  //Bottom Right
+			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(2, CoordBuffer_T::TOP   ),  //Top Left
+			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(1, CoordBuffer_T::BOTTOM),  //Bottom Left
+			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(1, CoordBuffer_T::BOTTOM),  //Bottom Right
 			//Triangle 2, Front
-			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(2),  //Top Left
-			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(1),  //Bottom Right
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(2),  //Top Right
+			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(2, CoordBuffer_T::TOP   ),  //Top Left
+			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(1, CoordBuffer_T::BOTTOM),  //Bottom Right
+			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(2, CoordBuffer_T::TOP   ),  //Top Right
 
 			//Triangle 1, Back
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(4),  //Top Right
-			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(3),  //Bottom Left
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(3),  //Bottom Right
+			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(4, CoordBuffer_T::TOP   ),  //Top Right
+			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(3, CoordBuffer_T::BOTTOM),  //Bottom Left
+			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(3, CoordBuffer_T::BOTTOM),  //Bottom Right
 			//Triangle 2, Back
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(4),  //Top Right
-			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(4),  //Top Left
-			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(3),  //Bottom Left
+			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(4, CoordBuffer_T::TOP   ),  //Top Right
+			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(4, CoordBuffer_T::TOP   ),  //Top Left
+			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(3, CoordBuffer_T::BOTTOM),  //Bottom Left
 
 			//Triangle 1, Left
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(0),  texAS.getTexCoord_T(3),  //Top Left
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(0),  texAS.getTexCoord_T(2),  //Bottom Left
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(2),  //Bottom Right
+			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(0, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Left
+			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(0, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Left
+			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Right
 			//Triangle 2, Left
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(0),  texAS.getTexCoord_T(3),  //Top Left
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(2),  //Bottom Right
-			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(3),  //Top Right
+			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(0, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Left
+			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Right
+			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Right
 
 			//Triangle 1, Right
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(3),  //Top Left
-			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(2),  //Bottom Left
-			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(3),  texAS.getTexCoord_T(2),  //Bottom Right
+			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Left
+			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Left
+			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(3, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Right
 			//Triangle 2, Right
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(3),  //Top Left
-			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(3),  texAS.getTexCoord_T(2),  //Bottom Right
-			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(3),  texAS.getTexCoord_T(3),  //Top Right
+			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Left
+			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(3, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Right
+			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(3, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Right
 
 			//Triangle 1, Top
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(1),  //Top Left
-			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(0),  //Bottom Left
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(0),  //Bottom Right
+			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(1, CoordBuffer_T::TOP   ),  //Top Left
+			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(0, CoordBuffer_T::BOTTOM),  //Bottom Left
+			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(0, CoordBuffer_T::BOTTOM),  //Bottom Right
 			//Triangle 2, Top
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(1),  //Top Left
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(0),  //Bottom Right
-			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(1),  //Top Right
+			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(1, CoordBuffer_T::TOP   ),  //Top Left
+			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(0, CoordBuffer_T::BOTTOM),  //Bottom Right
+			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(1, CoordBuffer_T::TOP   ),  //Top Right
 
 			//Triangle 1, Bottom
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(2),  //Bottom Left
-			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(3),  //Top Right
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(3),  //Top Left
+			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Left
+			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Right
+			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Left
 			//Triangle 2, Bottom
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1),  texAS.getTexCoord_T(2),  //Bottom Left
-			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(2),  //Bottom Right
-			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2),  texAS.getTexCoord_T(3),  //Top Right
+			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(1, CoordBuffer_S::LEFT ),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Left
+			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(2, CoordBuffer_T::BOTTOM),  //Bottom Right
+			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  texAS.getTexCoord_S(2, CoordBuffer_S::RIGHT),  texAS.getTexCoord_T(3, CoordBuffer_T::TOP   ),  //Top Right
 		};
 
 	public:
