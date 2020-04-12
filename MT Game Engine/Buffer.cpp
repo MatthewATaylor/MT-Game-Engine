@@ -1,6 +1,8 @@
 #include "Buffer.h"
 
 namespace mtge {
+	Window *Buffer::window = nullptr;
+
 	//Constructor
 	Buffer::Buffer(const float *VERTICES, const unsigned int VERTICES_SIZE, const bool POSITION_ONLY) : VERTICES_SIZE(VERTICES_SIZE), POSITION_ONLY(POSITION_ONLY) {
 		this->VERTICES = VERTICES;
@@ -39,11 +41,17 @@ namespace mtge {
 	}
 	void Buffer::updateBuffer() {
 		glBindVertexArray(vertexArrayID);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-		glBufferData(GL_ARRAY_BUFFER, VERTICES_SIZE, VERTICES, GL_STATIC_DRAW);
+		if (!buffersUpdated) {
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+			glBufferData(GL_ARRAY_BUFFER, VERTICES_SIZE, VERTICES, GL_STATIC_DRAW);
+			buffersUpdated = true;
+		}
 	}
 	void Buffer::deleteBuffer() {
 		glDeleteVertexArrays(1, &vertexArrayID);
 		glDeleteBuffers(1, &vertexBufferID);
+	}
+	void Buffer::setWindow(Window *window) {
+		Buffer::window = window;
 	}
 }
