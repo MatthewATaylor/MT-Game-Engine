@@ -28,7 +28,7 @@ namespace mtge {
 		void setCanApplyGravity(bool canApplyGravity);
 		void setGravityParams(float startGravitySpeed, float gravityAddend, float maxGravity);
 		void controlJump(Window *window, float jumpSize, int jumpKey);
-		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
+		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) override;
 		void controlReset(Window *window, float resetHeight);
 		glm::mat4 getViewMatrix();
 	};
