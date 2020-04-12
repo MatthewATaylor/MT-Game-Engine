@@ -30,8 +30,8 @@ namespace mtge {
 	void Shape::transform() {
 		//if (transformed) {
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+			transformed = false;
 		//}
-		transformed = false;
 	}
 
 	//Public

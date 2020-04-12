@@ -10,6 +10,7 @@
 namespace mtge {
 	class RenderablesSet {
 	private:
+		ShapeType lastShapeType = ShapeType::UNDEFINED;
 		bool isVisible = true;
 		bool deletable = false;
 		std::vector<Shape*> shapes = {};

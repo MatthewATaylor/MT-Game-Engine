@@ -42,14 +42,20 @@ namespace mtge {
 
 	void RenderablesSet::drawShape(unsigned int index) {
 		if (isVisible) {
-			shapes[index]->updateBuffers();
+			//if (lastShapeType == ShapeType::UNDEFINED || lastShapeType != shapes[index]->getType()) {
+				shapes[index]->updateBuffers();
+				//lastShapeType = shapes[index]->getType();
+			//}
 			shapes[index]->draw();
 		}
 	}
 	void RenderablesSet::drawAllShapes() {
 		if (isVisible) {
 			for (unsigned int i = 0; i < shapes.size(); i++) {
-				shapes[i]->updateBuffers();
+				//if (lastShapeType == ShapeType::UNDEFINED || lastShapeType != shapes[i]->getType()) {
+					shapes[i]->updateBuffers();
+					//lastShapeType = shapes[i]->getType();
+				//}
 				shapes[i]->draw();
 			}
 		}
