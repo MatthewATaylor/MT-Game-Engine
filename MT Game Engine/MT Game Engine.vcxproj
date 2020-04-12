@@ -133,7 +133,6 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Pyramid.cpp" />
     <ClCompile Include="RenderablesSet.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -143,7 +142,6 @@
     <ClCompile Include="STB_Image.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureAtlasSegment.cpp" />
-    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WorldMap.cpp" />
   </ItemGroup>
@@ -155,7 +153,6 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Mat.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Pyramid.h" />
     <ClInclude Include="RenderablesSet.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -164,7 +161,6 @@
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureAtlasSegment.h" />
-    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec.h" />
     <ClInclude Include="Vec_2.h" />
     <ClInclude Include="Vec_3.h" />
