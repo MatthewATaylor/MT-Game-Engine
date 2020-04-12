@@ -23,7 +23,6 @@ namespace mtge {
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::vec3 centerPosition;
 		glm::vec3 dimensions;
-		bool transformed = false;
 		bool deletable = false;
 
 		void transformInit();

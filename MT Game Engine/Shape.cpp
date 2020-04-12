@@ -28,10 +28,7 @@ namespace mtge {
 
 	//Protected
 	void Shape::transform() {
-		//if (transformed) {
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-			transformed = false;
-		//}
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 	}
 
 	//Public
@@ -39,18 +36,15 @@ namespace mtge {
 		buffer->updateBuffer();
 	}
 	void Shape::translate(glm::vec3 translation) {
-		transformed = true;
 		centerPosition += translation;
 		model = glm::translate(model, centerPosition);
 	}
 	void Shape::rotate(glm::vec3 rotationAngles) {
-		transformed = true;
 		model = glm::rotate(model, rotationAngles.x, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, rotationAngles.y, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, rotationAngles.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 	void Shape::scale(glm::vec3 scaleDimensions) {
-		transformed = true;
 		dimensions *= scaleDimensions;
 		model = glm::scale(model, dimensions);
 	}
