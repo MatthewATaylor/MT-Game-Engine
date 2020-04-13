@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Shape.h"
-#include "Texture.h"
-#include "ResourceManager.h"
+#include "../Texture.h"
+#include "../ResourceManager.h"
 
 namespace mtge {
 	class Skybox : public Shape {

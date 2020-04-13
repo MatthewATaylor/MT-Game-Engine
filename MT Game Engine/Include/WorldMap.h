@@ -11,7 +11,7 @@
 #include "RenderablesSet.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "Skybox.h"
+#include "Renderable/Skybox.h"
 #include "ResourceManager.h"
 
 namespace mtge {

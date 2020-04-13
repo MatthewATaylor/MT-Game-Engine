@@ -1,4 +1,4 @@
-#include "Cube.h"
+#include "../../Include/Renderable/Cube.h"
 
 namespace mtge {
 	//Constructor

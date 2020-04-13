@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "../Include/Camera.h"
 
 namespace mtge {
 	//Constructor

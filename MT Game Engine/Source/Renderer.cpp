@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "../Include/Renderer.h"
 
 namespace mtge {
 	//Public

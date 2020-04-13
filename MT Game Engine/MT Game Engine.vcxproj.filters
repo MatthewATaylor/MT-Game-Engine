@@ -15,139 +15,124 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Buffer.cpp">
+    <ClCompile Include="Source\Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Source\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Clock.cpp">
+    <ClCompile Include="Source\Clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
+    <ClCompile Include="Source\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="Source\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shape.cpp">
+    <ClCompile Include="Source\RenderablesSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Skybox.cpp">
+    <ClCompile Include="Source\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="STB_Image.cpp">
+    <ClCompile Include="Source\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
+    <ClCompile Include="Source\STB_Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
+    <ClCompile Include="Source\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WorldMap.cpp">
+    <ClCompile Include="Source\TextureAtlasSegment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderablesSet.cpp">
+    <ClCompile Include="Source\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Source\WorldMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
+    <ClCompile Include="Source\Renderable\Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
+    <ClCompile Include="Source\Renderable\Cube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
+    <ClCompile Include="Source\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureAtlasSegment.cpp">
+    <ClCompile Include="Source\Renderable\Shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Buffer.h">
+    <ClInclude Include="Include\Buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Include\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Clock.h">
+    <ClInclude Include="Include\Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
+    <ClInclude Include="Include\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="Include\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shape.h">
+    <ClInclude Include="Include\RenderablesSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Skybox.h">
+    <ClInclude Include="Include\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="Include\ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="Include\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vec.h">
+    <ClInclude Include="Include\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vec_3.h">
+    <ClInclude Include="Include\TextureAtlasSegment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vec_2.h">
+    <ClInclude Include="Include\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vec_4.h">
+    <ClInclude Include="Include\WorldMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mat.h">
+    <ClInclude Include="Include\Math\Vec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldMap.h">
+    <ClInclude Include="Include\Math\Vec_2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderablesSet.h">
+    <ClInclude Include="Include\Math\Vec_3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Include\Math\Vec_4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h">
+    <ClInclude Include="Include\Math\Mat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
+    <ClInclude Include="Include\Renderable\Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
+    <ClInclude Include="Include\Renderable\Shape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureAtlasSegment.h">
+    <ClInclude Include="Include\Renderable\Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Vec.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Vec_3.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Vec_2.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Vec_4.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Mat.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="Resources\Shaders\Shape.fs.glsl">
       <Filter>Resource Files</Filter>
     </None>
@@ -159,6 +144,21 @@
     </None>
     <None Include="Resources\Shaders\Skybox.vs.glsl">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Source\Math\Mat.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Math\Vec.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Math\Vec_2.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Math\Vec_3.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Math\Vec_4.inl">
+      <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
 </Project>

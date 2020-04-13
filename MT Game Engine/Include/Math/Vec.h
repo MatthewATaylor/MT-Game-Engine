@@ -40,7 +40,7 @@ namespace mtge {
 	}
 }
 
-#include "Vec.inl"
+#include "../Source/Math/Vec.inl"
 
 //Template Specializations
 #include "Vec_2.h"

@@ -54,4 +54,4 @@ namespace mtge {
 	};
 };
 
-#include "Mat.inl"
+#include "../Source/Math/Mat.inl"

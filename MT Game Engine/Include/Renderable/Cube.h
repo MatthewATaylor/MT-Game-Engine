@@ -3,10 +3,10 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "Texture.h"
+#include "../Texture.h"
 #include "Shape.h"
-#include "ResourceManager.h"
-#include "TextureAtlasSegment.h"
+#include "../ResourceManager.h"
+#include "../TextureAtlasSegment.h"
 
 namespace mtge {
 	class Cube : public Shape {

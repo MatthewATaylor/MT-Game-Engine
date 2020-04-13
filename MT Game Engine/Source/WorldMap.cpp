@@ -1,4 +1,4 @@
-#include "WorldMap.h"
+#include "../Include/WorldMap.h"
 
 namespace mtge {
 	Shader *WorldMap::shader = nullptr;

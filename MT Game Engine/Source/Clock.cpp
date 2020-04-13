@@ -1,4 +1,4 @@
-#include "Clock.h"
+#include "../Include/Clock.h"
 
 namespace mtge {
 	//Public

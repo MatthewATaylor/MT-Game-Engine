@@ -1,4 +1,4 @@
-#include "ResourceManager.h"
+#include "../Include/ResourceManager.h"
 
 namespace mtge {
 	Shader *ResourceManager::shapeShader = nullptr;

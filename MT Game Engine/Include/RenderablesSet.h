@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "Shape.h"
-#include "Cube.h"
+#include "Renderable/Shape.h"
+#include "Renderable/Cube.h"
 
 namespace mtge {
 	class RenderablesSet {

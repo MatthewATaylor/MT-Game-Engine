@@ -47,4 +47,4 @@ namespace mtge {
 	}
 }
 
-#include "Vec_4.inl"
+#include "../Source/Math/Vec_4.inl"

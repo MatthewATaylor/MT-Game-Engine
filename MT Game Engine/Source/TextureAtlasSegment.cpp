@@ -1,4 +1,4 @@
-#include "TextureAtlasSegment.h"
+#include "../Include/TextureAtlasSegment.h"
 
 namespace mtge {
 	const float TextureAtlasSegment::REL_COORD_BUFFER = 1.0f / 500.0f;

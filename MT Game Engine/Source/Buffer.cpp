@@ -1,4 +1,4 @@
-#include "Buffer.h"
+#include "../Include/Buffer.h"
 
 namespace mtge {
 	Window *Buffer::window = nullptr;
