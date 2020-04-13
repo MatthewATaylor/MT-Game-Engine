@@ -42,7 +42,7 @@ namespace mtge {
 	}
 	void Camera::controlRotation(double xPos, double yPos) {
 		const float MOUSE_SENSITIVITY = 0.05f;
-
+		
 		if (firstMouseEntrance) {
 			previousMouseX = (float)xPos;
 			previousMouseY = (float)yPos;
@@ -93,9 +93,8 @@ namespace mtge {
 	math::Vec<float, 3> Camera::getPosition() {
 		return position;
 	}
-	glm::mat4 Camera::getViewMatrix() {
-		glm::vec3 positionGLM = glm::vec3(position.getX(), position.getY(), position.getZ());
-		glm::vec3 frontGLM = glm::vec3(front.getX(), front.getY(), front.getZ());
-		return glm::lookAt(positionGLM, positionGLM + frontGLM, glm::vec3(0.0f, 1.0f, 0.0f));
+	math::Mat<float, 4, 4> Camera::getViewMatrix() {
+		math::Mat<float, 4, 4> viewMatrix = math::Util::lookAt(position, position + front, UP_VECTOR);
+		return viewMatrix;
 	}
 }

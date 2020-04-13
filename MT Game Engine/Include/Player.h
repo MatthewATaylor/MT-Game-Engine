@@ -6,6 +6,7 @@
 #include "ResourceManager.h"
 #include "Math/Vec.h"
 #include "Math/Mat.h"
+#include "Math/Util.h"
 
 namespace mtge {
 	class Player : public Camera {
@@ -32,7 +33,7 @@ namespace mtge {
 		void controlJump(Window *window, float jumpSize, int jumpKey);
 		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) override;
 		void controlReset(Window *window, float resetHeight);
-		glm::mat4 getViewMatrix() override;
+		math::Mat<float, 4, 4> getViewMatrix() override;
 	};
 }
 

@@ -4,8 +4,6 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 #include "Clock.h"
 #include "Window.h"
@@ -24,8 +22,8 @@ namespace mtge {
 		Clock clock;
 		float previousMouseX = 0.0f;
 		float previousMouseY = 0.0f;
-		float pitch;
-		float yaw;
+		float pitch = 0.0f;
+		float yaw = 0.0f;
 		bool firstMouseEntrance = true;
 		float fieldOfView = 45.0f;
 		float movementSize = 0.0f;
@@ -40,6 +38,6 @@ namespace mtge {
 		void controlZoom(double xOffset, double yOffset);
 		float getFieldOfView();
 		math::Vec<float, 3> getPosition();
-		virtual glm::mat4 getViewMatrix();
+		virtual math::Mat<float, 4, 4> getViewMatrix();
 	};
 }
