@@ -63,7 +63,7 @@ namespace mtge {
 	glm::vec3 Shape::getDimensions() const {
 		return dimensions;
 	}
-	bool Shape::collision(glm::vec3 position, glm::vec3 dimensions) {
+	bool Shape::collision(math::Vec<float, 3> position, math::Vec<float, 3> dimensions) {
 		return false;
 	}
 

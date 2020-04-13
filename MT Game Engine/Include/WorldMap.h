@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "Renderable/Skybox.h"
 #include "ResourceManager.h"
+#include "Math/Mat.h"
 
 namespace mtge {
 	class WorldMap {
@@ -32,8 +33,8 @@ namespace mtge {
 		static void clearRenderablesSets();
 		static void deleteSkybox();
 
-		static void drawRenderablesSets(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
-		static void drawSkybox(glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
+		static void drawRenderablesSets(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix);
+		static void drawSkybox(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix);
 
 		static void specifyRenderablesSetsRenderAreas();
 	};

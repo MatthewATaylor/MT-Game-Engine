@@ -23,8 +23,18 @@ namespace mtge {
 			Vec<T, SIZE> &operator+=(const Vec<T, SIZE> &otherVec);
 			Vec<T, SIZE> &operator-=(const Vec<T, SIZE> &otherVec);
 
+			Vec<T, SIZE> &operator+=(const T addend);
+			Vec<T, SIZE> &operator-=(const T addend);
+			Vec<T, SIZE> &operator*=(const T addend);
+			Vec<T, SIZE> &operator/=(const T addend);
+
 			Vec<T, SIZE> operator+(const Vec<T, SIZE> &otherVec) const;
 			Vec<T, SIZE> operator-(const Vec<T, SIZE> &otherVec) const;
+
+			Vec<T, SIZE> operator+(const T addend) const;
+			Vec<T, SIZE> operator-(const T addend) const;
+			Vec<T, SIZE> operator*(const T addend) const;
+			Vec<T, SIZE> operator/(const T addend) const;
 
 			bool operator==(const Vec<T, SIZE> &otherVec) const;
 
@@ -40,7 +50,7 @@ namespace mtge {
 	}
 }
 
-#include "../Source/Math/Vec.inl"
+#include "../../Source/Math/Vec.inl"
 
 //Template Specializations
 #include "Vec_2.h"

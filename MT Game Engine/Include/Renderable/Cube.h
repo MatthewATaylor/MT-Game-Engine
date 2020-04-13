@@ -7,6 +7,7 @@
 #include "Shape.h"
 #include "../ResourceManager.h"
 #include "../TextureAtlasSegment.h"
+#include "../Math/Vec.h"
 
 namespace mtge {
 	class Cube : public Shape {
@@ -77,7 +78,7 @@ namespace mtge {
 	public:
 		Cube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment *textureAtlasSegment);
 		Cube(const Cube &cube);
-		bool collision(glm::vec3 position, glm::vec3 dimensions);
+		bool collision(math::Vec<float, 3> position, math::Vec<float, 3> dimensions) override;
 		void draw();
 	};
 }

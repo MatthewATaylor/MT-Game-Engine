@@ -4,6 +4,7 @@
 
 #include "Renderable/Shape.h"
 #include "Renderable/Cube.h"
+#include "Math/Vec.h"
 
 namespace mtge {
 	class RenderablesSet {
@@ -28,8 +29,8 @@ namespace mtge {
 		void drawShape(unsigned int index);
 		void drawAllShapes();
 
-		bool checkSingleShapeCollision(unsigned int index, glm::vec3 position, glm::vec3 dimensions);
-		int checkAllShapeCollisions(glm::vec3 position, glm::vec3 dimensions);
+		bool checkSingleShapeCollision(unsigned int index, math::Vec<float, 3> position, math::Vec<float, 3> dimensions);
+		int checkAllShapeCollisions(math::Vec<float, 3> position, math::Vec<float, 3> dimensions);
 
 		void setDeletable(bool deletable);
 		bool getDeletable() const;

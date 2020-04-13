@@ -61,13 +61,13 @@ namespace mtge {
 		}
 	}
 
-	bool RenderablesSet::checkSingleShapeCollision(unsigned int index, glm::vec3 position, glm::vec3 dimensions) {
+	bool RenderablesSet::checkSingleShapeCollision(unsigned int index, math::Vec<float, 3> position, math::Vec<float, 3> dimensions) {
 		if (shapes[index]->collision(position, dimensions)) {
 			return true;
 		}
 		return false;
 	}
-	int RenderablesSet::checkAllShapeCollisions(glm::vec3 position, glm::vec3 dimensions) {
+	int RenderablesSet::checkAllShapeCollisions(math::Vec<float, 3> position, math::Vec<float, 3> dimensions) {
 		for (unsigned int i = 0; i < shapes.size(); i++) {
 			if (shapes[i]->collision(position, dimensions)) {
 				return i;

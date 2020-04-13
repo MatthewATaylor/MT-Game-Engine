@@ -7,6 +7,7 @@
 
 #include "../Shader.h"
 #include "../Buffer.h"
+#include "../Math/Vec.h"
 
 namespace mtge {
 	enum class ShapeType {
@@ -48,7 +49,7 @@ namespace mtge {
 		glm::vec3 getCenterPosition() const;
 		glm::vec3 getDimensions() const;
 
-		virtual bool collision(glm::vec3 position, glm::vec3 dimensions);
+		virtual bool collision(math::Vec<float, 3> position, math::Vec<float, 3> dimensions);
 
 		~Shape();
 

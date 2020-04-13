@@ -2,7 +2,8 @@
 
 namespace mtge {
 	//Constructor
-	Player::Player(glm::vec3 position, const glm::vec3 DIMENSIONS) : Camera(position, glm::vec3(0.0f, 0.0f, 1.0f)), DIMENSIONS(DIMENSIONS) {}
+	Player::Player(math::Vec<float, 3> position, const math::Vec<float, 3> DIMENSIONS) : 
+		Camera(position, math::Vec<float, 3>(0.0f, 0.0f, 1.0f)), DIMENSIONS(DIMENSIONS) {}
 
 	//Private
 	void Player::manageCollisionX() {
@@ -12,11 +13,11 @@ namespace mtge {
 				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
 				if (collisionValue >= 0) {
 					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
-					if (totalMovement.x > 0) {
-						position.x = currentShape->getCenterPosition().x - 0.5f * currentShape->getDimensions().x - 0.5f * DIMENSIONS.x;
+					if (totalMovement.getX() > 0) {
+						position.setX(currentShape->getCenterPosition().x - 0.5f * currentShape->getDimensions().x - 0.5f * DIMENSIONS.getX());
 					}
-					else if (totalMovement.x < 0) {
-						position.x = currentShape->getCenterPosition().x + 0.5f * currentShape->getDimensions().x + 0.5f * DIMENSIONS.x;
+					else if (totalMovement.getX() < 0) {
+						position.setX(currentShape->getCenterPosition().x + 0.5f * currentShape->getDimensions().x + 0.5f * DIMENSIONS.getX());
 					}
 				}
 			}
@@ -30,12 +31,12 @@ namespace mtge {
 				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
 				if (collisionValue >= 0) {
 					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
-					if (totalMovement.y > 0) {
-						position.y = currentShape->getCenterPosition().y - 0.5f * currentShape->getDimensions().y - 0.5f * DIMENSIONS.y;
+					if (totalMovement.getY() > 0) {
+						position.setY(currentShape->getCenterPosition().y - 0.5f * currentShape->getDimensions().y - 0.5f * DIMENSIONS.getY());
 						gravitySpeed = 0.0f;
 					}
-					else if (totalMovement.y < 0) {
-						position.y = currentShape->getCenterPosition().y + 0.5f * currentShape->getDimensions().y + 0.5f * DIMENSIONS.y;
+					else if (totalMovement.getY() < 0) {
+						position.setY(currentShape->getCenterPosition().y + 0.5f * currentShape->getDimensions().y + 0.5f * DIMENSIONS.getY());
 						gravitySpeed = startGravitySpeed;
 						bottomCollision = true;
 					}
@@ -51,11 +52,11 @@ namespace mtge {
 				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
 				if (collisionValue >= 0) {
 					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
-					if (totalMovement.z > 0) {
-						position.z = currentShape->getCenterPosition().z - 0.5f * currentShape->getDimensions().z - 0.5f * DIMENSIONS.z;
+					if (totalMovement.getZ() > 0) {
+						position.setZ(currentShape->getCenterPosition().z - 0.5f * currentShape->getDimensions().z - 0.5f * DIMENSIONS.getZ());
 					}
-					else if (totalMovement.z < 0) {
-						position.z = currentShape->getCenterPosition().z + 0.5f * currentShape->getDimensions().z + 0.5f * DIMENSIONS.z;
+					else if (totalMovement.getZ() < 0) {
+						position.setZ(currentShape->getCenterPosition().z + 0.5f * currentShape->getDimensions().z + 0.5f * DIMENSIONS.getZ());
 					}
 				}
 			}
@@ -68,7 +69,7 @@ namespace mtge {
 			gravitySpeed = maxGravity;
 		}
 
-		totalMovement.y -= gravitySpeed * movementSize;
+		totalMovement.setY(totalMovement.getY() - gravitySpeed * movementSize);
 	}
 
 	//Public
@@ -92,7 +93,7 @@ namespace mtge {
 		}
 	}
 	void Player::controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
-		glm::vec3 movementDirection = glm::vec3(front.x, 0.0f, front.z);
+		math::Vec<float, 3> movementDirection = math::Vec<float, 3>(front.getX(), 0.0f, front.getZ());
 		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
 
 		if (canApplyGravity) {
@@ -100,20 +101,20 @@ namespace mtge {
 		}
 
 		//Normalize X/Z Plane Velocities
-		float movementAngle = atan2(totalMovement.z, totalMovement.x);
+		float movementAngle = atan2(totalMovement.getZ(), totalMovement.getX());
 		float sinTheta = sin(movementAngle);
-		float movementMagnitude = (sinTheta != 0) ? (totalMovement.z / sinTheta) : totalMovement.x;
-		totalMovement.x *= ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0);
-		totalMovement.z *= ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0);
+		float movementMagnitude = (sinTheta != 0) ? (totalMovement.getZ() / sinTheta) : totalMovement.getX();
+		totalMovement.setX(totalMovement.getX() * ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0));
+		totalMovement.setZ(totalMovement.getZ() * ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0));
 
 		if (canApplyCollisions) {
-			position.y += totalMovement.y;
+			position.setY(position.getY() + totalMovement.getY());
 			manageCollisionY();
 
-			position.x += totalMovement.x;
+			position.setX(position.getX() + totalMovement.getX());
 			manageCollisionX();
 
-			position.z += totalMovement.z;
+			position.setZ(position.getZ() + totalMovement.getZ());
 			manageCollisionZ();
 		}
 		else {
@@ -123,11 +124,11 @@ namespace mtge {
 	void Player::controlReset(Window *window, float resetHeight) {
 		if (glfwGetKey(window->getPtr_GLFW(), GLFW_KEY_R) == GLFW_PRESS) {
 			gravitySpeed = startGravitySpeed;
-			position = glm::vec3(0.0f, resetHeight, 0.0f);
+			position = math::Vec<float, 3>(0.0f, resetHeight, 0.0f);
 		}
 	}
-	glm::mat4 Player::getViewMatrix() {
-		glm::vec3 eye = glm::vec3(position.x, position.y + 0.4f * DIMENSIONS.y, position.z);
-		return glm::lookAt(eye, eye + front, UP_VECTOR);
+	math::Mat<float, 4, 4> Player::getViewMatrix() {
+		math::Vec<float, 3> eye(position.getX(), position.getY() + 0.4f * DIMENSIONS.getY(), position.getZ());
+		return math::Util::lookAt(eye, eye + front, UP_VECTOR);
 	}
 }

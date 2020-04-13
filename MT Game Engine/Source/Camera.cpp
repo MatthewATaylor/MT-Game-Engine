@@ -2,13 +2,13 @@
 
 namespace mtge {
 	//Constructor
-	Camera::Camera(glm::vec3 position, glm::vec3 front) {
+	Camera::Camera(math::Vec<float, 3> position, math::Vec<float, 3> front) {
 		this->position = position;
 		this->front = front;
 	}
 
 	//Protected
-	void Camera::controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, glm::vec3 movementDirection) {
+	void Camera::controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, math::Vec<float, 3> movementDirection) {
 		if (!beganMotion) {
 			clock.setPrevious();
 			beganMotion = true;
@@ -18,7 +18,7 @@ namespace mtge {
 		movementSize = clock.getTimeChange() * speed;
 		clock.setPrevious();
 
-		totalMovement = glm::vec3(0.0f, 0.0f, 0.0f);
+		totalMovement = math::Vec<float, 3>(0.0f, 0.0f, 0.0f);
 		
 		if (glfwGetKey(window->getPtr_GLFW(), forwardKey) == GLFW_PRESS) {
 			totalMovement += movementDirection * movementSize;
@@ -27,10 +27,10 @@ namespace mtge {
 			totalMovement -= movementDirection * movementSize;
 		}
 		if (glfwGetKey(window->getPtr_GLFW(), leftKey) == GLFW_PRESS) {
-			totalMovement -= glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
+			totalMovement -= math::Util::normalized(movementDirection.cross(UP_VECTOR)) * movementSize;
 		}
 		if (glfwGetKey(window->getPtr_GLFW(), rightKey) == GLFW_PRESS) {
-			totalMovement += glm::normalize(glm::cross(movementDirection, UP_VECTOR)) * movementSize;
+			totalMovement += math::Util::normalized(movementDirection.cross(UP_VECTOR)) * movementSize;
 		}
 	}
 
@@ -62,11 +62,13 @@ namespace mtge {
 			pitch = -89.0f;
 		}
 
-		glm::vec3 facing;
-		facing.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-		facing.y = sin(glm::radians(pitch));
-		facing.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-		front = glm::normalize(facing);
+		math::Vec<float, 3> facing;
+		float pitchRadians = math::Util::toRadians(pitch);
+		float yawRadians = math::Util::toRadians(yaw);
+		facing.setX(cos(pitchRadians) * cos(yawRadians));
+		facing.setY(sin(pitchRadians));
+		facing.setZ(cos(pitchRadians) * sin(yawRadians));
+		front = math::Util::normalized(facing);
 
 		previousMouseX = (float)xPos;
 		previousMouseY = (float)yPos;
@@ -88,10 +90,10 @@ namespace mtge {
 	float Camera::getFieldOfView() {
 		return fieldOfView;
 	}
-	glm::vec3 Camera::getPosition() {
+	math::Vec<float, 3> Camera::getPosition() {
 		return position;
 	}
-	glm::mat4 Camera::getViewMatrix() {
-		return glm::lookAt(position, position + front, UP_VECTOR);
+	math::Mat<float, 4, 4> Camera::getViewMatrix() {
+		return math::Util::lookAt(position, position + front, UP_VECTOR);
 	}
 }

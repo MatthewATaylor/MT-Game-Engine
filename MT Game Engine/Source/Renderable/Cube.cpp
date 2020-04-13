@@ -16,13 +16,13 @@ namespace mtge {
 	}
 
 	//Public
-	bool Cube::collision(glm::vec3 position, glm::vec3 dimensions) {
-		if (position.x + 0.5f * dimensions.x > getCenterPosition().x - 0.5f * getDimensions().x &&
-			position.x - 0.5f * dimensions.x < getCenterPosition().x + 0.5f * getDimensions().x &&
-			position.y + 0.5f * dimensions.y > getCenterPosition().y - 0.5f * getDimensions().y &&
-			position.y - 0.5f * dimensions.y < getCenterPosition().y + 0.5f/*0.499999f*/ * getDimensions().y &&
-			position.z + 0.5f * dimensions.z > getCenterPosition().z - 0.5f * getDimensions().z &&
-			position.z - 0.5f * dimensions.z < getCenterPosition().z + 0.5f * getDimensions().z) {
+	bool Cube::collision(math::Vec<float, 3> position, math::Vec<float, 3> dimensions) {
+		if (position.getX() + 0.5f * dimensions.getX() > getCenterPosition().x - 0.5f * getDimensions().x &&
+			position.getX() - 0.5f * dimensions.getX() < getCenterPosition().x + 0.5f * getDimensions().x &&
+			position.getY() + 0.5f * dimensions.getY() > getCenterPosition().y - 0.5f * getDimensions().y &&
+			position.getY() - 0.5f * dimensions.getY() < getCenterPosition().y + 0.5f/*0.499999f*/ * getDimensions().y &&
+			position.getZ() + 0.5f * dimensions.getZ() > getCenterPosition().z - 0.5f * getDimensions().z &&
+			position.getZ() - 0.5f * dimensions.getZ() < getCenterPosition().z + 0.5f * getDimensions().z) {
 
 			return true;
 		}

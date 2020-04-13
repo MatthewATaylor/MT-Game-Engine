@@ -47,6 +47,35 @@ namespace mtge {
 		}
 
 		template<typename T>
+		Vec<T, 4> &Vec<T, 4>::operator+=(const T addend) {
+			for (unsigned int i = 0; i < 4; i++) {
+				elements[i] += addend;
+			}
+			return *this;
+		}
+		template<typename T>
+		Vec<T, 4> &Vec<T, 4>::operator-=(const T addend) {
+			for (unsigned int i = 0; i < 4; i++) {
+				elements[i] -= addend;
+			}
+			return *this;
+		}
+		template<typename T>
+		Vec<T, 4> &Vec<T, 4>::operator*=(const T addend) {
+			for (unsigned int i = 0; i < 4; i++) {
+				elements[i] *= addend;
+			}
+			return *this;
+		}
+		template<typename T>
+		Vec<T, 4> &Vec<T, 4>::operator/=(const T addend) {
+			for (unsigned int i = 0; i < 4; i++) {
+				elements[i] /= addend;
+			}
+			return *this;
+		}
+
+		template<typename T>
 		Vec<T, 4> Vec<T, 4>::operator+(const Vec<T, 4> &otherVec) const {
 			Vec<T, 4> vectorResult = *this;
 			return vectorResult += otherVec;
@@ -55,6 +84,27 @@ namespace mtge {
 		Vec<T, 4> Vec<T, 4>::operator-(const Vec<T, 4> &otherVec) const {
 			Vec<T, 4> vectorResult = *this;
 			return vectorResult -= otherVec;
+		}
+
+		template<typename T>
+		Vec<T, 4> Vec<T, 4>::operator+(const T addend) const {
+			Vec<T, 4> vectorResult = *this;
+			return vectorResult += addend;
+		}
+		template<typename T>
+		Vec<T, 4> Vec<T, 4>::operator-(const T addend) const {
+			Vec<T, 4> vectorResult = *this;
+			return vectorResult -= addend;
+		}
+		template<typename T>
+		Vec<T, 4> Vec<T, 4>::operator*(const T addend) const {
+			Vec<T, 4> vectorResult = *this;
+			return vectorResult *= addend;
+		}
+		template<typename T>
+		Vec<T, 4> Vec<T, 4>::operator/(const T addend) const {
+			Vec<T, 4> vectorResult = *this;
+			return vectorResult /= addend;
 		}
 
 		template<typename T>

@@ -40,6 +40,35 @@ namespace mtge {
 		}
 
 		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> &Vec<T, SIZE>::operator+=(const T addend) {
+			for (unsigned int i = 0; i < SIZE; i++) {
+				elements[i] += addend;
+			}
+			return *this;
+		}
+		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> &Vec<T, SIZE>::operator-=(const T addend) {
+			for (unsigned int i = 0; i < SIZE; i++) {
+				elements[i] -= addend;
+			}
+			return *this;
+		}
+		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> &Vec<T, SIZE>::operator*=(const T addend) {
+			for (unsigned int i = 0; i < SIZE; i++) {
+				elements[i] *= addend;
+			}
+			return *this;
+		}
+		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> &Vec<T, SIZE>::operator/=(const T addend) {
+			for (unsigned int i = 0; i < SIZE; i++) {
+				elements[i] /= addend;
+			}
+			return *this;
+		}
+
+		template<typename T, unsigned int SIZE>
 		Vec<T, SIZE> Vec<T, SIZE>::operator+(const Vec<T, SIZE> &otherVec) const {
 			Vec<T, SIZE> vectorResult = *this;
 			return vectorResult += otherVec;
@@ -48,6 +77,27 @@ namespace mtge {
 		Vec<T, SIZE> Vec<T, SIZE>::operator-(const Vec<T, SIZE> &otherVec) const {
 			Vec<T, SIZE> vectorResult = *this;
 			return vectorResult -= otherVec;
+		}
+
+		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> Vec<T, SIZE>::operator+(const T addend) const {
+			Vec<T, SIZE> vectorResult = *this;
+			return vectorResult += addend;
+		}
+		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> Vec<T, SIZE>::operator-(const T addend) const {
+			Vec<T, SIZE> vectorResult = *this;
+			return vectorResult -= addend;
+		}
+		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> Vec<T, SIZE>::operator*(const T addend) const {
+			Vec<T, SIZE> vectorResult = *this;
+			return vectorResult *= addend;
+		}
+		template<typename T, unsigned int SIZE>
+		Vec<T, SIZE> Vec<T, SIZE>::operator/(const T addend) const {
+			Vec<T, SIZE> vectorResult = *this;
+			return vectorResult /= addend;
 		}
 
 		template<typename T, unsigned int SIZE>
