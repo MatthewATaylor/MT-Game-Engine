@@ -3,39 +3,41 @@
 #include <ostream>
 
 namespace mtge {
-	template<typename T, unsigned int SIZE>
-	class Vec;
+	namespace math {
+		template<typename T, unsigned int SIZE>
+		class Vec;
 
-	template<typename T, unsigned int SIZE>
-	std::ostream &operator<<(std::ostream &outputStream, const Vec<T, SIZE> &vec);
+		template<typename T, unsigned int SIZE>
+		std::ostream &operator<<(std::ostream &outputStream, const Vec<T, SIZE> &vec);
 
-	template<typename T, unsigned int SIZE>
-	class Vec {
-	private:
-		T elements[SIZE];
+		template<typename T, unsigned int SIZE>
+		class Vec {
+		private:
+			T elements[SIZE];
 
-	public:
-		Vec();
-		Vec(T elements[SIZE]);
+		public:
+			Vec();
+			Vec(T elements[SIZE]);
 
-		Vec<T, SIZE> &operator=(const Vec<T, SIZE> &otherVec);
-		Vec<T, SIZE> &operator+=(const Vec<T, SIZE> &otherVec);
-		Vec<T, SIZE> &operator-=(const Vec<T, SIZE> &otherVec);
+			Vec<T, SIZE> &operator=(const Vec<T, SIZE> &otherVec);
+			Vec<T, SIZE> &operator+=(const Vec<T, SIZE> &otherVec);
+			Vec<T, SIZE> &operator-=(const Vec<T, SIZE> &otherVec);
 
-		Vec<T, SIZE> operator+(const Vec<T, SIZE> &otherVec) const;
-		Vec<T, SIZE> operator-(const Vec<T, SIZE> &otherVec) const;
+			Vec<T, SIZE> operator+(const Vec<T, SIZE> &otherVec) const;
+			Vec<T, SIZE> operator-(const Vec<T, SIZE> &otherVec) const;
 
-		bool operator==(const Vec<T, SIZE> &otherVec) const;
+			bool operator==(const Vec<T, SIZE> &otherVec) const;
 
-		friend std::ostream &operator<<<T, SIZE>(std::ostream &outputStream, const Vec<T, SIZE> &vec);
+			friend std::ostream &operator<<<T, SIZE>(std::ostream &outputStream, const Vec<T, SIZE> &vec);
 
-		T dot(const Vec<T, SIZE> &otherVec) const;
-		T magSquared() const;
-		T mag() const;
+			T dot(const Vec<T, SIZE> &otherVec) const;
+			T magSquared() const;
+			T mag() const;
 
-		T get(unsigned int index) const;
-		void set(unsigned int index, T newElement);
-	};
+			T get(unsigned int index) const;
+			void set(unsigned int index, T newElement);
+		};
+	}
 }
 
 #include "Vec.inl"
