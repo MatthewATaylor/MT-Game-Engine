@@ -4,6 +4,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Clock.h"
 #include "Window.h"
@@ -38,6 +40,6 @@ namespace mtge {
 		void controlZoom(double xOffset, double yOffset);
 		float getFieldOfView();
 		math::Vec<float, 3> getPosition();
-		virtual math::Mat<float, 4, 4> getViewMatrix();
+		virtual glm::mat4 getViewMatrix();
 	};
 }

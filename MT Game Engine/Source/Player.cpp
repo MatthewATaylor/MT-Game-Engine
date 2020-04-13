@@ -127,8 +127,8 @@ namespace mtge {
 			position = math::Vec<float, 3>(0.0f, resetHeight, 0.0f);
 		}
 	}
-	math::Mat<float, 4, 4> Player::getViewMatrix() {
-		math::Vec<float, 3> eye(position.getX(), position.getY() + 0.4f * DIMENSIONS.getY(), position.getZ());
-		return math::Util::lookAt(eye, eye + front, UP_VECTOR);
+	glm::mat4 Player::getViewMatrix() {
+		glm::vec3 eye = glm::vec3(position.getX(), position.getY() + 0.4f * DIMENSIONS.getY(), position.getZ());
+		return glm::lookAt(eye, eye + glm::vec3(front.getX(), front.getY(), front.getZ()), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 }
