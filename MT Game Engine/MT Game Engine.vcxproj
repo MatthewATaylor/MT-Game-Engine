@@ -129,9 +129,11 @@
   <ItemGroup>
     <ClCompile Include="Source\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\Chunk.cpp" />
     <ClCompile Include="Source\Clock.cpp" />
     <ClCompile Include="Source\Math\Util.cpp" />
-    <ClCompile Include="Source\Renderable\Cube.cpp" />
+    <ClCompile Include="Source\Renderable\CubeData.cpp" />
+    <ClCompile Include="Source\Renderable\OldCube.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\RenderablesSet.cpp" />
@@ -149,9 +151,12 @@
   <ItemGroup>
     <ClInclude Include="Include\Buffer.h" />
     <ClInclude Include="Include\Camera.h" />
+    <ClInclude Include="Include\Chunk.h" />
     <ClInclude Include="Include\Clock.h" />
     <ClInclude Include="Include\Math\Util.h" />
     <ClInclude Include="Include\Renderable\Cube.h" />
+    <ClInclude Include="Include\Renderable\CubeData.h" />
+    <ClInclude Include="Include\Renderable\OldCube.h" />
     <ClInclude Include="Include\Input.h" />
     <ClInclude Include="Include\Math\Mat.h" />
     <ClInclude Include="Include\Player.h" />

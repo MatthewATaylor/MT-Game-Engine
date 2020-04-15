@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Renderable/Shape.h"
-#include "Renderable/Cube.h"
+#include "Renderable/OldCube.h"
 #include "Math/Vec.h"
 
 namespace mtge {
