@@ -23,7 +23,6 @@ namespace mtge {
 		static std::vector<RenderablesSet*> renderablesSets;
 
 	public:
-		static void setSkyboxTexture(Texture *texture);
 		static unsigned int getNumRenderablesSets();
 		static void appendRenderablesSet(RenderablesSet *renderablesSet);
 		static void appendRenderablesSet(RenderablesSet *renderablesSet, bool deletable);

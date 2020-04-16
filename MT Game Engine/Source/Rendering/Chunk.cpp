@@ -94,7 +94,13 @@ namespace mtge {
 		glEnableVertexAttribArray(1);
 	}
 	void Chunk::render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
+		glBindVertexArray(vertexArrayID);
+		
 		Shader *shader = ResourceManager::getShapeShaderPtr();
+		if (shader == nullptr) {
+			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED SHAPE SHADER" << std::endl << std::endl;
+			return;
+		}
 		shader->useProgram();
 
 		glUniformMatrix4fv(ResourceManager::getShapeShaderPtr()->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));

@@ -9,6 +9,7 @@
 #include "Math/Vec.h"
 #include "Math/Mat.h"
 #include "ResourceManager.h"
+#include "Texture/TextureAtlasSegment.h"
 
 namespace mtge {
 	class Chunk {

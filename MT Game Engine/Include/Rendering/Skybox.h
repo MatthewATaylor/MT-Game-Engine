@@ -9,10 +9,9 @@ namespace mtge {
 	private:
 		static const float VERTICES[];
 		static const unsigned int VERTICES_SIZE = sizeof(float) * 108;
-		Texture *texture;
 
 	public:
-		Skybox(Texture *texture);
+		Skybox();
 		void draw();
 	};
 }

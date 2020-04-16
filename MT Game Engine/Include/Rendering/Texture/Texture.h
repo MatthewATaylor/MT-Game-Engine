@@ -49,7 +49,6 @@ namespace mtge {
 	public:
 		void load2D(const char* textureFile, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
 		void loadCubemap(const char *textureFiles[], TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
-		void loadSkybox(const std::string FOLDER_NAME, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
 		void setUniform(Shader* shader, unsigned int location, int textureNum);
 		void activate(GLenum textureNum);
 	};

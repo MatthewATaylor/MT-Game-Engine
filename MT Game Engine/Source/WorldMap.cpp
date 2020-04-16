@@ -6,9 +6,6 @@ namespace mtge {
 	std::vector<RenderablesSet*> WorldMap::renderablesSets = {};
 
 	//Public
-	void WorldMap::setSkyboxTexture(Texture *texture) {
-		WorldMap::skybox = new Skybox(texture);
-	}
 	unsigned int WorldMap::getNumRenderablesSets() {
 		return renderablesSets.size();
 	}
@@ -56,10 +53,17 @@ namespace mtge {
 		}
 	}
 	void WorldMap::drawSkybox(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
+		if (skybox == nullptr) {
+			skybox = new Skybox;
+		}
 		if (shader != ResourceManager::getSkyboxShaderPtr()) {
 			shader = ResourceManager::getSkyboxShaderPtr();
-			shader->useProgram();
 		}
+		if (shader == nullptr) {
+			std::cout << "ERROR [FUNCTION: drawSkybox]: UNINITIALIZED SKYBOX SHADER" << std::endl << std::endl;
+			return;
+		}
+		shader->useProgram();
 
 		glDepthFunc(GL_LEQUAL);
 		glUniformMatrix4fv(ResourceManager::getSkyboxShaderPtr()->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));

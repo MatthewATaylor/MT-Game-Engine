@@ -86,7 +86,7 @@ namespace mtge {
 	}
 	void Texture::loadCubemap(const char *textureFiles[], TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
 		setTextureSettings_GL_3D(textureWrapX, textureWrapY, textureWrapZ, textureFilterMin, textureFilterMag, colorFormat);
-		
+
 		//Setup/Bind Texture
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -114,25 +114,6 @@ namespace mtge {
 		}
 
 		this->target = GL_TEXTURE_CUBE_MAP;
-	}
-	void Texture::loadSkybox(const std::string FOLDER_NAME, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
-		std::string skyTexturesString[6] = {
-			"skyFront.tga",
-			"skyBack.tga",
-			"skyUp.tga",
-			"skyDown.tga",
-			"skyRight.tga",
-			"skyLeft.tga"
-		};
-		for (unsigned int i = 0; i < 6; i++) {
-			std::string skyTextureFullPath = "Resources/Textures/" + FOLDER_NAME + "/";
-			skyTexturesString[i] = skyTextureFullPath + skyTexturesString[i];
-		}
-		const char *skyboxTexturesChar[6];
-		for (unsigned int i = 0; i < 6; i++) {
-			skyboxTexturesChar[i] = skyTexturesString[i].c_str();
-		}
-		loadCubemap(skyboxTexturesChar, textureWrapX, textureWrapY, textureWrapZ, textureFilterMin, textureFilterMag, colorFormat);
 	}
 	void Texture::setUniform(Shader* shader, unsigned int location, int textureNum) {
 		shader->useProgram();
