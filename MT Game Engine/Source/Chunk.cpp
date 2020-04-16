@@ -23,6 +23,9 @@ namespace mtge {
 
 	//Public
 	Chunk::Chunk() {
+		glGenVertexArrays(1, &vertexArrayID);
+		glGenBuffers(1, &vertexBufferID);
+
 		cubes = new Cube***[LENGTH_IN_CUBES];
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			cubes[i] = new Cube**[LENGTH_IN_CUBES];
@@ -49,9 +52,6 @@ namespace mtge {
 		delete[] cubes;
 	}
 	void Chunk::genBuffer() {
-		glGenVertexArrays(1, &vertexArrayID);
-		glGenBuffers(1, &vertexBufferID);
-
 		glBindVertexArray(vertexArrayID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 
