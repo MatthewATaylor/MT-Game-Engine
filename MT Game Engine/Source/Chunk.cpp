@@ -29,7 +29,12 @@ namespace mtge {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				cubes[i][j] = new Cube*[LENGTH_IN_CUBES];
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
-					cubes[i][j][k] = new Cube{ 'd' };
+					if (i == 0 && j % 3 == 0 && k % 3 == 0) {
+						cubes[i][j][k] = new Cube{ 'x' };
+					}
+					else {
+						cubes[i][j][k] = new Cube{ 'd' };
+					}
 				}
 			}
 		}
@@ -52,9 +57,10 @@ namespace mtge {
 
 		glBufferData(GL_ARRAY_BUFFER, NUM_CUBES * CubeData::VERTEX_BUFFER_SIZE, 0, GL_STATIC_DRAW);
 
+		CubeData::resetBufferOffsetCounter();
+
 		//Add each cube's vertex buffer as sub data
 		float cubeSize = 2.0f / LENGTH_IN_CUBES;
-		unsigned int cubeNum = 0;
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
@@ -62,18 +68,19 @@ namespace mtge {
 					float yOffset = -1.0f + cubeSize / 2 + j * cubeSize;
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
-					CubeData cubeData(
-						math::Vec<float, 3>(xOffset, yOffset, zOffset), 
-						LENGTH_IN_CUBES,
-						cubeHasTopNeighbor(i, j, k),
-						cubeHasBottomNeighbor(i, j, k),
-						cubeHasLeftNeighbor(i, j, k),
-						cubeHasRightNeighbor(i, j, k),
-						cubeHasFrontNeighbor(i, j, k),
-						cubeHasBackNeighbor(i, j, k)
-					);
-					glBufferSubData(GL_ARRAY_BUFFER, cubeNum * CubeData::VERTEX_BUFFER_SIZE, CubeData::VERTEX_BUFFER_SIZE, cubeData.vertexBuffer);
-					cubeNum++;
+					if (cubes[i][j][k]->type != 'x') {
+						CubeData cubeData;
+						cubeData.addBufferSubData(
+							math::Vec<float, 3>(xOffset, yOffset, zOffset),
+							LENGTH_IN_CUBES,
+							cubeHasTopNeighbor(i, j, k),
+							cubeHasBottomNeighbor(i, j, k),
+							cubeHasLeftNeighbor(i, j, k),
+							cubeHasRightNeighbor(i, j, k),
+							cubeHasFrontNeighbor(i, j, k),
+							cubeHasBackNeighbor(i, j, k)
+						);
+					}
 				}
 			}
 		}
@@ -93,8 +100,8 @@ namespace mtge {
 		glUniformMatrix4fv(ResourceManager::getShapeShaderPtr()->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		glUniformMatrix4fv(ResourceManager::getShapeShaderPtr()->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
 
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-		glDrawArrays(GL_TRIANGLES, 0, 36 * NUM_CUBES);
+		glDrawArrays(GL_TRIANGLES, 0, (CubeData::getBufferOffsetCounter() / 6) / sizeof(float));
 	}
 }

@@ -1,135 +1,14 @@
 #include "../../Include/Renderable/CubeData.h"
 
 namespace mtge {
-	//Public
-	CubeData::CubeData(
-		math::Vec<float, 3> offset,
-		float scale,
-		bool hasTopNeighbor,
-		bool hasBottomNeighbor,
-		bool hasLeftNeighbor,
-		bool hasRightNeighbor,
-		bool hasFrontNeighbor,
-		bool hasBackNeighbor) {
+	//Private
+	unsigned int CubeData::bufferOffsetSize = 0;
 
-		vertexBuffer = new float[VERTEX_BUFFER_LENGTH] {
-			/*
-			//Positions-----------Colors-------------
-			//Triangle 1, Front
-			-1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  //Top Left
-			-1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  //Bottom Left
-			 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  //Bottom Right
-			//Triangle 2, Front
-			-1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  //Top Left
-			 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  //Bottom Right
-			 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  //Top Right
-
-			//Triangle 1, Back
-			-1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  //Top Right
-			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  //Bottom Left
-			-1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  //Bottom Right
-			//Triangle 2, Back
-			-1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  //Top Right
-			 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  //Top Left
-			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  //Bottom Left
-
-			//Triangle 1, Left
-			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,  //Top Left
-			-1.0f, -1.0f, -1.0f,  0.0f,  1.0f,  0.0f,  //Bottom Left
-			-1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  //Bottom Right
-			//Triangle 2, Left
-			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,  //Top Left
-			-1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  //Bottom Right
-			-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  //Top Right
-
-			//Triangle 1, Right
-			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  //Top Left
-			 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  //Bottom Left
-			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  //Bottom Right
-			//Triangle 2, Right
-			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  //Top Left
-			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  //Bottom Right
-			 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  //Top Right
-
-			//Triangle 1, Top
-			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  1.0f,  //Top Left
-			-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  1.0f,  //Bottom Left
-			 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  1.0f,  //Bottom Right
-			//Triangle 2, Top
-			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  1.0f,  //Top Left
-			 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  1.0f,  //Bottom Right
-			 1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  1.0f,  //Top Right
-
-			//Triangle 1, Bottom
-			-1.0f, -1.0f, -1.0f,  0.0f,  1.0f,  1.0f,  //Bottom Left
-			 1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  1.0f,  //Top Right
-			-1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  1.0f,  //Top Left
-			//Triangle 2, Bottom
-			-1.0f, -1.0f, -1.0f,  0.0f,  1.0f,  1.0f,  //Bottom Left
-			 1.0f, -1.0f, -1.0f,  0.0f,  1.0f,  1.0f,  //Bottom Right
-			 1.0f, -1.0f,  1.0f,  0.0f,  1.0f,  1.0f   //Top Right
-			 */
-
-			 //Positions-----------Colors-------------
- //Triangle 1, Front
-			-0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  //Top Left
-				-0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  //Bottom Left
-				0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  //Bottom Right
-			   //Triangle 2, Front
-				-0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  //Top Left
-				0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  //Bottom Right
-				0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  //Top Right
-
-			   //Triangle 1, Back
-				-0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //Top Right
-				0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //Bottom Left
-				-0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //Bottom Right
-				//Triangle 2, Back
-				-0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //Top Right
-				0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //Top Left
-				0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //Bottom Left
-
-			   //Triangle 1, Left
-				-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  //Top Left
-				-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  //Bottom Left
-				-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  //Bottom Right
-				//Triangle 2, Left
-				-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  //Top Left
-				-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  //Bottom Right
-				-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,  //Top Right
-
-				//Triangle 1, Right
-				0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,  //Top Left
-				0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 1.0f,  //Bottom Left
-				0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 1.0f,  //Bottom Right
-			   //Triangle 2, Right
-				0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f,  //Top Left
-				0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 1.0f,  //Bottom Right
-				0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 1.0f,  //Top Right
-
-			   //Triangle 1, Top
-				-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //Top Left
-				-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 1.0f,  //Bottom Left
-				0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 1.0f,  //Bottom Right
-			   //Triangle 2, Top
-				-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //Top Left
-				0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 1.0f,  //Bottom Right
-				0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //Top Right
-
-			   //Triangle 1, Bottom
-				-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //Bottom Left
-				0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 1.0f,  //Top Right
-				-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 1.0f,  //Top Left
-				//Triangle 2, Bottom
-				-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //Bottom Left
-				0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //Bottom Right
-				0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 1.0f   //Top Right
-		};
-
-		for (unsigned int i = 0; i < VERTEX_BUFFER_LENGTH - 3; i += 6) {
-			float &x = vertexBuffer[i];
-			float &y = vertexBuffer[i + 1];
-			float &z = vertexBuffer[i + 2];
+	void CubeData::transformFace(float face[FACE_VERTEX_BUFFER_LENGTH], math::Vec<float, 3> offset, float scale) {
+		for (unsigned int i = 0; i < FACE_VERTEX_BUFFER_LENGTH - 3; i += 6) {
+			float &x = face[i];
+			float &y = face[i + 1];
+			float &z = face[i + 2];
 
 			x /= scale;
 			y /= scale;
@@ -140,7 +19,53 @@ namespace mtge {
 			z += offset.getZ();
 		}
 	}
-	CubeData::~CubeData() {
-		delete[] vertexBuffer;
+
+	//Public
+	void CubeData::resetBufferOffsetCounter() {
+		bufferOffsetSize = 0;
+	}
+	unsigned int CubeData::getBufferOffsetCounter() {
+		return bufferOffsetSize;
+	}
+	void CubeData::addBufferSubData(
+		math::Vec<float, 3> offset,
+		float scale,
+		bool hasTopNeighbor,
+		bool hasBottomNeighbor,
+		bool hasLeftNeighbor,
+		bool hasRightNeighbor,
+		bool hasFrontNeighbor,
+		bool hasBackNeighbor) {
+
+		if (!hasTopNeighbor) {
+			transformFace(topFace, offset, scale);
+			glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, topFace);
+			bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
+		}
+		if (!hasBottomNeighbor) {
+			transformFace(bottomFace, offset, scale);
+			glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, bottomFace);
+			bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
+		}
+		if (!hasLeftNeighbor) {
+			transformFace(leftFace, offset, scale);
+			glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, leftFace);
+			bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
+		}
+		if (!hasRightNeighbor) {
+			transformFace(rightFace, offset, scale);
+			glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, rightFace);
+			bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
+		}
+		if (!hasFrontNeighbor) {
+			transformFace(frontFace, offset, scale);
+			glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, frontFace);
+			bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
+		}
+		if (!hasBackNeighbor) {
+			transformFace(backFace, offset, scale);
+			glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, backFace);
+			bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
+		}
 	}
 }
