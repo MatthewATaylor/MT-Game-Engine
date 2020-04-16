@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "Input.h"
+#include "Interaction/Input.h"
 #include "Window.h"
 
 namespace mtge {

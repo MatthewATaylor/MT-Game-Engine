@@ -1,4 +1,4 @@
-#include "../Include/Window.h"
+#include "Window.h"
 
 namespace mtge {
 	//Constructor

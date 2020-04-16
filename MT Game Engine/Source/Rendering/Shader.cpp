@@ -1,4 +1,4 @@
-#include "../Include/Shader.h"
+#include "Rendering/Shader.h"
 
 namespace mtge {
 	//Constructor

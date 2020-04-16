@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLM;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLM;C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -101,7 +101,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLM;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLM;C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -127,47 +127,50 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Buffer.cpp" />
-    <ClCompile Include="Source\Camera.cpp" />
-    <ClCompile Include="Source\Chunk.cpp" />
+    <ClCompile Include="Source\Rendering\Buffer.cpp" />
+    <ClCompile Include="Source\Interaction\Camera.cpp" />
+    <ClCompile Include="Source\Rendering\Chunk.cpp" />
     <ClCompile Include="Source\Clock.cpp" />
     <ClCompile Include="Source\Math\Util.cpp" />
-    <ClCompile Include="Source\Renderable\CubeData.cpp" />
-    <ClCompile Include="Source\Renderable\OldCube.cpp" />
-    <ClCompile Include="Source\Input.cpp" />
-    <ClCompile Include="Source\Player.cpp" />
-    <ClCompile Include="Source\RenderablesSet.cpp" />
-    <ClCompile Include="Source\Renderer.cpp" />
+    <ClCompile Include="Source\Rendering\CubeData.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Source\Rendering\OldCube.cpp" />
+    <ClCompile Include="Source\Interaction\Input.cpp" />
+    <ClCompile Include="Source\Interaction\Player.cpp" />
+    <ClCompile Include="Source\Rendering\RenderablesSet.cpp" />
+    <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\ResourceManager.cpp" />
-    <ClCompile Include="Source\Shader.cpp" />
-    <ClCompile Include="Source\Renderable\Shape.cpp" />
-    <ClCompile Include="Source\Renderable\Skybox.cpp" />
+    <ClCompile Include="Source\Rendering\Shader.cpp" />
+    <ClCompile Include="Source\Rendering\Shape.cpp" />
+    <ClCompile Include="Source\Rendering\Skybox.cpp" />
     <ClCompile Include="Source\STB_Image.cpp" />
-    <ClCompile Include="Source\Texture.cpp" />
-    <ClCompile Include="Source\TextureAtlasSegment.cpp" />
+    <ClCompile Include="Source\Rendering\Texture\Texture.cpp" />
+    <ClCompile Include="Source\Rendering\Texture\TextureAtlasSegment.cpp" />
     <ClCompile Include="Source\Window.cpp" />
     <ClCompile Include="Source\WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Buffer.h" />
-    <ClInclude Include="Include\Camera.h" />
-    <ClInclude Include="Include\Chunk.h" />
+    <ClInclude Include="Include\Rendering\Buffer.h" />
+    <ClInclude Include="Include\Interaction\Camera.h" />
+    <ClInclude Include="Include\Rendering\Chunk.h" />
     <ClInclude Include="Include\Clock.h" />
     <ClInclude Include="Include\Math\Util.h" />
-    <ClInclude Include="Include\Renderable\Cube.h" />
-    <ClInclude Include="Include\Renderable\CubeData.h" />
-    <ClInclude Include="Include\Renderable\OldCube.h" />
-    <ClInclude Include="Include\Input.h" />
+    <ClInclude Include="Include\Rendering\Cube.h" />
+    <ClInclude Include="Include\Rendering\CubeData.h" />
+    <ClInclude Include="Include\Rendering\OldCube.h" />
+    <ClInclude Include="Include\Interaction\Input.h" />
     <ClInclude Include="Include\Math\Mat.h" />
-    <ClInclude Include="Include\Player.h" />
-    <ClInclude Include="Include\RenderablesSet.h" />
-    <ClInclude Include="Include\Renderer.h" />
+    <ClInclude Include="Include\Interaction\Player.h" />
+    <ClInclude Include="Include\Rendering\RenderablesSet.h" />
+    <ClInclude Include="Include\Rendering\Renderer.h" />
     <ClInclude Include="Include\ResourceManager.h" />
-    <ClInclude Include="Include\Shader.h" />
-    <ClInclude Include="Include\Renderable\Shape.h" />
-    <ClInclude Include="Include\Renderable\Skybox.h" />
-    <ClInclude Include="Include\Texture.h" />
-    <ClInclude Include="Include\TextureAtlasSegment.h" />
+    <ClInclude Include="Include\Rendering\Shader.h" />
+    <ClInclude Include="Include\Rendering\Shape.h" />
+    <ClInclude Include="Include\Rendering\Skybox.h" />
+    <ClInclude Include="Include\Rendering\Texture\Texture.h" />
+    <ClInclude Include="Include\Rendering\Texture\TextureAtlasSegment.h" />
     <ClInclude Include="Include\Math\Vec.h" />
     <ClInclude Include="Include\Math\Vec_2.h" />
     <ClInclude Include="Include\Math\Vec_3.h" />

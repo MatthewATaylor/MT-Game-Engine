@@ -1,4 +1,4 @@
-#include "../../Include/Renderable/Shape.h"
+#include "Rendering//Shape.h"
 
 namespace mtge {
 	//Constructor

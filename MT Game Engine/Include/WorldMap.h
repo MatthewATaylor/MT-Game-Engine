@@ -8,10 +8,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "RenderablesSet.h"
-#include "Shader.h"
-#include "Texture.h"
-#include "Renderable/Skybox.h"
+#include "Rendering/RenderablesSet.h"
+#include "Rendering/Shader.h"
+#include "Rendering/Texture/Texture.h"
+#include "Rendering/Skybox.h"
 #include "ResourceManager.h"
 #include "Math/Mat.h"
 

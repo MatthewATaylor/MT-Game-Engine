@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "../Math/Vec.h"
+#include "Math/Vec.h"
 
 namespace mtge {
 	class CubeData {

@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <stb_image.h>
 
-#include "Shader.h"
+#include "Rendering/Shader.h"
 
 namespace mtge {
 	enum class TextureWrapSetting {

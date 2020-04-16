@@ -1,4 +1,4 @@
-#include "../../Include/Renderable/Skybox.h"
+#include "Rendering/Skybox.h"
 
 namespace mtge {
 	const float Skybox::VERTICES[] = {

@@ -1,4 +1,4 @@
-#include "../Include/Input.h"
+#include "Interaction/Input.h"
 
 namespace mtge {
 	const int Input::GLFW_KEY_LIST[Input::NUM_KEYS] = {

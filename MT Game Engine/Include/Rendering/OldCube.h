@@ -3,11 +3,11 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "../Texture.h"
+#include "Texture/Texture.h"
 #include "Shape.h"
-#include "../ResourceManager.h"
-#include "../TextureAtlasSegment.h"
-#include "../Math/Vec.h"
+#include "ResourceManager.h"
+#include "Texture/TextureAtlasSegment.h"
+#include "Math/Vec.h"
 
 namespace mtge {
 	class OldCube : public Shape {

@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "Renderable/Shape.h"
-#include "Renderable/OldCube.h"
+#include "Rendering/Shape.h"
+#include "Rendering/OldCube.h"
 #include "Math/Vec.h"
 
 namespace mtge {

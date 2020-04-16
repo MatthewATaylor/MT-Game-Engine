@@ -1,4 +1,4 @@
-#include "../Include/Texture.h"
+#include "Rendering/Texture/Texture.h"
 
 namespace mtge {
 	//Private

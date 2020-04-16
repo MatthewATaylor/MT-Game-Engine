@@ -1,4 +1,4 @@
-#include "../../Include/Renderable/CubeData.h"
+#include "Rendering/CubeData.h"
 
 namespace mtge {
 	//Private

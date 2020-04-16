@@ -5,9 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../Shader.h"
-#include "../Buffer.h"
-#include "../Math/Vec.h"
+#include "Rendering/Shader.h"
+#include "Rendering/Buffer.h"
+#include "Math/Vec.h"
 
 namespace mtge {
 	enum class ShapeType {

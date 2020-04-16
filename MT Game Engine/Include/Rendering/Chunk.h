@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Renderable/Cube.h"
-#include "Renderable/CubeData.h"
+#include "Rendering/Cube.h"
+#include "Rendering/CubeData.h"
 #include "Math/Vec.h"
 #include "Math/Mat.h"
 #include "ResourceManager.h"
