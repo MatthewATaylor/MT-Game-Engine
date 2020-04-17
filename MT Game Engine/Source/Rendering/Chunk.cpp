@@ -1,27 +1,7 @@
 #include "Rendering/Chunk.h"
 
 namespace mtge {
-	//Private
-	bool Chunk::cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex]->type != 'x';
-	}
-	bool Chunk::cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex]->type != 'x';
-	}
-	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x';
-	}
-	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x';
-	}
-	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]->type != 'x';
-	}
-	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x';
-	}
-
-	//Public
+	//Constructor
 	Chunk::Chunk(TextureAtlasSegment *texAtlasSegment) {
 		this->texAtlasSegment = texAtlasSegment;
 
@@ -44,15 +24,28 @@ namespace mtge {
 			}
 		}
 	}
-	Chunk::~Chunk() {
-		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
-			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
-				delete[] cubes[i][j];
-			}
-			delete[] cubes[i];
-		}
-		delete[] cubes;
+
+	//Private
+	bool Chunk::cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex]->type != 'x';
 	}
+	bool Chunk::cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex]->type != 'x';
+	}
+	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		return xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x';
+	}
+	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		return xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x';
+	}
+	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		return zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]->type != 'x';
+	}
+	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		return zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x';
+	}
+
+	//Public
 	void Chunk::genBuffer() {
 		glBindVertexArray(vertexArrayID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -98,18 +91,29 @@ namespace mtge {
 	void Chunk::render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
 		glBindVertexArray(vertexArrayID);
 		
-		Shader *shader = ResourceManager::getShapeShaderPtr();
-		if (shader == nullptr) {
+		Shader *shader = Shader::getTexturedShapePtr();
+		if (!shader) {
 			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED SHAPE SHADER" << std::endl << std::endl;
 			return;
 		}
 		shader->useProgram();
 
-		glUniformMatrix4fv(ResourceManager::getShapeShaderPtr()->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-		glUniformMatrix4fv(ResourceManager::getShapeShaderPtr()->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
+		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
 
 		glEnable(GL_CULL_FACE);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 		glDrawArrays(GL_TRIANGLES, 0, CubeData::getVerticesAdded());
+	}
+
+	//Destructor
+	Chunk::~Chunk() {
+		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
+			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
+				delete[] cubes[i][j];
+			}
+			delete[] cubes[i];
+		}
+		delete[] cubes;
 	}
 }

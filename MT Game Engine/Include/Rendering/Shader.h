@@ -20,12 +20,16 @@ namespace mtge {
 		unsigned int viewLocation;
 		unsigned int modelLocation;
 
+		static Shader *texturedShape;
+		static Shader *skybox;
+
 		void checkShaderCompileErrors(unsigned int ID, ShaderType shaderType);
 		void checkShaderLinkErrors(unsigned int ID);
-		void readShaderFiles(const char* vertexShaderSource, const char* fragmentShaderSource);
+		void readShadersFromFiles(std::string vertexShaderFile, std::string fragmentShaderFile);
+		void readShaders(std::string vertexShader, std::string fragmentShader);
 
 	public:
-		Shader(const char* vertexShaderSource, const char* fragmentShaderSource);
+		Shader(std::string vertexShaderSource, std::string fragmentShaderSource, bool fromFiles);
 
 		void useProgram();
 		void setBoolUniform(unsigned int location, bool newValue);
@@ -37,5 +41,17 @@ namespace mtge {
 		unsigned int getProjectionLocation();
 		unsigned int getViewLocation();
 		unsigned int getModelLocation();
+
+		static void loadShaders(
+			std::string texturedShapeVertexShaderPath, 
+			std::string texturedShapeFragmentShaderPath, 
+			std::string skyboxVertexShaderPath, 
+			std::string skyboxFragmentShaderPath
+		);
+		static void loadDefaultShaders();
+
+		static Shader *getTexturedShapePtr();
+		static Shader *getSkyboxPtr();
+		static void freeResources();
 	};
 }

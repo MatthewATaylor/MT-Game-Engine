@@ -1,6 +1,9 @@
 #include "Rendering/CubeData.h"
 
 namespace mtge {
+	//Constructor
+	CubeData::CubeData(TextureAtlasSegment *texAtlasSegment) : texAtlasSegment(texAtlasSegment) {}
+
 	//Private
 	unsigned int CubeData::bufferOffsetSize = 0;
 
@@ -21,7 +24,6 @@ namespace mtge {
 	}
 
 	//Public
-	CubeData::CubeData(TextureAtlasSegment *texAtlasSegment) : texAtlasSegment(texAtlasSegment) {}
 	void CubeData::resetBufferOffsetCounter() {
 		bufferOffsetSize = 0;
 	}

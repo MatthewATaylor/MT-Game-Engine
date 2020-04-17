@@ -2,6 +2,9 @@
 
 namespace mtge {
 	//Private
+	Texture *Texture::atlas = nullptr;
+	Texture *Texture::skybox = nullptr;
+
 	void Texture::setTextureWrap_GL(TextureWrapSetting textureWrap, GLint &textureWrap_GL) {
 		switch (textureWrap) {
 		case TextureWrapSetting::REPEAT:
@@ -54,9 +57,7 @@ namespace mtge {
 
 		setColorFormat_GL(colorFormat, textureSettings_GL_3D.colorFormat);
 	}
-
-	//Public
-	void Texture::load2D(const char* textureFile, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
+	void Texture::load2D(std::string textureFile, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
 		setTextureSettings_GL_2D(textureWrapX, textureWrapY, textureFilterMin, textureFilterMag, colorFormat);
 
 		//Setup/Bind Texture
@@ -72,7 +73,7 @@ namespace mtge {
 		//Load Texture
 		stbi_set_flip_vertically_on_load(true);
 		int textureWidth, textureHeight, numColorChannels;
-		unsigned char *data = stbi_load(textureFile, &textureWidth, &textureHeight, &numColorChannels, 0);
+		unsigned char *data = stbi_load(textureFile.c_str(), &textureWidth, &textureHeight, &numColorChannels, 0);
 		if (data) {
 			glTexImage2D(GL_TEXTURE_2D, 0, textureSettings_GL_2D.colorFormat, textureWidth, textureHeight, 0, textureSettings_GL_2D.colorFormat, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -84,7 +85,7 @@ namespace mtge {
 
 		this->target = GL_TEXTURE_2D;
 	}
-	void Texture::loadCubemap(const char *textureFiles[], TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
+	void Texture::loadCubemap(std::string textureFiles[6], TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
 		setTextureSettings_GL_3D(textureWrapX, textureWrapY, textureWrapZ, textureFilterMin, textureFilterMag, colorFormat);
 
 		//Setup/Bind Texture
@@ -102,7 +103,7 @@ namespace mtge {
 		stbi_set_flip_vertically_on_load(false);
 		int textureWidth, textureHeight, numColorChannels;
 		for (unsigned int i = 0; i < 6; i++) {
-			unsigned char *data = stbi_load(textureFiles[i], &textureWidth, &textureHeight, &numColorChannels, 0);
+			unsigned char *data = stbi_load(textureFiles[i].c_str(), &textureWidth, &textureHeight, &numColorChannels, 0);
 			if (data) {
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, textureSettings_GL_3D.colorFormat, textureWidth, textureHeight, 0, textureSettings_GL_3D.colorFormat, GL_UNSIGNED_BYTE, data);
 				glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
@@ -122,5 +123,41 @@ namespace mtge {
 	void Texture::activate(GLenum textureNum) {
 		glActiveTexture(textureNum);
 		glBindTexture(target, textureID);
+	}
+
+	//Public
+	void Texture::loadTextureAtlas(std::string textureFile, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
+		atlas = new Texture;
+		atlas->load2D(textureFile, textureWrapX, textureWrapY, textureFilterMin, textureFilterMag, colorFormat);
+		if (!Shader::getTexturedShapePtr()) {
+			std::cout << "ERROR [FUNCTION: loadTextureAtlas]: UNINITIALIZED SHAPE SHADER" << std::endl << std::endl;
+			return;
+		}
+		atlas->setUniform(Shader::getTexturedShapePtr(), Shader::getTexturedShapePtr()->getUniformLocation("texture1"), 0);
+		atlas->activate(GL_TEXTURE0);
+	}
+	void Texture::loadSkybox(SkyboxTextureContainer *textureContainer, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat) {
+		skybox = new Texture;
+		skybox->loadCubemap(textureContainer->files, textureWrapX, textureWrapY, textureWrapZ, textureFilterMin, textureFilterMag, colorFormat);
+		if (!Shader::getSkyboxPtr()) {
+			std::cout << "ERROR [FUNCTION: loadSkybox]: UNINITIALIZED SKYBOX SHADER" << std::endl << std::endl;
+			return;
+		}
+		skybox->setUniform(Shader::getSkyboxPtr(), Shader::getSkyboxPtr()->getUniformLocation("skybox"), 0);
+		skybox->activate(GL_TEXTURE0);
+	}
+	Texture *Texture::getAtlasPtr() {
+		return atlas;
+	}
+	Texture *Texture::getSkyboxPtr() {
+		return skybox;
+	}
+	void Texture::freeResources() {
+		if (atlas) {
+			delete atlas;
+		}
+		if (skybox) {
+			delete skybox;
+		}
 	}
 }

@@ -2,17 +2,17 @@
 
 namespace mtge {
 	//Constructor
-	OldCube::OldCube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment *textureAtlasSegment) : Shape(pos, dimensions, ResourceManager::getShapeShaderPtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(textureAtlasSegment) {
-		this->textureAtlas = textureAtlas;
-		textureLocation = shader->getUniformLocation("texture1");
-		this->textureAtlas->setUniform(shader, textureLocation, 0);
-		this->textureAtlas->activate(GL_TEXTURE0);
+	OldCube::OldCube(glm::vec3 pos, glm::vec3 dimensions, Texture *textureAtlas, TextureAtlasSegment *textureAtlasSegment) : Shape(pos, dimensions, Shader::getTexturedShapePtr(), VERTICES, VERTICES_SIZE, false, ShapeType::CUBE), texAS(textureAtlasSegment) {
+		//this->textureAtlas = textureAtlas;
+		//textureLocation = shader->getUniformLocation("texture1");
+		//this->textureAtlas->setUniform(shader, textureLocation, 0);
+		//this->textureAtlas->activate(GL_TEXTURE0);
 	}
 	OldCube::OldCube(const OldCube &cube) : Shape(cube.getCenterPosition(), cube.getDimensions(), cube.shader, VERTICES, VERTICES_SIZE, cube.POSITION_ONLY_VERTICES, ShapeType::CUBE), texAS(cube.texAS) {
-		textureAtlas = cube.textureAtlas;
-		textureLocation = cube.textureLocation;
-		textureAtlas->setUniform(shader, textureLocation, 0);
-		textureAtlas->activate(GL_TEXTURE0);
+		//textureAtlas = cube.textureAtlas;
+		//textureLocation = cube.textureLocation;
+		//textureAtlas->setUniform(shader, textureLocation, 0);
+		//textureAtlas->activate(GL_TEXTURE0);
 	}
 
 	//Public

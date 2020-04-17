@@ -30,8 +30,8 @@ namespace mtge {
 
 	public:
 		Chunk(TextureAtlasSegment *texAtlasSegment);
-		~Chunk();
 		void genBuffer();
 		void render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix);
+		~Chunk();
 	};
 }

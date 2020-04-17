@@ -7,6 +7,7 @@
 #include <stb_image.h>
 
 #include "Rendering/Shader.h"
+#include "SkyboxTextureContainer.h"
 
 namespace mtge {
 	enum class TextureWrapSetting {
@@ -40,16 +41,25 @@ namespace mtge {
 		unsigned int textureID;
 		GLenum target;
 
+		static Texture* atlas;
+		static Texture* skybox;
+
 		void setTextureWrap_GL(TextureWrapSetting textureWrap, GLint &textureWrap_GL);
 		void setTextureFilter_GL(TextureFilterSetting textureFilter, GLint &textureFilter_GL);
 		void setColorFormat_GL(TextureColorSetting colorFormat, GLint &colorFormat_GL);
 		void setTextureSettings_GL_2D(TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
 		void setTextureSettings_GL_3D(TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
-
-	public:
-		void load2D(const char* textureFile, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
-		void loadCubemap(const char *textureFiles[], TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
+		void load2D(std::string textureFile, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
+		void loadCubemap(std::string textureFiles[6], TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
 		void setUniform(Shader* shader, unsigned int location, int textureNum);
 		void activate(GLenum textureNum);
+
+	public:
+		static void loadTextureAtlas(std::string textureFile, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
+		static void loadSkybox(SkyboxTextureContainer *textureContainer, TextureWrapSetting textureWrapX, TextureWrapSetting textureWrapY, TextureWrapSetting textureWrapZ, TextureFilterSetting textureFilterMin, TextureFilterSetting textureFilterMag, TextureColorSetting colorFormat);
+		
+		static Texture *getAtlasPtr();
+		static Texture *getSkyboxPtr();
+		static void freeResources();
 	};
 }

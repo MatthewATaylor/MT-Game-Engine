@@ -141,6 +141,7 @@
     <ClCompile Include="Source\Interaction\Player.cpp" />
     <ClCompile Include="Source\Rendering\RenderablesSet.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
+    <ClCompile Include="Source\Rendering\Texture\SkyboxTextureContainer.cpp" />
     <ClCompile Include="Source\ResourceManager.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
     <ClCompile Include="Source\Rendering\Shape.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Include\Interaction\Player.h" />
     <ClInclude Include="Include\Rendering\RenderablesSet.h" />
     <ClInclude Include="Include\Rendering\Renderer.h" />
+    <ClInclude Include="Include\Rendering\Texture\SkyboxTextureContainer.h" />
     <ClInclude Include="Include\ResourceManager.h" />
     <ClInclude Include="Include\Rendering\Shader.h" />
     <ClInclude Include="Include\Rendering\Shape.h" />

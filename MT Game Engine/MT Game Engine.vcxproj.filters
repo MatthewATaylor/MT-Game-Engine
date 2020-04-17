@@ -75,6 +75,9 @@
     <ClCompile Include="Source\Rendering\Texture\TextureAtlasSegment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Rendering\Texture\SkyboxTextureContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Clock.h">
@@ -150,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Rendering\Chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Rendering\Texture\SkyboxTextureContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,14 +2,22 @@
 
 namespace mtge {
 	//Constructor
-	Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource) {
-		readShaderFiles(vertexShaderSource, fragmentShaderSource);
+	Shader::Shader(std::string vertexShaderSource, std::string fragmentShaderSource, bool fromFiles) {
+		if (fromFiles) {
+			readShadersFromFiles(vertexShaderSource, fragmentShaderSource);
+		}
+		else {
+			readShaders(vertexShaderSource, fragmentShaderSource);
+		}
 		projectionLocation = getUniformLocation("projection");
 		viewLocation = getUniformLocation("view");
 		modelLocation = getUniformLocation("model");
 	}
 	
 	//Private
+	Shader *Shader::texturedShape = nullptr;
+	Shader *Shader::skybox = nullptr;
+
 	void Shader::checkShaderCompileErrors(unsigned int ID, ShaderType shaderType) {
 		const int ERROR_BUFFER_SIZE = 512;
 		int success;
@@ -36,7 +44,7 @@ namespace mtge {
 			std::cout << "ERROR: SHADERS FAILED TO LINK" << std::endl << std::endl;
 		}
 	}
-	void Shader::readShaderFiles(const char* vertexShaderSource, const char* fragmentShaderSource) {
+	void Shader::readShadersFromFiles(std::string vertexShaderFile, std::string fragmentShaderFile) {
 		std::ifstream vertexFileInput, fragmentFileInput;
 
 		vertexFileInput.exceptions(std::ifstream::badbit | std::ifstream::failbit);
@@ -47,8 +55,8 @@ namespace mtge {
 
 		//Extract GLSL Code from Files
 		try {
-			vertexFileInput.open(vertexShaderSource);
-			fragmentFileInput.open(fragmentShaderSource);
+			vertexFileInput.open(vertexShaderFile);
+			fragmentFileInput.open(fragmentShaderFile);
 
 			std::stringstream vertexStream, fragmentStream;
 			vertexStream << vertexFileInput.rdbuf();
@@ -64,18 +72,21 @@ namespace mtge {
 			std::cout << "ERROR [FUNCTION: readShaderFiles]: SHADER FILES COULD NOT BE READ" << std::endl << std::endl;
 		}
 
-		const char* vertexShader = vertexReadString.c_str();
-		const char* fragmentShader = fragmentReadString.c_str();
-
+		readShaders(vertexReadString, fragmentReadString);
+	}
+	void Shader::readShaders(std::string vertexShader, std::string fragmentShader) {
+		const char* vertexShader_cstr = vertexShader.c_str();
+		const char* fragmentShader_cstr = fragmentShader.c_str();
+		
 		//Compile Vertex Shader
 		unsigned int vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShaderID, 1, &vertexShader, NULL);
+		glShaderSource(vertexShaderID, 1, &vertexShader_cstr, NULL);
 		glCompileShader(vertexShaderID);
 		checkShaderCompileErrors(vertexShaderID, ShaderType::VERTEX);
 
 		//Compile Fragment Shader
 		unsigned int fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShaderID, 1, &fragmentShader, NULL);
+		glShaderSource(fragmentShaderID, 1, &fragmentShader_cstr, NULL);
 		glCompileShader(fragmentShaderID);
 		checkShaderCompileErrors(fragmentShaderID, ShaderType::FRAGMENT);
 
@@ -104,7 +115,6 @@ namespace mtge {
 	void Shader::setFloatUniform(unsigned int location, float newValue) {
 		glUniform1f(location, newValue);
 	}
-
 	unsigned int Shader::getUniformLocation(const char *uniformName) {
 		return glGetUniformLocation(ID, uniformName);
 	}
@@ -119,5 +129,31 @@ namespace mtge {
 	}
 	unsigned int Shader::getModelLocation() {
 		return modelLocation;
+	}
+	void Shader::loadShaders(
+		std::string texturedShapeVertexShaderPath,
+		std::string texturedShapeFragmentShaderPath,
+		std::string skyboxVertexShaderPath,
+		std::string skyboxFragmentShaderPath) {
+
+		texturedShape = new Shader(texturedShapeVertexShaderPath, texturedShapeFragmentShaderPath, true);
+		skybox = new Shader(skyboxVertexShaderPath, skyboxFragmentShaderPath, true);
+	}
+	void Shader::loadDefaultShaders() {
+
+	}
+	Shader *Shader::getTexturedShapePtr() {
+		return texturedShape;
+	}
+	Shader *Shader::getSkyboxPtr() {
+		return skybox;
+	}
+	void Shader::freeResources() {
+		if (texturedShape) {
+			delete texturedShape;
+		}
+		if (skybox) {
+			delete skybox;
+		}
 	}
 }

@@ -40,6 +40,7 @@ namespace mtge {
 		delete skybox;
 	}
 
+	/*
 	void WorldMap::drawRenderablesSets(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
 		if (shader != ResourceManager::getShapeShaderPtr()) {
 			shader = ResourceManager::getShapeShaderPtr();
@@ -52,12 +53,13 @@ namespace mtge {
 			renderablesSets[i]->drawAllShapes();
 		}
 	}
+	*/
 	void WorldMap::drawSkybox(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
 		if (skybox == nullptr) {
 			skybox = new Skybox;
 		}
-		if (shader != ResourceManager::getSkyboxShaderPtr()) {
-			shader = ResourceManager::getSkyboxShaderPtr();
+		if (shader != Shader::getSkyboxPtr()) {
+			shader = Shader::getSkyboxPtr();
 		}
 		if (shader == nullptr) {
 			std::cout << "ERROR [FUNCTION: drawSkybox]: UNINITIALIZED SKYBOX SHADER" << std::endl << std::endl;
@@ -66,7 +68,7 @@ namespace mtge {
 		shader->useProgram();
 
 		glDepthFunc(GL_LEQUAL);
-		glUniformMatrix4fv(ResourceManager::getSkyboxShaderPtr()->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		
 		//Remove translation
 		viewMatrix.set(1, 4, 0.0f);
@@ -77,7 +79,7 @@ namespace mtge {
 		viewMatrix.set(4, 3, 0.0f);
 		viewMatrix.set(4, 4, 1.0f);
 
-		glUniformMatrix4fv(ResourceManager::getSkyboxShaderPtr()->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
+		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
 		skybox->updateBuffers();
 		skybox->draw();
 		glDepthFunc(GL_LESS);
