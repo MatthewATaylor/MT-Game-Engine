@@ -22,7 +22,9 @@ namespace mtge {
 	}
 
 	//Public
-	Chunk::Chunk() {
+	Chunk::Chunk(TextureAtlasSegment *texAtlasSegment) {
+		this->texAtlasSegment = texAtlasSegment;
+
 		glGenVertexArrays(1, &vertexArrayID);
 		glGenBuffers(1, &vertexBufferID);
 
@@ -69,7 +71,7 @@ namespace mtge {
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
 					if (cubes[i][j][k]->type != 'x') {
-						CubeData cubeData;
+						CubeData cubeData(texAtlasSegment);
 						cubeData.addBufferSubData(
 							math::Vec<float, 3>(xOffset, yOffset, zOffset),
 							LENGTH_IN_CUBES,
@@ -86,11 +88,11 @@ namespace mtge {
 		}
 
 		//Position vertex attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 
 		//Color vertex attribute
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 	}
 	void Chunk::render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
@@ -108,6 +110,6 @@ namespace mtge {
 
 		glEnable(GL_CULL_FACE);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-		glDrawArrays(GL_TRIANGLES, 0, (CubeData::getBufferOffsetCounter() / 6) / sizeof(float));
+		glDrawArrays(GL_TRIANGLES, 0, CubeData::getVerticesAdded());
 	}
 }

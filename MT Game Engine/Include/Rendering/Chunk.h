@@ -19,6 +19,7 @@ namespace mtge {
 		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> further right    +j -> higher up    +k -> further forwards
 		unsigned int vertexArrayID;
 		unsigned int vertexBufferID;
+		TextureAtlasSegment *texAtlasSegment = nullptr;
 
 		bool cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		bool cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
@@ -28,7 +29,7 @@ namespace mtge {
 		bool cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 
 	public:
-		Chunk();
+		Chunk(TextureAtlasSegment *texAtlasSegment);
 		~Chunk();
 		void genBuffer();
 		void render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix);

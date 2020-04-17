@@ -5,7 +5,7 @@ namespace mtge {
 	unsigned int CubeData::bufferOffsetSize = 0;
 
 	void CubeData::transformFace(float face[FACE_VERTEX_BUFFER_LENGTH], math::Vec<float, 3> offset, float scale) {
-		for (unsigned int i = 0; i < FACE_VERTEX_BUFFER_LENGTH - 3; i += 6) {
+		for (unsigned int i = 0; i < FACE_VERTEX_BUFFER_LENGTH - 2; i += 5) {
 			float &x = face[i];
 			float &y = face[i + 1];
 			float &z = face[i + 2];
@@ -21,11 +21,12 @@ namespace mtge {
 	}
 
 	//Public
+	CubeData::CubeData(TextureAtlasSegment *texAtlasSegment) : texAtlasSegment(texAtlasSegment) {}
 	void CubeData::resetBufferOffsetCounter() {
 		bufferOffsetSize = 0;
 	}
-	unsigned int CubeData::getBufferOffsetCounter() {
-		return bufferOffsetSize;
+	unsigned int CubeData::getVerticesAdded() {
+		return bufferOffsetSize / ELEMENTS_PER_VERTEX / sizeof(float);
 	}
 	void CubeData::addBufferSubData(
 		math::Vec<float, 3> offset,
