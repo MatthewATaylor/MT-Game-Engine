@@ -1,7 +1,8 @@
 #include "Rendering/Skybox.h"
 
 namespace mtge {
-	const float Skybox::VERTICES[] = {
+	//Private
+	const float Skybox::VERTEX_BUFFER[VERTEX_BUFFER_LENGTH] = {
 		//Triangle 1, Front
 		-0.5f,  0.5f,  0.5f,
 		-0.5f, -0.5f,  0.5f,
@@ -56,15 +57,54 @@ namespace mtge {
 		 0.5f, -0.5f, -0.5f,
 		 0.5f, -0.5f,  0.5f,
 	};
-
-	//Constructor
-	Skybox::Skybox() :
-		Shape(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), Shader::getSkyboxPtr(), VERTICES, VERTICES_SIZE, true, ShapeType::SKYBOX) {}
+	unsigned int Skybox::vertexArrayID = 0;
+	unsigned int Skybox::vertexBufferID = 0;
 
 	//Public
-	void Skybox::draw() {
+	void Skybox::init() {
+		glGenVertexArrays(1, &vertexArrayID);
+		glGenBuffers(1, &vertexBufferID);
+
+		glBindVertexArray(vertexArrayID);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+		glBufferData(GL_ARRAY_BUFFER, VERTEX_BUFFER_SIZE, VERTEX_BUFFER, GL_STATIC_DRAW);
+
+		//Position vertex attribute
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+	}
+	void Skybox::render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
+		glBindVertexArray(vertexArrayID);
+
+		if (!Texture::getSkyboxPtr()) {
+			std::cout << "WARNING [FUNCTION: render]: SKYBOX TEXTURE UNINITIALIZED" << std::endl << std::endl;
+		}
+
+		Shader *shader = Shader::getSkyboxPtr();
+		if (!shader) {
+			std::cout << "ERROR [FUNCTION: render]: SKYBOX SHADER UNINITIALIZED" << std::endl << std::endl;
+			return;
+		}
+		shader->useProgram();
+
+		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		viewMatrix.set(1, 4, 0.0f);
+		viewMatrix.set(2, 4, 0.0f);
+		viewMatrix.set(3, 4, 0.0f);
+		viewMatrix.set(4, 1, 0.0f);
+		viewMatrix.set(4, 2, 0.0f);
+		viewMatrix.set(4, 3, 0.0f);
+		viewMatrix.set(4, 4, 1.0f);
+		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
+		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+
+		glDepthFunc(GL_LEQUAL);
 		glDisable(GL_CULL_FACE);
-		transform();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDepthFunc(GL_LESS);
+	}
+	void Skybox::freeResources() {
+		glDeleteVertexArrays(1, &vertexArrayID);
+		glDeleteBuffers(1, &vertexBufferID);
 	}
 }

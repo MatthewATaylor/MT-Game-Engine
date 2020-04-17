@@ -1,17 +1,27 @@
 #pragma once
 
-#include "Shape.h"
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include "Shader.h"
 #include "Texture/Texture.h"
-#include "ResourceManager.h"
+#include "Math/Vec.h"
+#include "Math/Mat.h"
 
 namespace mtge {
-	class Skybox : public Shape {
+	class Skybox {
 	private:
-		static const float VERTICES[];
-		static const unsigned int VERTICES_SIZE = sizeof(float) * 108;
+		static const unsigned int VERTEX_BUFFER_LENGTH = 108;
+		static const unsigned int VERTEX_BUFFER_SIZE = sizeof(float) * VERTEX_BUFFER_LENGTH;
+		static const float VERTEX_BUFFER[VERTEX_BUFFER_LENGTH];
+
+		static unsigned int vertexArrayID;
+		static unsigned int vertexBufferID;
 
 	public:
-		Skybox();
-		void draw();
+		static void init();
+		static void render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix);
+		static void freeResources();
 	};
 }

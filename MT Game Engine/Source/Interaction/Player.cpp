@@ -7,60 +7,60 @@ namespace mtge {
 
 	//Private
 	void Player::manageCollisionX() {
-		for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
-			RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
-			if (currentRenderablesSet->getIsVisible()) {
-				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
-				if (collisionValue >= 0) {
-					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
-					if (totalMovement.getX() > 0) {
-						position.setX(currentShape->getCenterPosition().x - 0.5f * currentShape->getDimensions().x - 0.5f * DIMENSIONS.getX());
-					}
-					else if (totalMovement.getX() < 0) {
-						position.setX(currentShape->getCenterPosition().x + 0.5f * currentShape->getDimensions().x + 0.5f * DIMENSIONS.getX());
-					}
-				}
-			}
-		}
+		//for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
+		//	RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
+		//	if (currentRenderablesSet->getIsVisible()) {
+		//		int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
+		//		if (collisionValue >= 0) {
+		//			Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
+		//			if (totalMovement.getX() > 0) {
+		//				position.setX(currentShape->getCenterPosition().x - 0.5f * currentShape->getDimensions().x - 0.5f * DIMENSIONS.getX());
+		//			}
+		//			else if (totalMovement.getX() < 0) {
+		//				position.setX(currentShape->getCenterPosition().x + 0.5f * currentShape->getDimensions().x + 0.5f * DIMENSIONS.getX());
+		//			}
+		//		}
+		//	}
+		//}
 	}
 	void Player::manageCollisionY() {
-		bool bottomCollision = false;
-		for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
-			RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
-			if (currentRenderablesSet->getIsVisible()) {
-				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
-				if (collisionValue >= 0) {
-					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
-					if (totalMovement.getY() > 0) {
-						position.setY(currentShape->getCenterPosition().y - 0.5f * currentShape->getDimensions().y - 0.5f * DIMENSIONS.getY());
-						gravitySpeed = 0.0f;
-					}
-					else if (totalMovement.getY() < 0) {
-						position.setY(currentShape->getCenterPosition().y + 0.5f * currentShape->getDimensions().y + 0.5f * DIMENSIONS.getY());
-						gravitySpeed = startGravitySpeed;
-						bottomCollision = true;
-					}
-				}
-			}
-		}
-		onGround = bottomCollision;
+		//bool bottomCollision = false;
+		//for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
+		//	RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
+		//	if (currentRenderablesSet->getIsVisible()) {
+		//		int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
+		//		if (collisionValue >= 0) {
+		//			Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
+		//			if (totalMovement.getY() > 0) {
+		//				position.setY(currentShape->getCenterPosition().y - 0.5f * currentShape->getDimensions().y - 0.5f * DIMENSIONS.getY());
+		//				gravitySpeed = 0.0f;
+		//			}
+		//			else if (totalMovement.getY() < 0) {
+		//				position.setY(currentShape->getCenterPosition().y + 0.5f * currentShape->getDimensions().y + 0.5f * DIMENSIONS.getY());
+		//				gravitySpeed = startGravitySpeed;
+		//				bottomCollision = true;
+		//			}
+		//		}
+		//	}
+		//}
+		//onGround = bottomCollision;
 	}
 	void Player::manageCollisionZ() {
-		for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
-			RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
-			if (currentRenderablesSet->getIsVisible()) {
-				int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
-				if (collisionValue >= 0) {
-					Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
-					if (totalMovement.getZ() > 0) {
-						position.setZ(currentShape->getCenterPosition().z - 0.5f * currentShape->getDimensions().z - 0.5f * DIMENSIONS.getZ());
-					}
-					else if (totalMovement.getZ() < 0) {
-						position.setZ(currentShape->getCenterPosition().z + 0.5f * currentShape->getDimensions().z + 0.5f * DIMENSIONS.getZ());
-					}
-				}
-			}
-		}
+		//for (unsigned int i = 0; i < WorldMap::getNumRenderablesSets(); i++) {
+		//	RenderablesSet *currentRenderablesSet = WorldMap::getRenderablesSetPtr(i);
+		//	if (currentRenderablesSet->getIsVisible()) {
+		//		int collisionValue = currentRenderablesSet->checkAllShapeCollisions(position, DIMENSIONS);
+		//		if (collisionValue >= 0) {
+		//			Shape *currentShape = currentRenderablesSet->getShapePtr(collisionValue);
+		//			if (totalMovement.getZ() > 0) {
+		//				position.setZ(currentShape->getCenterPosition().z - 0.5f * currentShape->getDimensions().z - 0.5f * DIMENSIONS.getZ());
+		//			}
+		//			else if (totalMovement.getZ() < 0) {
+		//				position.setZ(currentShape->getCenterPosition().z + 0.5f * currentShape->getDimensions().z + 0.5f * DIMENSIONS.getZ());
+		//			}
+		//		}
+		//	}
+		//}
 	}
 	void Player::applyGravity() {
 		gravitySpeed += gravityAddend * movementSize;

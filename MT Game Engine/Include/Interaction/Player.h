@@ -1,6 +1,5 @@
 #pragma once
 
-#include "WorldMap.h"
 #include "Camera.h"
 #include "Window.h"
 #include "ResourceManager.h"

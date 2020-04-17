@@ -127,7 +127,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Rendering\Buffer.cpp" />
     <ClCompile Include="Source\Interaction\Camera.cpp" />
     <ClCompile Include="Source\Rendering\Chunk.cpp" />
     <ClCompile Include="Source\Clock.cpp" />
@@ -136,40 +135,32 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="Source\Rendering\OldCube.cpp" />
     <ClCompile Include="Source\Interaction\Input.cpp" />
     <ClCompile Include="Source\Interaction\Player.cpp" />
-    <ClCompile Include="Source\Rendering\RenderablesSet.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Rendering\Texture\SkyboxTextureContainer.cpp" />
     <ClCompile Include="Source\ResourceManager.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
-    <ClCompile Include="Source\Rendering\Shape.cpp" />
     <ClCompile Include="Source\Rendering\Skybox.cpp" />
     <ClCompile Include="Source\STB_Image.cpp" />
     <ClCompile Include="Source\Rendering\Texture\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Texture\TextureAtlasSegment.cpp" />
     <ClCompile Include="Source\Window.cpp" />
-    <ClCompile Include="Source\WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Rendering\Buffer.h" />
     <ClInclude Include="Include\Interaction\Camera.h" />
     <ClInclude Include="Include\Rendering\Chunk.h" />
     <ClInclude Include="Include\Clock.h" />
     <ClInclude Include="Include\Math\Util.h" />
     <ClInclude Include="Include\Rendering\Cube.h" />
     <ClInclude Include="Include\Rendering\CubeData.h" />
-    <ClInclude Include="Include\Rendering\OldCube.h" />
     <ClInclude Include="Include\Interaction\Input.h" />
     <ClInclude Include="Include\Math\Mat.h" />
     <ClInclude Include="Include\Interaction\Player.h" />
-    <ClInclude Include="Include\Rendering\RenderablesSet.h" />
     <ClInclude Include="Include\Rendering\Renderer.h" />
     <ClInclude Include="Include\Rendering\Texture\SkyboxTextureContainer.h" />
     <ClInclude Include="Include\ResourceManager.h" />
     <ClInclude Include="Include\Rendering\Shader.h" />
-    <ClInclude Include="Include\Rendering\Shape.h" />
     <ClInclude Include="Include\Rendering\Skybox.h" />
     <ClInclude Include="Include\Rendering\Texture\Texture.h" />
     <ClInclude Include="Include\Rendering\Texture\TextureAtlasSegment.h" />
@@ -178,7 +169,6 @@
     <ClInclude Include="Include\Math\Vec_3.h" />
     <ClInclude Include="Include\Math\Vec_4.h" />
     <ClInclude Include="Include\Window.h" />
-    <ClInclude Include="Include\WorldMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Math\Mat.inl" />

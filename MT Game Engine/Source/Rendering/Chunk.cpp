@@ -91,18 +91,22 @@ namespace mtge {
 	void Chunk::render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
 		glBindVertexArray(vertexArrayID);
 		
+		if (!Texture::getAtlasPtr()) {
+			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
+		}
+
 		Shader *shader = Shader::getTexturedShapePtr();
 		if (!shader) {
-			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED SHAPE SHADER" << std::endl << std::endl;
+			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED TEXTURED SHAPE SHADER" << std::endl << std::endl;
 			return;
 		}
 		shader->useProgram();
 
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
+		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 
 		glEnable(GL_CULL_FACE);
-		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 		glDrawArrays(GL_TRIANGLES, 0, CubeData::getVerticesAdded());
 	}
 
@@ -115,5 +119,8 @@ namespace mtge {
 			delete[] cubes[i];
 		}
 		delete[] cubes;
+
+		glDeleteVertexArrays(1, &vertexArrayID);
+		glDeleteBuffers(1, &vertexBufferID);
 	}
 }
