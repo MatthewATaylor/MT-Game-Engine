@@ -140,7 +140,72 @@ namespace mtge {
 		skybox = new Shader(skyboxVertexShaderPath, skyboxFragmentShaderPath, true);
 	}
 	void Shader::loadDefaultShaders() {
+		std::string defaultTexturedShapeVertexShader = R"(
+			#version 330 core
 
+			layout(location = 0) in vec3 vertexPosition;
+			layout(location = 1) in vec2 vertexTextureCoord;
+
+			out vec2 fragmentTextureCoord;
+
+			uniform mat4 model;
+			uniform mat4 view;
+			uniform mat4 projection;
+
+			void main() {
+				gl_Position = projection * view * model * vec4(vertexPosition, 1.0f);
+				fragmentTextureCoord = vertexTextureCoord;
+			}
+		)";
+
+		std::string defaultTexturedShapeFragmentShader = R"(
+			#version 330 core
+
+			in vec2 fragmentTextureCoord;
+
+			out vec4 finalFragmentColor;
+
+			uniform sampler2D texture1;
+
+			void main() {
+				finalFragmentColor = texture(texture1, fragmentTextureCoord);
+			}
+		)";
+
+		std::string defaultSkyboxVertexShader = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 vertexPositions;
+
+			out vec3 fragmentTextureCoord;
+
+			uniform mat4 model;
+			uniform mat4 view;
+			uniform mat4 projection;
+
+			void main() {
+				vec4 transformedPosition = projection * view * model * vec4(vertexPositions, 1.0f);
+				gl_Position = transformedPosition.xyww;
+				fragmentTextureCoord = vertexPositions;
+			}
+		)";
+
+		std::string defaultSkyboxFragmentShader = R"(
+			#version 330 core
+
+			in vec3 fragmentTextureCoord;
+
+			out vec4 finalFragmentColor;
+
+			uniform samplerCube skybox;
+
+			void main() {
+				finalFragmentColor = texture(skybox, fragmentTextureCoord);
+			}
+		)";
+
+		texturedShape = new Shader(defaultTexturedShapeVertexShader, defaultTexturedShapeFragmentShader, false);
+		skybox = new Shader(defaultSkyboxVertexShader, defaultSkyboxFragmentShader, false);
 	}
 	Shader *Shader::getTexturedShapePtr() {
 		return texturedShape;

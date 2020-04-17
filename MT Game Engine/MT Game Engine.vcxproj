@@ -172,10 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Math\Mat.inl" />
-    <None Include="Resources\Shaders\Shape.fs.glsl" />
-    <None Include="Resources\Shaders\Shape.vs.glsl" />
-    <None Include="Resources\Shaders\Skybox.fs.glsl" />
-    <None Include="Resources\Shaders\Skybox.vs.glsl" />
     <None Include="Source\Math\Vec.inl" />
     <None Include="Source\Math\Vec_2.inl" />
     <None Include="Source\Math\Vec_3.inl" />
