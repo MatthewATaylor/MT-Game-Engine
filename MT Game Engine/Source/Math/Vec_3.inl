@@ -21,6 +21,12 @@ namespace mtge {
 			elements[1] = y;
 			elements[2] = z;
 		}
+		template<typename T>
+		Vec<T, 3>::Vec(T element) {
+			for (unsigned int i = 0; i < 3; i++) {
+				this->elements[i] = element;
+			}
+		}
 
 		//Public
 		template<typename T>

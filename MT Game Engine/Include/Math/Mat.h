@@ -47,6 +47,10 @@ namespace mtge {
 
 			Mat<T, COLS, ROWS> altMajorOrder() const;
 		};
+
+		typedef Mat<float, 2, 2> Mat2;
+		typedef Mat<float, 3, 3> Mat3;
+		typedef Mat<float, 4, 4> Mat4;
 	}
 }
 

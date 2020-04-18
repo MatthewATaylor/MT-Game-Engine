@@ -87,10 +87,10 @@ namespace mtge {
 		}
 		shader->useProgram();
 
-		math::Mat<float, 4, 4> modelMatrix = math::Util::MatGen::identity<float, 4>();
+		math::Mat4 modelMatrix = math::Util::MatGen::identity<float, 4>();
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
-		math::Mat<float, 4, 4> viewMatrix = camera->getViewMatrix();
+		math::Mat4 viewMatrix = camera->getViewMatrix();
 		viewMatrix.set(1, 4, 0.0f);
 		viewMatrix.set(2, 4, 0.0f);
 		viewMatrix.set(3, 4, 0.0f);
@@ -100,7 +100,7 @@ namespace mtge {
 		viewMatrix.set(4, 4, 1.0f);
 		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
 
-		math::Mat<float, 4, 4> projectionMatrix = camera->getProjectionMatrix(window);
+		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
 		glDepthFunc(GL_LEQUAL);

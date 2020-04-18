@@ -64,7 +64,7 @@ namespace mtge {
 					if (cubes[i][j][k]->type != 'x') {
 						CubeData cubeData(texAtlasSegment);
 						cubeData.addBufferSubData(
-							math::Vec<float, 3>(xOffset, yOffset, zOffset),
+							math::Vec3(xOffset, yOffset, zOffset),
 							LENGTH_IN_CUBES,
 							cubeHasTopNeighbor(i, j, k),
 							cubeHasBottomNeighbor(i, j, k),
@@ -110,14 +110,13 @@ namespace mtge {
 		}
 		shader->useProgram();
 		
-		math::Mat<float, 4, 4> modelMatrix = 
-			math::Util::MatGen::scale<float, 4>(math::Vec<float, 3>(LENGTH_IN_CUBES / 24.0f, LENGTH_IN_CUBES / 24.0f, LENGTH_IN_CUBES / 24.0f));
+		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES / 24.0f));
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
-		math::Mat<float, 4, 4> viewMatrix = camera->getViewMatrix();
+		math::Mat4 viewMatrix = camera->getViewMatrix();
 		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
 
-		math::Mat<float, 4, 4> projectionMatrix = camera->getProjectionMatrix(window);
+		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
 		glEnable(GL_CULL_FACE);

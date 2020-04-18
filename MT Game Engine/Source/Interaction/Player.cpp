@@ -2,8 +2,8 @@
 
 namespace mtge {
 	//Constructor
-	Player::Player(math::Vec<float, 3> position, const math::Vec<float, 3> DIMENSIONS) : 
-		Camera(position, math::Vec<float, 3>(0.0f, 0.0f, 1.0f)), DIMENSIONS(DIMENSIONS) {}
+	Player::Player(math::Vec3 position, const math::Vec3 DIMENSIONS) : 
+		Camera(position, math::Vec3(0.0f, 0.0f, 1.0f)), DIMENSIONS(DIMENSIONS) {}
 
 	//Private
 	void Player::manageCollisionX() {
@@ -93,7 +93,7 @@ namespace mtge {
 		}
 	}
 	void Player::controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
-		math::Vec<float, 3> movementDirection = math::Vec<float, 3>(front.getX(), 0.0f, front.getZ());
+		math::Vec3 movementDirection = math::Vec3(front.getX(), 0.0f, front.getZ());
 		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
 
 		if (canApplyGravity) {
@@ -124,11 +124,11 @@ namespace mtge {
 	void Player::controlReset(Window *window, float resetHeight) {
 		if (glfwGetKey(window->getPtr_GLFW(), GLFW_KEY_R) == GLFW_PRESS) {
 			gravitySpeed = startGravitySpeed;
-			position = math::Vec<float, 3>(0.0f, resetHeight, 0.0f);
+			position = math::Vec3(0.0f, resetHeight, 0.0f);
 		}
 	}
-	math::Mat<float, 4, 4> Player::getViewMatrix() {
-		math::Vec<float, 3> eye(position.getX(), position.getY() + 0.4f * DIMENSIONS.getY(), position.getZ());
+	math::Mat4 Player::getViewMatrix() {
+		math::Vec3 eye(position.getX(), position.getY() + 0.4f * DIMENSIONS.getY(), position.getZ());
 		return math::Util::MatGen::lookAt(eye, eye + front, UP_VECTOR);
 	}
 }

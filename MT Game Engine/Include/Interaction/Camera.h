@@ -15,10 +15,10 @@
 namespace mtge {
 	class Camera {
 	protected:
-		const math::Vec<float, 3> UP_VECTOR = math::Vec<float, 3>(0.0f, 1.0f, 0.0f);
-		math::Vec<float, 3> position;
-		math::Vec<float, 3> front;
-		math::Vec<float, 3> totalMovement;
+		const math::Vec3 UP_VECTOR = math::Vec3(0.0f, 1.0f, 0.0f);
+		math::Vec3 position;
+		math::Vec3 front;
+		math::Vec3 totalMovement;
 		Clock clock;
 		float previousMouseX = 0.0f;
 		float previousMouseY = 0.0f;
@@ -29,16 +29,16 @@ namespace mtge {
 		float movementSize = 0.0f;
 		bool beganMotion = false;
 
-		void controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, math::Vec<float, 3> movementDirection);
+		void controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, math::Vec3 movementDirection);
 
 	public:
-		Camera(math::Vec<float, 3> position, math::Vec<float, 3> front);
+		Camera(math::Vec3 position, math::Vec3 front);
 		virtual void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
 		void controlRotation(double xPos, double yPos);
 		void controlZoom(double xOffset, double yOffset);
 		float getFieldOfView();
-		math::Vec<float, 3> getPosition();
-		math::Mat<float, 4, 4> getProjectionMatrix(Window *window);
-		virtual math::Mat<float, 4, 4> getViewMatrix();
+		math::Vec3 getPosition();
+		math::Mat4 getProjectionMatrix(Window *window);
+		virtual math::Mat4 getViewMatrix();
 	};
 }

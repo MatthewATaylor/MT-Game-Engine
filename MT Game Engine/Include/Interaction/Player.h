@@ -10,7 +10,7 @@
 namespace mtge {
 	class Player : public Camera {
 	private:
-		const math::Vec<float, 3> DIMENSIONS;
+		const math::Vec3 DIMENSIONS;
 		float startGravitySpeed = 0.0f;
 		float gravitySpeed = 0.0f;
 		float gravityAddend = 0.0f;
@@ -25,14 +25,14 @@ namespace mtge {
 		void applyGravity();
 
 	public:
-		Player(math::Vec<float, 3> position, const math::Vec<float, 3> DIMENSIONS);
+		Player(math::Vec3 position, const math::Vec3 DIMENSIONS);
 		void setCanApplyCollisions(bool canApplyCollisions);
 		void setCanApplyGravity(bool canApplyGravity);
 		void setGravityParams(float startGravitySpeed, float gravityAddend, float maxGravity);
 		void controlJump(Window *window, float jumpSize, int jumpKey);
 		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) override;
 		void controlReset(Window *window, float resetHeight);
-		math::Mat<float, 4, 4> getViewMatrix() override;
+		math::Mat4 getViewMatrix() override;
 	};
 }
 

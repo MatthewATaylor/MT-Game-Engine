@@ -2,13 +2,13 @@
 
 namespace mtge {
 	//Constructor
-	Camera::Camera(math::Vec<float, 3> position, math::Vec<float, 3> front) {
+	Camera::Camera(math::Vec3 position, math::Vec3 front) {
 		this->position = position;
 		this->front = front;
 	}
 
 	//Protected
-	void Camera::controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, math::Vec<float, 3> movementDirection) {
+	void Camera::controlRawMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey, math::Vec3 movementDirection) {
 		if (!beganMotion) {
 			clock.setPrevious();
 			beganMotion = true;
@@ -18,7 +18,7 @@ namespace mtge {
 		movementSize = clock.getTimeChange() * speed;
 		clock.setPrevious();
 
-		totalMovement = math::Vec<float, 3>(0.0f, 0.0f, 0.0f);
+		totalMovement = math::Vec3(0.0f, 0.0f, 0.0f);
 		
 		if (glfwGetKey(window->getPtr_GLFW(), forwardKey) == GLFW_PRESS) {
 			totalMovement += movementDirection * movementSize;
@@ -61,7 +61,7 @@ namespace mtge {
 			pitch = -89.0f;
 		}
 
-		math::Vec<float, 3> facing;
+		math::Vec3 facing;
 		float pitchRadians = math::Util::toRadians(pitch);
 		float yawRadians = math::Util::toRadians(yaw);
 		facing.setX(cos(pitchRadians) * cos(yawRadians));
@@ -89,14 +89,14 @@ namespace mtge {
 	float Camera::getFieldOfView() {
 		return fieldOfView;
 	}
-	math::Vec<float, 3> Camera::getPosition() {
+	math::Vec3 Camera::getPosition() {
 		return position;
 	}
-	math::Mat<float, 4, 4> Camera::getProjectionMatrix(Window *window) {
+	math::Mat4 Camera::getProjectionMatrix(Window *window) {
 		return math::Util::MatGen::perspective<float>(math::Util::toRadians(fieldOfView), (float)window->getWidth(), (float)window->getHeight(), 0.01f, 100.0f);
 	}
-	math::Mat<float, 4, 4> Camera::getViewMatrix() {
-		math::Mat<float, 4, 4> viewMatrix = math::Util::MatGen::lookAt(position, position + front, UP_VECTOR);
+	math::Mat4 Camera::getViewMatrix() {
+		math::Mat4 viewMatrix = math::Util::MatGen::lookAt(position, position + front, UP_VECTOR);
 		return viewMatrix;
 	}
 }

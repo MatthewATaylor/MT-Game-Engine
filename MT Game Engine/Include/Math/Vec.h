@@ -18,6 +18,7 @@ namespace mtge {
 		public:
 			Vec();
 			Vec(T elements[SIZE]);
+			Vec(T element);
 
 			Vec<T, SIZE> &operator=(const Vec<T, SIZE> &otherVec);
 			Vec<T, SIZE> &operator+=(const Vec<T, SIZE> &otherVec);
@@ -47,6 +48,10 @@ namespace mtge {
 			T get(unsigned int index) const;
 			void set(unsigned int index, T newElement);
 		};
+
+		typedef Vec<float, 2> Vec2;
+		typedef Vec<float, 3> Vec3;
+		typedef Vec<float, 4> Vec4;
 	}
 }
 

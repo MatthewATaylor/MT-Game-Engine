@@ -7,7 +7,7 @@ namespace mtge {
 	//Private
 	unsigned int CubeData::bufferOffsetSize = 0;
 
-	void CubeData::transformFace(float face[FACE_VERTEX_BUFFER_LENGTH], math::Vec<float, 3> offset, float scale) {
+	void CubeData::transformFace(float face[FACE_VERTEX_BUFFER_LENGTH], math::Vec3 offset, float scale) {
 		for (unsigned int i = 0; i < FACE_VERTEX_BUFFER_LENGTH - 2; i += 5) {
 			float &x = face[i];
 			float &y = face[i + 1];
@@ -31,7 +31,7 @@ namespace mtge {
 		return bufferOffsetSize / ELEMENTS_PER_VERTEX / sizeof(float);
 	}
 	void CubeData::addBufferSubData(
-		math::Vec<float, 3> offset,
+		math::Vec3 offset,
 		float scale,
 		bool hasTopNeighbor,
 		bool hasBottomNeighbor,

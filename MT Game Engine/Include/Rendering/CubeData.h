@@ -82,7 +82,7 @@ namespace mtge {
 		static void resetBufferOffsetCounter();
 		static unsigned int getVerticesAdded();
 		void addBufferSubData(
-			math::Vec<float, 3> offset,
+			math::Vec3 offset,
 			float scale,
 			bool hasTopNeighbor,
 			bool hasBottomNeighbor,
@@ -93,6 +93,6 @@ namespace mtge {
 		);
 
 	private:
-		void transformFace(float face[FACE_VERTEX_BUFFER_LENGTH], math::Vec<float, 3> offset, float);
+		void transformFace(float face[FACE_VERTEX_BUFFER_LENGTH], math::Vec3 offset, float);
 	};
 }

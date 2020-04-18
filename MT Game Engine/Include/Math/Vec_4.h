@@ -17,6 +17,7 @@ namespace mtge {
 			Vec();
 			Vec(T elements[4]);
 			Vec(T x, T y, T z, T w);
+			Vec(T element);
 
 			Vec<T, 4> &operator=(const Vec<T, 4> &otherVec);
 			Vec<T, 4> &operator+=(const Vec<T, 4> &otherVec);
