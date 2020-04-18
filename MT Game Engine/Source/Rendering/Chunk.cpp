@@ -88,7 +88,7 @@ namespace mtge {
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 	}
-	void Chunk::render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
+	void Chunk::render(Camera *camera, Window *window) {
 		glBindVertexArray(vertexArrayID);
 		
 		if (!Texture::getAtlasPtr()) {
@@ -101,10 +101,15 @@ namespace mtge {
 			return;
 		}
 		shader->useProgram();
+		
+		math::Mat<float, 4, 4> modelMatrix(math::MatType::IDENTITY);
+		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
-		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		math::Mat<float, 4, 4> viewMatrix = camera->getViewMatrix();
 		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
-		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+
+		math::Mat<float, 4, 4> projectionMatrix = camera->getProjectionMatrix(window);
+		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
 		glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, CubeData::getVerticesAdded());

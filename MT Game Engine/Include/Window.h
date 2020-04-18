@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -13,9 +14,11 @@ namespace mtge {
 		static void frameBufferSizeCallback(GLFWwindow *window, int width, int height);
 
 	public:
-		Window(const char *windowTitle, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, bool resizable);
+		Window(std::string windowTitle, int screenWidth, int screenHeight, bool resizable);
 		void setShouldClose(bool shouldClose);
 		bool getShouldClose();
 		GLFWwindow *getPtr_GLFW();
+		int getWidth();
+		int getHeight();
 	};
 }

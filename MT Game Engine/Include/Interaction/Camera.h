@@ -38,6 +38,7 @@ namespace mtge {
 		void controlZoom(double xOffset, double yOffset);
 		float getFieldOfView();
 		math::Vec<float, 3> getPosition();
+		math::Mat<float, 4, 4> getProjectionMatrix(Window *window);
 		virtual math::Mat<float, 4, 4> getViewMatrix();
 	};
 }

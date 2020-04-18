@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "Vec.h"
 #include "Mat.h"
 
@@ -14,6 +16,9 @@ namespace mtge {
 
 			template<typename T>
 			static Mat<T, 4, 4> lookAt(Vec<T, 3> cameraPosition, Vec<T, 3> cameraForward, Vec<T, 3> cameraUp);
+
+			template<typename T>
+			static Mat<T, 4, 4> perspective(T fovYRadians, T screenWidth, T screenHeight, T near, T far);
 
 			template<typename T>
 			static T toRadians(T degrees);
@@ -61,6 +66,25 @@ namespace mtge {
 			outputMatrix.set(4, 2, up.dot(cameraPosition) * -1);
 			outputMatrix.set(4, 3, forward.dot(cameraPosition) * -1);
 			outputMatrix.set(4, 4, 1);
+
+			return outputMatrix;
+		}
+
+		template<typename T>
+		Mat<T, 4, 4> Util::perspective(T fovYRadians, T screenWidth, T screenHeight, T near, T far) {
+			T aspectRatio = screenWidth / screenHeight;
+			T topOverNear = tan(fovYRadians / 2);
+			T top = topOverNear * near;
+			T bottom = -top;
+			T right = top * aspectRatio;
+			T left = -right;
+
+			Mat<T, 4, 4> outputMatrix;
+			outputMatrix.set(1, 1, 1 / (aspectRatio * topOverNear));
+			outputMatrix.set(2, 2, 1 / topOverNear);
+			outputMatrix.set(3, 3, -(far + near) / (far - near));
+			outputMatrix.set(3, 4, -1);
+			outputMatrix.set(4, 3, -2 * far * near / (far - near));
 
 			return outputMatrix;
 		}

@@ -73,7 +73,7 @@ namespace mtge {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 	}
-	void Skybox::render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix) {
+	void Skybox::render(Camera *camera, Window *window) {
 		glBindVertexArray(vertexArrayID);
 
 		if (!Texture::getSkyboxPtr()) {
@@ -87,7 +87,10 @@ namespace mtge {
 		}
 		shader->useProgram();
 
-		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		math::Mat<float, 4, 4> modelMatrix(math::MatType::IDENTITY);
+		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
+
+		math::Mat<float, 4, 4> viewMatrix = camera->getViewMatrix();
 		viewMatrix.set(1, 4, 0.0f);
 		viewMatrix.set(2, 4, 0.0f);
 		viewMatrix.set(3, 4, 0.0f);
@@ -96,7 +99,9 @@ namespace mtge {
 		viewMatrix.set(4, 3, 0.0f);
 		viewMatrix.set(4, 4, 1.0f);
 		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
-		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+
+		math::Mat<float, 4, 4> projectionMatrix = camera->getProjectionMatrix(window);
+		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
 		glDepthFunc(GL_LEQUAL);
 		glDisable(GL_CULL_FACE);

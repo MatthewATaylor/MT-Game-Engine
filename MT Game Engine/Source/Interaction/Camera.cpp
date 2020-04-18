@@ -93,6 +93,9 @@ namespace mtge {
 	math::Vec<float, 3> Camera::getPosition() {
 		return position;
 	}
+	math::Mat<float, 4, 4> Camera::getProjectionMatrix(Window *window) {
+		return math::Util::perspective<float>(math::Util::toRadians(fieldOfView), (float)window->getWidth(), (float)window->getHeight(), 0.01f, 100.0f);
+	}
 	math::Mat<float, 4, 4> Camera::getViewMatrix() {
 		math::Mat<float, 4, 4> viewMatrix = math::Util::lookAt(position, position + front, UP_VECTOR);
 		return viewMatrix;

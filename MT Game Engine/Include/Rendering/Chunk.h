@@ -1,8 +1,6 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "Rendering/Cube.h"
 #include "Rendering/CubeData.h"
@@ -10,6 +8,8 @@
 #include "Math/Mat.h"
 #include "ResourceManager.h"
 #include "Texture/TextureAtlasSegment.h"
+#include "Window.h"
+#include "Interaction/Camera.h"
 
 namespace mtge {
 	class Chunk {
@@ -31,7 +31,7 @@ namespace mtge {
 	public:
 		Chunk(TextureAtlasSegment *texAtlasSegment);
 		void genBuffer();
-		void render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix);
+		void render(Camera *camera, Window *window);
 		~Chunk();
 	};
 }

@@ -1,13 +1,13 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
 #include "Texture/Texture.h"
 #include "Math/Vec.h"
 #include "Math/Mat.h"
+#include "Interaction/Camera.h"
+#include "Window.h"
 
 namespace mtge {
 	class Skybox {
@@ -21,7 +21,7 @@ namespace mtge {
 
 	public:
 		static void init();
-		static void render(glm::mat4 projectionMatrix, math::Mat<float, 4, 4> viewMatrix);
+		static void render(Camera *camera, Window *window);
 		static void freeResources();
 	};
 }

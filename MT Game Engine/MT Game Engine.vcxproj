@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLM;C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -101,7 +101,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLM;C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\STB Image;$(SolutionDir)Dependencies\GLEW\include;C:\Users\Matth\Documents\Visual Studio 2017\Programs\C++ Programs\MT Game Engine\MT Game Engine\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
