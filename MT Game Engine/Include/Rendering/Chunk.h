@@ -6,6 +6,7 @@
 #include "Rendering/CubeData.h"
 #include "Math/Vec.h"
 #include "Math/Mat.h"
+#include "Math/Util.h"
 #include "ResourceManager.h"
 #include "Texture/TextureAtlasSegment.h"
 #include "Window.h"
@@ -20,6 +21,7 @@ namespace mtge {
 		unsigned int vertexArrayID;
 		unsigned int vertexBufferID;
 		TextureAtlasSegment *texAtlasSegment = nullptr;
+		bool shouldGenBuffer = true;
 
 		bool cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		bool cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
@@ -28,10 +30,13 @@ namespace mtge {
 		bool cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		bool cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 
+		void genBuffer();
+
 	public:
 		Chunk(TextureAtlasSegment *texAtlasSegment);
-		void genBuffer();
+		void enableBufferRegenNextFrame();
 		void render(Camera *camera, Window *window);
+		Cube *getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		~Chunk();
 	};
 }

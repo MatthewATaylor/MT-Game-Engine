@@ -87,7 +87,7 @@ namespace mtge {
 		}
 		shader->useProgram();
 
-		math::Mat<float, 4, 4> modelMatrix(math::MatType::IDENTITY);
+		math::Mat<float, 4, 4> modelMatrix = math::Util::MatGen::identity<float, 4>();
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
 		math::Mat<float, 4, 4> viewMatrix = camera->getViewMatrix();

@@ -6,6 +6,7 @@
 #include "Texture/Texture.h"
 #include "Math/Vec.h"
 #include "Math/Mat.h"
+#include "Math/Util.h"
 #include "Interaction/Camera.h"
 #include "Window.h"
 

@@ -37,7 +37,6 @@ namespace mtge {
 	//Public
 	void Camera::controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
 		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, front);
-
 		position += totalMovement;
 	}
 	void Camera::controlRotation(double xPos, double yPos) {
@@ -94,10 +93,10 @@ namespace mtge {
 		return position;
 	}
 	math::Mat<float, 4, 4> Camera::getProjectionMatrix(Window *window) {
-		return math::Util::perspective<float>(math::Util::toRadians(fieldOfView), (float)window->getWidth(), (float)window->getHeight(), 0.01f, 100.0f);
+		return math::Util::MatGen::perspective<float>(math::Util::toRadians(fieldOfView), (float)window->getWidth(), (float)window->getHeight(), 0.01f, 100.0f);
 	}
 	math::Mat<float, 4, 4> Camera::getViewMatrix() {
-		math::Mat<float, 4, 4> viewMatrix = math::Util::lookAt(position, position + front, UP_VECTOR);
+		math::Mat<float, 4, 4> viewMatrix = math::Util::MatGen::lookAt(position, position + front, UP_VECTOR);
 		return viewMatrix;
 	}
 }

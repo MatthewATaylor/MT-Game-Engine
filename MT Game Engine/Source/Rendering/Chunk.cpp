@@ -44,8 +44,6 @@ namespace mtge {
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x';
 	}
-
-	//Public
 	void Chunk::genBuffer() {
 		glBindVertexArray(vertexArrayID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -88,7 +86,17 @@ namespace mtge {
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 	}
+
+	//Public
+	void Chunk::enableBufferRegenNextFrame() {
+		shouldGenBuffer = true;
+	}
 	void Chunk::render(Camera *camera, Window *window) {
+		if (shouldGenBuffer) {
+			genBuffer();
+			shouldGenBuffer = false;
+		}
+
 		glBindVertexArray(vertexArrayID);
 		
 		if (!Texture::getAtlasPtr()) {
@@ -102,7 +110,8 @@ namespace mtge {
 		}
 		shader->useProgram();
 		
-		math::Mat<float, 4, 4> modelMatrix(math::MatType::IDENTITY);
+		math::Mat<float, 4, 4> modelMatrix = 
+			math::Util::MatGen::scale<float, 4>(math::Vec<float, 3>(LENGTH_IN_CUBES / 24.0f, LENGTH_IN_CUBES / 24.0f, LENGTH_IN_CUBES / 24.0f));
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
 		math::Mat<float, 4, 4> viewMatrix = camera->getViewMatrix();
@@ -113,6 +122,12 @@ namespace mtge {
 
 		glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, CubeData::getVerticesAdded());
+	}
+	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (xIndex >= LENGTH_IN_CUBES || yIndex >= LENGTH_IN_CUBES || zIndex >= LENGTH_IN_CUBES) {
+			return nullptr;
+		}
+		return cubes[xIndex][yIndex][zIndex];
 	}
 
 	//Destructor
