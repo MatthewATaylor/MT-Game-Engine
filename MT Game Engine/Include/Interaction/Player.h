@@ -6,6 +6,8 @@
 #include "Math/Vec.h"
 #include "Math/Mat.h"
 #include "Math/Util.h"
+#include "WorldMap.h"
+#include "Rendering/Chunk.h"
 
 namespace mtge {
 	class Player : public Camera {
@@ -19,9 +21,10 @@ namespace mtge {
 		bool canApplyCollisions = false;
 		bool canApplyGravity = false;
 
-		void manageCollisionX();
-		void manageCollisionY();
-		void manageCollisionZ();
+		bool isCubeCollision(math::Vec3 cubePos, math::Vec3 cubeDimens);
+		void manageCollisionX(WorldMap *worldMap);
+		void manageCollisionY(WorldMap *worldMap);
+		void manageCollisionZ(WorldMap *worldMap);
 		void applyGravity();
 
 	public:
@@ -30,7 +33,7 @@ namespace mtge {
 		void setCanApplyGravity(bool canApplyGravity);
 		void setGravityParams(float startGravitySpeed, float gravityAddend, float maxGravity);
 		void controlJump(Window *window, float jumpSize, int jumpKey);
-		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) override;
+		void controlMotion(Window *window, WorldMap *worldMap, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
 		void controlReset(Window *window, float resetHeight);
 		math::Mat4 getViewMatrix() override;
 	};

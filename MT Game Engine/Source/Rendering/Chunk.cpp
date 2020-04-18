@@ -14,7 +14,7 @@ namespace mtge {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				cubes[i][j] = new Cube*[LENGTH_IN_CUBES];
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
-					if (i == 0 && j % 3 == 0 && k % 3 == 0) {
+					if (j == LENGTH_IN_CUBES - 1 && i % 3 == 0 && k % 3 == 0) {
 						cubes[i][j][k] = new Cube{ 'x' };
 					}
 					else {
@@ -23,6 +23,10 @@ namespace mtge {
 				}
 			}
 		}
+		cubes[0][LENGTH_IN_CUBES - 1][0]->type = 'x';
+		cubes[1][LENGTH_IN_CUBES - 1][0]->type = 'x';
+		cubes[0][LENGTH_IN_CUBES - 1][1]->type = 'x';
+		cubes[1][LENGTH_IN_CUBES - 1][1]->type = 'x';
 	}
 
 	//Private
@@ -88,6 +92,8 @@ namespace mtge {
 	}
 
 	//Public
+	const float Chunk::CUBE_SIZE = 0.06f;
+
 	void Chunk::enableBufferRegenNextFrame() {
 		shouldGenBuffer = true;
 	}
@@ -110,7 +116,10 @@ namespace mtge {
 		}
 		shader->useProgram();
 		
-		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES / 24.0f));
+		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f));
+		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(
+			math::Vec3(0.0f, -(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f) + CUBE_SIZE / 2.0f, 0.0f)
+		);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
 		math::Mat4 viewMatrix = camera->getViewMatrix();
@@ -119,7 +128,7 @@ namespace mtge {
 		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
-		glEnable(GL_CULL_FACE);
+		//glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, CubeData::getVerticesAdded());
 	}
 	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {

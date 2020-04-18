@@ -14,10 +14,12 @@
 
 namespace mtge {
 	class Chunk {
-	private:
+	public:
 		static const unsigned int LENGTH_IN_CUBES = 16;
+
+	private:
 		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
-		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> further right    +j -> higher up    +k -> further forwards
+		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
 		unsigned int vertexArrayID;
 		unsigned int vertexBufferID;
 		TextureAtlasSegment *texAtlasSegment = nullptr;
@@ -33,6 +35,8 @@ namespace mtge {
 		void genBuffer();
 
 	public:
+		static const float CUBE_SIZE;
+
 		Chunk(TextureAtlasSegment *texAtlasSegment);
 		void enableBufferRegenNextFrame();
 		void render(Camera *camera, Window *window);

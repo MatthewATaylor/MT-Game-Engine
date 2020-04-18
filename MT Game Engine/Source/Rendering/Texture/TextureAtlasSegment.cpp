@@ -1,7 +1,7 @@
 #include "Rendering/Texture/TextureAtlasSegment.h"
 
 namespace mtge {
-	const float TextureAtlasSegment::REL_COORD_BUFFER = 1.0f / 500.0f;
+	const float TextureAtlasSegment::REL_COORD_BUFFER = 1.0f / 100.0f;
 
 	//Constructor
 	TextureAtlasSegment::TextureAtlasSegment(const unsigned int ORIGIN_INDEX_S, const unsigned int ORIGIN_INDEX_T, const unsigned int ATLAS_SIZE_S, const unsigned int ATLAS_SIZE_T) :
