@@ -101,16 +101,24 @@ namespace mtge {
 		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex]->type != 'x';
 	}
 	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x';
+		return 
+			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x') || 
+			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x');
 	}
 	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x';
+		return 
+			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x') || 
+			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x');
 	}
 	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]->type != 'x';
+		return 
+			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex ][yIndex][zIndex + 1]->type != 'x') || 
+			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x');
 	}
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x';
+		return 
+			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x') || 
+			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x');
 	}
 	bool Chunk::cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
