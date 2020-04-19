@@ -30,13 +30,20 @@ namespace mtge {
 		unsigned int jumpHeightInCubes = 0;
 
 		math::Vec3 getCubePosFromIndices(math::Vec<unsigned int, 3> indices, unsigned int chunkIndex);
+
 		void setBottomCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
 		void setTopCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
 		void setFrontCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
 		void setBackCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
 		void setLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
 		void setRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
+		void setFrontRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
+		void setBackRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
+		void setFrontLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
+		void setBackLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
+
 		void setCollisionCoordsToCheck();
+
 		bool isCubeCollision(math::Vec3 cubePos, math::Vec3 cubeDimens);
 		void manageCollisionX();
 		void manageCollisionY();
