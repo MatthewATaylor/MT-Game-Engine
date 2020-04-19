@@ -146,6 +146,7 @@
     <ClCompile Include="Source\Rendering\Texture\Texture.cpp" />
     <ClCompile Include="Source\Rendering\Texture\TextureAtlasSegment.cpp" />
     <ClCompile Include="Source\Window.cpp" />
+    <ClCompile Include="Source\WorldGenerator.cpp" />
     <ClCompile Include="Source\WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="Include\Math\Vec_3.h" />
     <ClInclude Include="Include\Math\Vec_4.h" />
     <ClInclude Include="Include\Window.h" />
+    <ClInclude Include="Include\WorldGenerator.h" />
     <ClInclude Include="Include\WorldMap.h" />
   </ItemGroup>
   <ItemGroup>

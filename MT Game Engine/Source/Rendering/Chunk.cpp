@@ -26,6 +26,7 @@ namespace mtge {
 		}
 		
 		//Origin marker
+		/*
 		cubes[0][LENGTH_IN_CUBES - 1][0]->type = 'x';
 		cubes[1][LENGTH_IN_CUBES - 1][0]->type = 'x';
 		cubes[0][LENGTH_IN_CUBES - 1][1]->type = 'x';
@@ -44,6 +45,7 @@ namespace mtge {
 		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
 		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
 		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
+		*/
 	}
 
 	//Private

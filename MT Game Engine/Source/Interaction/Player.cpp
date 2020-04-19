@@ -534,6 +534,12 @@ namespace mtge {
 			prevChunkIndices = math::Vec<int, 2>(0, 0);
 		}
 	}
+	math::Vec3 Player::getPosition() {
+		return position;
+	}
+	unsigned int Player::getChunkIndex() {
+		return mapChunkIndex;
+	}
 	math::Mat4 Player::getViewMatrix() {
 		math::Vec3 eye(position.getX(), position.getY() + 0.4f * DIMENSIONS.getY(), position.getZ());
 		return math::Util::MatGen::lookAt(eye, eye + front, UP_VECTOR);

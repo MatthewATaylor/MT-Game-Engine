@@ -63,6 +63,8 @@ namespace mtge {
 		void controlJump(Window *window, float jumpSize, int jumpKey);
 		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
 		void controlReset(Window *window, float resetHeight);
+		math::Vec3 getPosition();
+		unsigned int getChunkIndex();
 		math::Mat4 getViewMatrix() override;
 	};
 }
