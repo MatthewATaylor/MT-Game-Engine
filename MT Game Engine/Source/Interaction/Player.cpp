@@ -3,9 +3,145 @@
 namespace mtge {
 	//Constructor
 	Player::Player(math::Vec3 position, const math::Vec3 DIMENSIONS) : 
-		Camera(position, math::Vec3(0.0f, 0.0f, 1.0f)), DIMENSIONS(DIMENSIONS) {}
+		Camera(position, math::Vec3(0.0f, 0.0f, 1.0f)), DIMENSIONS(DIMENSIONS) {
+		
+		playerHeightInCubes = (unsigned int)ceilf(DIMENSIONS.getY() / Chunk::CUBE_SIZE);
+	}
 
 	//Private
+	math::Vec3 Player::getCubePosFromIndices(math::Vec<unsigned int, 3> indices, unsigned int chunkIndex) {
+		int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
+		float cubeX =
+			-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + indices.getX() * Chunk::CUBE_SIZE +
+			WorldMap::getChunkPtr(chunkIndex)->getPosition().getX();
+		float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + indices.getY() * Chunk::CUBE_SIZE;
+		float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + indices.getZ() * Chunk::CUBE_SIZE +
+			WorldMap::getChunkPtr(chunkIndex)->getPosition().getY();
+		return math::Vec3(cubeX, cubeY, cubeZ);
+	}
+	void Player::setBottomCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices) {
+		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			if (WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(posIndices.getX(), posIndices.getY(), posIndices.getZ())->type != 'x') {
+				math::Vec3 cubeCoords = getCubePosFromIndices(posIndices, mapChunkIndex);
+				collisionCoordsToCheck.push_back(cubeCoords);
+			}
+		}
+	}
+	void Player::setTopCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices) {
+		for (unsigned int i = 0; i <= jumpHeightInCubes; i++) {
+			unsigned int yIndexToTest = posIndices.getY() + playerHeightInCubes + i;
+			if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
+				math::Vec<unsigned int, 3> indicesToTest(posIndices.getX(), yIndexToTest, posIndices.getZ());
+				if (WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())->type != 'x') {
+					math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, mapChunkIndex);
+					collisionCoordsToCheck.push_back(cubeCoords);
+				}
+			}
+		}
+	}
+	void Player::setFrontCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices) {
+		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			unsigned int zIndexToTest = posIndices.getZ() + 1;
+			unsigned int chunkIndexToTest = mapChunkIndex;
+			if (zIndexToTest >= Chunk::LENGTH_IN_CUBES) {
+				if (!WorldMap::getChunkPtr(mapChunkIndex)->frontNeighbor) {
+					return;
+				}
+				zIndexToTest = 0;
+				chunkIndexToTest = WorldMap::getChunkPtr(mapChunkIndex)->frontNeighbor->indexInMap;
+			}
+			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
+				unsigned int yIndexToTest = posIndices.getY() + i;
+				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
+					math::Vec<unsigned int, 3> indicesToTest(posIndices.getX(), yIndexToTest, zIndexToTest);
+					if (WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())->type != 'x') {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+						collisionCoordsToCheck.push_back(cubeCoords);
+					}
+				}
+			}
+		}
+	}
+	void Player::setBackCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices) {
+		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			int zIndexToTest = (int)posIndices.getZ() - 1;
+			unsigned int chunkIndexToTest = mapChunkIndex;
+			if (zIndexToTest < 0) {
+				if (!WorldMap::getChunkPtr(mapChunkIndex)->backNeighbor) {
+					return;
+				}
+				zIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
+				chunkIndexToTest = WorldMap::getChunkPtr(mapChunkIndex)->backNeighbor->indexInMap;
+			}
+			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
+				unsigned int yIndexToTest = posIndices.getY() + i;
+				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
+					math::Vec<unsigned int, 3> indicesToTest(posIndices.getX(), yIndexToTest, (unsigned int)zIndexToTest);
+					if (WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())->type != 'x') {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+						collisionCoordsToCheck.push_back(cubeCoords);
+					}
+				}
+			}
+		}
+	}
+	void Player::setLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices) {
+		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			int xIndexToTest = (int)posIndices.getX() - 1;
+			unsigned int chunkIndexToTest = mapChunkIndex;
+			if (xIndexToTest < 0) {
+				if (!WorldMap::getChunkPtr(mapChunkIndex)->leftNeighbor) {
+					return;
+				}
+				xIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
+				chunkIndexToTest = WorldMap::getChunkPtr(mapChunkIndex)->leftNeighbor->indexInMap;
+			}
+			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
+				unsigned int yIndexToTest = posIndices.getY() + i;
+				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
+					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, posIndices.getZ());
+					if (WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())->type != 'x') {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+						collisionCoordsToCheck.push_back(cubeCoords);
+					}
+				}
+			}
+		}
+	}
+	void Player::setRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices) {
+		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			unsigned int xIndexToTest = posIndices.getX() + 1;
+			unsigned int chunkIndexToTest = mapChunkIndex;
+			if (xIndexToTest >= Chunk::LENGTH_IN_CUBES) {
+				if (!WorldMap::getChunkPtr(mapChunkIndex)->rightNeighbor) {
+					return;
+				}
+				xIndexToTest = 0;
+				chunkIndexToTest = WorldMap::getChunkPtr(mapChunkIndex)->rightNeighbor->indexInMap;
+			}
+			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
+				unsigned int yIndexToTest = posIndices.getY() + i;
+				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
+					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, posIndices.getZ());
+					if (WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())->type != 'x') {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+						collisionCoordsToCheck.push_back(cubeCoords);
+					}
+				}
+			}
+		}
+	}
+	void Player::setCollisionCoordsToCheck() {
+		collisionCoordsToCheck.clear();
+		math::Vec<unsigned int, 3> posIndices = getPositionIndices();
+		
+		setBottomCollisionCoordsToCheck(posIndices);
+		setTopCollisionCoordsToCheck(posIndices);
+		setFrontCollisionCoordsToCheck(posIndices);
+		setBackCollisionCoordsToCheck(posIndices);
+		setLeftCollisionCoordsToCheck(posIndices);
+		setRightCollisionCoordsToCheck(posIndices);
+	}
 	bool Player::isCubeCollision(math::Vec3 cubePos, math::Vec3 cubeDimens) {
 		//Positions refer to center point
 		if (position.getX() + 0.5f * DIMENSIONS.getX() > cubePos.getX() - 0.4999f /* (floating point numbers are fun...) */ * cubeDimens.getX() &&
@@ -19,28 +155,26 @@ namespace mtge {
 		}
 		return false;
 	}
-	void Player::manageCollisionX(WorldMap *worldMap) {
-		for (unsigned int chunkIndex = 0; chunkIndex < worldMap->getNumChunks(); chunkIndex++) {
+	void Player::manageCollisionX() {
+		/*
+		//for (unsigned int chunkIndex = 0; chunkIndex < WorldMap::getNumChunks(); chunkIndex++) {
 			for (unsigned int i = 0; i < Chunk::LENGTH_IN_CUBES; i++) {
 				for (unsigned int j = 0; j < Chunk::LENGTH_IN_CUBES; j++) {
 					for (unsigned int k = 0; k < Chunk::LENGTH_IN_CUBES; k++) {
-						Cube *currentCube = worldMap->getChunkPtr(chunkIndex)->getCubePtr(i, j, k);
+						Cube *currentCube = WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(i, j, k);
 						if (currentCube->type == 'x') {
 							continue;
 						}
-						if (worldMap->getChunkPtr(chunkIndex)->cubeIsSurrounded(i, j, k)) {
+						if (WorldMap::getChunkPtr(mapChunkIndex)->cubeIsSurrounded(i, j, k)) {
 							continue;
 						}
 
-						int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
-						float cubeX = 
-							-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE + 
-							worldMap->getChunkPtr(chunkIndex)->getPosition().getX();
-						float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + j * Chunk::CUBE_SIZE;
-						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE +
-							worldMap->getChunkPtr(chunkIndex)->getPosition().getY();
+						math::Vec3 cubePos = getCubePosFromIndices(math::Vec<unsigned int, 3>(i, j, k), mapChunkIndex);
+						float cubeX = cubePos.getX();
+						float cubeY = cubePos.getY();
+						float cubeZ = cubePos.getZ();
 
-						if (isCubeCollision(math::Vec3(cubeX, cubeY, cubeZ), math::Vec3(Chunk::CUBE_SIZE))) {
+						if (isCubeCollision(cubePos, math::Vec3(Chunk::CUBE_SIZE))) {
 							if (totalMovement.getX() > 0) {
 								position.setX(cubeX - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getX());
 								return;
@@ -53,30 +187,42 @@ namespace mtge {
 					}
 				}
 			}
+		//}
+		*/
+
+		for (unsigned int i = 0; i < collisionCoordsToCheck.size(); i++) {
+			if (isCubeCollision(collisionCoordsToCheck[i], math::Vec3(Chunk::CUBE_SIZE))) {
+				if (totalMovement.getX() > 0) {
+					position.setX(collisionCoordsToCheck[i].getX() - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getX());
+					return;
+				}
+				else if (totalMovement.getX() < 0) {
+					position.setX(collisionCoordsToCheck[i].getX() + 0.5f * Chunk::CUBE_SIZE + 0.5f * DIMENSIONS.getX());
+					return;
+				}
+			}
 		}
 	}
-	void Player::manageCollisionY(WorldMap *worldMap) {
-		for (unsigned int chunkIndex = 0; chunkIndex < worldMap->getNumChunks(); chunkIndex++) {
+	void Player::manageCollisionY() {
+		/*
+		//for (unsigned int chunkIndex = 0; chunkIndex < WorldMap::getNumChunks(); chunkIndex++) {
 			for (unsigned int i = 0; i < Chunk::LENGTH_IN_CUBES; i++) {
 				for (unsigned int j = 0; j < Chunk::LENGTH_IN_CUBES; j++) {
 					for (unsigned int k = 0; k < Chunk::LENGTH_IN_CUBES; k++) {
-						Cube *currentCube = worldMap->getChunkPtr(chunkIndex)->getCubePtr(i, j, k);
+						Cube *currentCube = WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(i, j, k);
 						if (currentCube->type == 'x') {
 							continue;
 						}
-						if (worldMap->getChunkPtr(chunkIndex)->cubeIsSurrounded(i, j, k)) {
+						if (WorldMap::getChunkPtr(mapChunkIndex)->cubeIsSurrounded(i, j, k)) {
 							continue;
 						}
 
-						int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
-						float cubeX =
-							-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE +
-							worldMap->getChunkPtr(chunkIndex)->getPosition().getX();
-						float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + j * Chunk::CUBE_SIZE;
-						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE +
-							worldMap->getChunkPtr(chunkIndex)->getPosition().getY();
+						math::Vec3 cubePos = getCubePosFromIndices(math::Vec<unsigned int, 3>(i, j, k), mapChunkIndex);
+						float cubeX = cubePos.getX();
+						float cubeY = cubePos.getY();
+						float cubeZ = cubePos.getZ();
 
-						if (isCubeCollision(math::Vec3(cubeX, cubeY, cubeZ), math::Vec3(Chunk::CUBE_SIZE))) {
+						if (isCubeCollision(cubePos, math::Vec3(Chunk::CUBE_SIZE))) {
 							if (totalMovement.getY() > 0) {
 								position.setY(cubeY - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getY());
 								gravitySpeed = 0.0f;
@@ -93,28 +239,48 @@ namespace mtge {
 					}
 				}
 			}
+		//}
+		onGround = false;
+		*/
+
+		for (unsigned int i = 0; i < collisionCoordsToCheck.size(); i++) {
+			if (isCubeCollision(collisionCoordsToCheck[i], math::Vec3(Chunk::CUBE_SIZE))) {
+				if (totalMovement.getY() > 0) {
+					position.setY(collisionCoordsToCheck[i].getY() - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getY());
+					gravitySpeed = 0.0f;
+					onGround = false;
+					return;
+				}
+				else if (totalMovement.getY() < 0) {
+					position.setY(collisionCoordsToCheck[i].getY() + 0.5f * Chunk::CUBE_SIZE + 0.5f * DIMENSIONS.getY());
+					gravitySpeed = startGravitySpeed;
+					onGround = true;
+					return;
+				}
+			}
 		}
 		onGround = false;
 	}
-	void Player::manageCollisionZ(WorldMap *worldMap) {
-		for (unsigned int chunkIndex = 0; chunkIndex < worldMap->getNumChunks(); chunkIndex++) {
+	void Player::manageCollisionZ() {
+		/*
+		//for (unsigned int chunkIndex = 0; chunkIndex < WorldMap::getNumChunks(); chunkIndex++) {
 			for (unsigned int i = 0; i < Chunk::LENGTH_IN_CUBES; i++) {
 				for (unsigned int j = 0; j < Chunk::LENGTH_IN_CUBES; j++) {
 					for (unsigned int k = 0; k < Chunk::LENGTH_IN_CUBES; k++) {
-						Cube *currentCube = worldMap->getChunkPtr(chunkIndex)->getCubePtr(i, j, k);
+						Cube *currentCube = WorldMap::getChunkPtr(mapChunkIndex)->getCubePtr(i, j, k);
 						if (currentCube->type == 'x') {
 							continue;
 						}
+						if (WorldMap::getChunkPtr(mapChunkIndex)->cubeIsSurrounded(i, j, k)) {
+							continue;
+						}
 
-						int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
-						float cubeX =
-							-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE +
-							worldMap->getChunkPtr(chunkIndex)->getPosition().getX();
-						float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + j * Chunk::CUBE_SIZE;
-						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE +
-							worldMap->getChunkPtr(chunkIndex)->getPosition().getY();
+						math::Vec3 cubePos = getCubePosFromIndices(math::Vec<unsigned int, 3>(i, j, k), mapChunkIndex);
+						float cubeX = cubePos.getX();
+						float cubeY = cubePos.getY();
+						float cubeZ = cubePos.getZ();
 
-						if (isCubeCollision(math::Vec3(cubeX, cubeY, cubeZ), math::Vec3(Chunk::CUBE_SIZE))) {
+						if (isCubeCollision(cubePos, math::Vec3(Chunk::CUBE_SIZE))) {
 							if (totalMovement.getZ() > 0) {
 								position.setZ(cubeZ - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getZ());
 								return;
@@ -125,6 +291,20 @@ namespace mtge {
 							}
 						}
 					}
+				}
+			}
+		//}
+		*/
+
+		for (unsigned int i = 0; i < collisionCoordsToCheck.size(); i++) {
+			if (isCubeCollision(collisionCoordsToCheck[i], math::Vec3(Chunk::CUBE_SIZE))) {
+				if (totalMovement.getZ() > 0) {
+					position.setZ(collisionCoordsToCheck[i].getZ() - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getZ());
+					return;
+				}
+				else if (totalMovement.getZ() < 0) {
+					position.setZ(collisionCoordsToCheck[i].getZ() + 0.5f * Chunk::CUBE_SIZE + 0.5f * DIMENSIONS.getZ());
+					return;
 				}
 			}
 		}
@@ -147,7 +327,7 @@ namespace mtge {
 
 		return math::Vec<int, 2>(chunkXIndex, chunkZIndex);
 	}
-	math::Vec<int, 3> Player::getPositionIndices() {
+	math::Vec<unsigned int, 3> Player::getPositionIndices() {
 		int chunkXIndex = getChunkPositionIndices().getX();
 		int chunkZIndex = getChunkPositionIndices().getY();
 		float chunkX = chunkXIndex * Chunk::CHUNK_SIZE;
@@ -157,7 +337,30 @@ namespace mtge {
 		int xIndex = (int)(xRel / Chunk::CUBE_SIZE);
 		int yIndex = (int)((position.getY() - DIMENSIONS.getY() / 2.0f + Chunk::CHUNK_SIZE) / Chunk::CUBE_SIZE) - 1;
 		int zIndex = (int)(zRel / Chunk::CUBE_SIZE);
-		return math::Vec<int, 3>(xIndex, yIndex, zIndex);
+		xIndex = xIndex < 0 ? 0 : xIndex;
+		yIndex = yIndex < 0 ? 0 : yIndex;
+		zIndex = zIndex < 0 ? 0 : zIndex;
+		return math::Vec<unsigned int, 3>(xIndex, yIndex, zIndex);
+	}
+	void Player::setMapChunkIndex() {
+		math::Vec<int, 2> currentChunkIndices = getChunkPositionIndices();
+		Chunk *currentChunk = WorldMap::getChunkPtr(mapChunkIndex);
+		if (currentChunkIndices.getX() - prevChunkIndices.getX() > 0 && currentChunk->rightNeighbor) {
+			mapChunkIndex = currentChunk->rightNeighbor->indexInMap;
+			prevChunkIndices = currentChunkIndices;
+		}
+		else if (currentChunkIndices.getX() - prevChunkIndices.getX() < 0 && currentChunk->leftNeighbor) {
+			mapChunkIndex = currentChunk->leftNeighbor->indexInMap;
+			prevChunkIndices = currentChunkIndices;
+		}
+		else if (currentChunkIndices.getY() - prevChunkIndices.getY() > 0 && currentChunk->frontNeighbor) {
+			mapChunkIndex = currentChunk->frontNeighbor->indexInMap;
+			prevChunkIndices = currentChunkIndices;
+		}
+		else if (currentChunkIndices.getY() - prevChunkIndices.getY() < 0 && currentChunk->backNeighbor) {
+			mapChunkIndex = currentChunk->backNeighbor->indexInMap;
+			prevChunkIndices = currentChunkIndices;
+		}
 	}
 
 	//Public
@@ -176,11 +379,20 @@ namespace mtge {
 	}
 	void Player::controlJump(Window *window, float jumpSize, int jumpKey) {
 		if ((glfwGetKey(window->getPtr_GLFW(), jumpKey) == GLFW_PRESS) && onGround) {
-			gravitySpeed = jumpSize;
+			gravitySpeed = -jumpSize;
 			onGround = false;
+
+			float timeToChangeDirection = jumpSize / (gravityAddend * movementSize);
+			float jumpYDisplacement = 0.5f * timeToChangeDirection * jumpSize * movementSize;
+			if (jumpYDisplacement > 0) {
+				jumpHeightInCubes = (unsigned int)ceilf(jumpYDisplacement / Chunk::CUBE_SIZE);
+			}
+			else {
+				jumpHeightInCubes = 0;
+			}
 		}
 	}
-	void Player::controlMotion(Window *window, WorldMap *worldMap, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+	void Player::controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
 		math::Vec3 movementDirection = math::Vec3(front.getX(), 0.0f, front.getZ());
 		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
 
@@ -196,24 +408,30 @@ namespace mtge {
 		totalMovement.setZ(totalMovement.getZ() * ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0));
 
 		if (canApplyCollisions) {
+			setCollisionCoordsToCheck();
+
 			position.setY(position.getY() + totalMovement.getY());
-			manageCollisionY(worldMap);
+			manageCollisionY();
 
 			position.setX(position.getX() + totalMovement.getX());
-			manageCollisionX(worldMap);
+			manageCollisionX();
 
 			position.setZ(position.getZ() + totalMovement.getZ());
-			manageCollisionZ(worldMap);
+			manageCollisionZ();
 		}
 		else {
 			position += totalMovement;
 		}
-		std::cout << position << "   " << getChunkPositionIndices() << "   " << getPositionIndices() << std::endl;
+		
+		setMapChunkIndex();
+		//std::cout << position << "   " << getChunkPositionIndices() << "   " << getPositionIndices() << "   " << mapChunkIndex << std::endl;
 	}
 	void Player::controlReset(Window *window, float resetHeight) {
 		if (glfwGetKey(window->getPtr_GLFW(), GLFW_KEY_R) == GLFW_PRESS) {
 			gravitySpeed = startGravitySpeed;
 			position = math::Vec3(0.0f, resetHeight, 0.0f);
+			mapChunkIndex = 0;
+			prevChunkIndices = math::Vec<int, 2>(0, 0);
 		}
 	}
 	math::Mat4 Player::getViewMatrix() {

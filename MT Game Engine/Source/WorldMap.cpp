@@ -1,10 +1,15 @@
 #include "WorldMap.h"
 
 namespace mtge {
+	//Private
+	std::vector<Chunk*> WorldMap::chunks;
+
+	//Public
 	unsigned int WorldMap::getNumChunks() {
 		return chunks.size();
 	}
 	void WorldMap::addChunk(Chunk *chunk) {
+		chunk->indexInMap = chunks.size();
 		chunks.push_back(chunk);
 	}
 	Chunk *WorldMap::getChunkPtr(unsigned int index) {

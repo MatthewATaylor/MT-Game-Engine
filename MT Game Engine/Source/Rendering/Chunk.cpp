@@ -24,10 +24,26 @@ namespace mtge {
 				}
 			}
 		}
+		
+		//Origin marker
 		cubes[0][LENGTH_IN_CUBES - 1][0]->type = 'x';
 		cubes[1][LENGTH_IN_CUBES - 1][0]->type = 'x';
 		cubes[0][LENGTH_IN_CUBES - 1][1]->type = 'x';
 		cubes[1][LENGTH_IN_CUBES - 1][1]->type = 'x';
+
+		//Hole
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 1][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
+
+		//Tunnel
+		cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
 	}
 
 	//Private
@@ -104,6 +120,22 @@ namespace mtge {
 			cubeHasRightNeighbor(xIndex, yIndex, zIndex) &&
 			cubeHasFrontNeighbor(xIndex, yIndex, zIndex) &&
 			cubeHasBackNeighbor(xIndex, yIndex, zIndex);
+	}
+	void Chunk::setFrontNeighbor(Chunk *chunk) {
+		frontNeighbor = chunk;
+		chunk->backNeighbor = this;
+	}
+	void Chunk::setBackNeighbor(Chunk *chunk) {
+		backNeighbor = chunk;
+		chunk->frontNeighbor = this;
+	}
+	void Chunk::setLeftNeighbor(Chunk *chunk) {
+		leftNeighbor = chunk;
+		chunk->rightNeighbor = this;
+	}
+	void Chunk::setRightNeighbor(Chunk *chunk) {
+		rightNeighbor = chunk;
+		chunk->leftNeighbor = this;
 	}
 	void Chunk::enableBufferRegenNextFrame() {
 		shouldGenBuffer = true;

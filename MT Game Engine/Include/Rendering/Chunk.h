@@ -31,6 +31,12 @@ namespace mtge {
 	public:
 		static const float CUBE_SIZE;
 		static const float CHUNK_SIZE;
+		unsigned int indexInMap = 0;
+
+		Chunk *frontNeighbor = nullptr;
+		Chunk *backNeighbor = nullptr;
+		Chunk *leftNeighbor = nullptr;
+		Chunk *rightNeighbor = nullptr;
 
 		Chunk(TextureAtlasSegment *texAtlasSegment, math::Vec2 position);
 
@@ -41,6 +47,11 @@ namespace mtge {
 		bool cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		bool cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		bool cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
+
+		void setFrontNeighbor(Chunk *chunk);
+		void setBackNeighbor(Chunk *chunk);
+		void setLeftNeighbor(Chunk *chunk);
+		void setRightNeighbor(Chunk *chunk);
 
 		void enableBufferRegenNextFrame();
 		void render(Camera *camera, Window *window);
