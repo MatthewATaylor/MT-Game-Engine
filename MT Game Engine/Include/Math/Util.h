@@ -79,7 +79,7 @@ namespace mtge {
 		template<typename T, unsigned int SIZE>
 		Mat<T, SIZE, SIZE> Util::MatGen::translation(Vec<T, SIZE - 1> translationValues) {
 			Mat<T, SIZE, SIZE> outputMatrix = identity<T, SIZE>();
-			for (unsigned int i = 1; i < SIZE - 1; i++) {
+			for (unsigned int i = 1; i <= SIZE - 1; i++) {
 				outputMatrix.set(SIZE, i, translationValues.get(i - 1));
 			}
 			return outputMatrix;

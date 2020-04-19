@@ -26,6 +26,8 @@ namespace mtge {
 		void manageCollisionY(WorldMap *worldMap);
 		void manageCollisionZ(WorldMap *worldMap);
 		void applyGravity();
+		math::Vec<int, 2> getChunkPositionIndices();
+		math::Vec<int, 3> getPositionIndices();
 
 	public:
 		Player(math::Vec3 position, const math::Vec3 DIMENSIONS);

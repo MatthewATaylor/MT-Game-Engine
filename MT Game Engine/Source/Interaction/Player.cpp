@@ -28,18 +28,26 @@ namespace mtge {
 						if (currentCube->type == 'x') {
 							continue;
 						}
-						
+						if (worldMap->getChunkPtr(chunkIndex)->cubeIsSurrounded(i, j, k)) {
+							continue;
+						}
+
 						int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
-						float cubeX = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE;
+						float cubeX = 
+							-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE + 
+							worldMap->getChunkPtr(chunkIndex)->getPosition().getX();
 						float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + j * Chunk::CUBE_SIZE;
-						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE;
+						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE +
+							worldMap->getChunkPtr(chunkIndex)->getPosition().getY();
 
 						if (isCubeCollision(math::Vec3(cubeX, cubeY, cubeZ), math::Vec3(Chunk::CUBE_SIZE))) {
 							if (totalMovement.getX() > 0) {
 								position.setX(cubeX - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getX());
+								return;
 							}
 							else if (totalMovement.getX() < 0) {
 								position.setX(cubeX + 0.5f * Chunk::CUBE_SIZE + 0.5f * DIMENSIONS.getX());
+								return;
 							}
 						}
 					}
@@ -48,7 +56,6 @@ namespace mtge {
 		}
 	}
 	void Player::manageCollisionY(WorldMap *worldMap) {
-		bool bottomCollision = false;
 		for (unsigned int chunkIndex = 0; chunkIndex < worldMap->getNumChunks(); chunkIndex++) {
 			for (unsigned int i = 0; i < Chunk::LENGTH_IN_CUBES; i++) {
 				for (unsigned int j = 0; j < Chunk::LENGTH_IN_CUBES; j++) {
@@ -57,28 +64,37 @@ namespace mtge {
 						if (currentCube->type == 'x') {
 							continue;
 						}
+						if (worldMap->getChunkPtr(chunkIndex)->cubeIsSurrounded(i, j, k)) {
+							continue;
+						}
 
 						int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
-						float cubeX = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE;
+						float cubeX =
+							-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE +
+							worldMap->getChunkPtr(chunkIndex)->getPosition().getX();
 						float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + j * Chunk::CUBE_SIZE;
-						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE;
+						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE +
+							worldMap->getChunkPtr(chunkIndex)->getPosition().getY();
 
 						if (isCubeCollision(math::Vec3(cubeX, cubeY, cubeZ), math::Vec3(Chunk::CUBE_SIZE))) {
 							if (totalMovement.getY() > 0) {
 								position.setY(cubeY - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getY());
 								gravitySpeed = 0.0f;
+								onGround = false;
+								return;
 							}
 							else if (totalMovement.getY() < 0) {
 								position.setY(cubeY + 0.5f * Chunk::CUBE_SIZE + 0.5f * DIMENSIONS.getY());
 								gravitySpeed = startGravitySpeed;
-								bottomCollision = true;
+								onGround = true;
+								return;
 							}
 						}
 					}
 				}
 			}
 		}
-		onGround = bottomCollision;
+		onGround = false;
 	}
 	void Player::manageCollisionZ(WorldMap *worldMap) {
 		for (unsigned int chunkIndex = 0; chunkIndex < worldMap->getNumChunks(); chunkIndex++) {
@@ -91,16 +107,21 @@ namespace mtge {
 						}
 
 						int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
-						float cubeX = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE;
+						float cubeX =
+							-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + i * Chunk::CUBE_SIZE +
+							worldMap->getChunkPtr(chunkIndex)->getPosition().getX();
 						float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + j * Chunk::CUBE_SIZE;
-						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE;
+						float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + k * Chunk::CUBE_SIZE +
+							worldMap->getChunkPtr(chunkIndex)->getPosition().getY();
 
 						if (isCubeCollision(math::Vec3(cubeX, cubeY, cubeZ), math::Vec3(Chunk::CUBE_SIZE))) {
 							if (totalMovement.getZ() > 0) {
 								position.setZ(cubeZ - 0.5f * Chunk::CUBE_SIZE - 0.5f * DIMENSIONS.getZ());
+								return;
 							}
 							else if (totalMovement.getZ() < 0) {
 								position.setZ(cubeZ + 0.5f * Chunk::CUBE_SIZE + 0.5f * DIMENSIONS.getZ());
+								return;
 							}
 						}
 					}
@@ -116,6 +137,27 @@ namespace mtge {
 		}
 
 		totalMovement.setY(totalMovement.getY() - gravitySpeed * movementSize);
+	}
+	math::Vec<int, 2> Player::getChunkPositionIndices() {
+		float xRelToCorner = position.getX() + Chunk::CHUNK_SIZE / 2.0f;
+		int chunkXIndex = (int)(xRelToCorner / Chunk::CHUNK_SIZE) - (xRelToCorner < 0 ? 1 : 0);
+
+		float zRelToCorner = position.getZ() + Chunk::CHUNK_SIZE / 2.0f;
+		int chunkZIndex = (int)(zRelToCorner / Chunk::CHUNK_SIZE) - (zRelToCorner < 0 ? 1 : 0);
+
+		return math::Vec<int, 2>(chunkXIndex, chunkZIndex);
+	}
+	math::Vec<int, 3> Player::getPositionIndices() {
+		int chunkXIndex = getChunkPositionIndices().getX();
+		int chunkZIndex = getChunkPositionIndices().getY();
+		float chunkX = chunkXIndex * Chunk::CHUNK_SIZE;
+		float chunkZ = chunkZIndex * Chunk::CHUNK_SIZE;
+		float xRel = position.getX() - chunkX + Chunk::CHUNK_SIZE / 2.0f;
+		float zRel = position.getZ() - chunkZ + Chunk::CHUNK_SIZE / 2.0f;
+		int xIndex = (int)(xRel / Chunk::CUBE_SIZE);
+		int yIndex = (int)((position.getY() - DIMENSIONS.getY() / 2.0f + Chunk::CHUNK_SIZE) / Chunk::CUBE_SIZE) - 1;
+		int zIndex = (int)(zRel / Chunk::CUBE_SIZE);
+		return math::Vec<int, 3>(xIndex, yIndex, zIndex);
 	}
 
 	//Public
@@ -166,6 +208,7 @@ namespace mtge {
 		else {
 			position += totalMovement;
 		}
+		std::cout << position << "   " << getChunkPositionIndices() << "   " << getPositionIndices() << std::endl;
 	}
 	void Player::controlReset(Window *window, float resetHeight) {
 		if (glfwGetKey(window->getPtr_GLFW(), GLFW_KEY_R) == GLFW_PRESS) {
