@@ -31,7 +31,7 @@ namespace mtge {
 		);
 	}
 	int ChunkData::getVerticesInBuffer() {
-		return vertexBuffer.size() / CubeData::ELEMENTS_PER_VERTEX / 
+		return vertexBuffer.size() / CubeData::ELEMENTS_PER_VERTEX;
 	}
 	void ChunkData::sendBuffer() {
 		glBufferData(GL_ARRAY_BUFFER, vertexBuffer.size() * sizeof(float), vertexBuffer.data(), GL_STATIC_DRAW);

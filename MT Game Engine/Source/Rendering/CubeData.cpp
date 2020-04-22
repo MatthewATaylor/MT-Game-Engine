@@ -33,41 +33,29 @@ namespace mtge {
 		bool hasFrontNeighbor,
 		bool hasBackNeighbor) {
 
-		/*if (!hasTopNeighbor) {
+		if (!hasTopNeighbor) {
 			transformFace(topFace, offset, scale);
 			vertexBuffer->insert(vertexBuffer->end(), topFace, topFace + FACE_VERTEX_BUFFER_LENGTH);
-			//glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, topFace);
-			//bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
-		}*/
+		}
 		if (!hasBottomNeighbor) {
 			transformFace(bottomFace, offset, scale);
 			vertexBuffer->insert(vertexBuffer->end(), bottomFace, bottomFace + FACE_VERTEX_BUFFER_LENGTH);
-			//glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, bottomFace);
-			//bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
 		}
 		if (!hasLeftNeighbor) {
 			transformFace(leftFace, offset, scale);
 			vertexBuffer->insert(vertexBuffer->end(), leftFace, leftFace + FACE_VERTEX_BUFFER_LENGTH);
-			//glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, leftFace);
-			//bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
 		}
 		if (!hasRightNeighbor) {
 			transformFace(rightFace, offset, scale);
 			vertexBuffer->insert(vertexBuffer->end(), rightFace, rightFace + FACE_VERTEX_BUFFER_LENGTH);
-			//glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, rightFace);
-			//bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
 		}
 		if (!hasFrontNeighbor) {
 			transformFace(frontFace, offset, scale);
 			vertexBuffer->insert(vertexBuffer->end(), frontFace, frontFace + FACE_VERTEX_BUFFER_LENGTH);
-			//glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, frontFace);
-			//bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
 		}
 		if (!hasBackNeighbor) {
 			transformFace(backFace, offset, scale);
 			vertexBuffer->insert(vertexBuffer->end(), backFace, backFace + FACE_VERTEX_BUFFER_LENGTH);
-			//glBufferSubData(GL_ARRAY_BUFFER, bufferOffsetSize, FACE_VERTEX_BUFFER_SIZE, backFace);
-			//bufferOffsetSize += FACE_VERTEX_BUFFER_SIZE;
 		}
 	}
 }

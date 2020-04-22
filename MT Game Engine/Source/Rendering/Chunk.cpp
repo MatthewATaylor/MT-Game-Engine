@@ -22,55 +22,35 @@ namespace mtge {
 					//else {
 						cubes[i][j][k] = new Cube{ 'd' };
 					//}
-
-					//if (k == LENGTH_IN_CUBES - 1) {
-					//	cubes[i][j][k] = new Cube{ 'd' };
-					//}
-					//else {
-					//	cubes[i][j][k] = new Cube{ 'x' };
-					//}
 				}
 			}
 		}
 		
 		//Origin marker
-		/*
-		cubes[0][LENGTH_IN_CUBES - 1][0]->type = 'x';
-		cubes[1][LENGTH_IN_CUBES - 1][0]->type = 'x';
-		cubes[0][LENGTH_IN_CUBES - 1][1]->type = 'x';
-		cubes[1][LENGTH_IN_CUBES - 1][1]->type = 'x';
+		//cubes[0][LENGTH_IN_CUBES - 1][0]->type = 'x';
+		//cubes[1][LENGTH_IN_CUBES - 1][0]->type = 'x';
+		//cubes[0][LENGTH_IN_CUBES - 1][1]->type = 'x';
+		//cubes[1][LENGTH_IN_CUBES - 1][1]->type = 'x';
 
 		//Hole
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 1][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 1][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
 
 		//Tunnel
-		cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
-		*/
-
-		/*
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 1][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
-		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
-		*/
+		//cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
+		//cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
 	}
 
 	//Private
 	void Chunk::genBuffer() {
 		glBindVertexArray(vertexArrayID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-
-		//glBufferData(GL_ARRAY_BUFFER, NUM_CUBES * CubeData::VERTEX_BUFFER_SIZE, 0, GL_STATIC_DRAW);
-
-		//CubeData::resetBufferOffsetCounter();
 
 		//Add each cube's vertex buffer as sub data
 		ChunkData chunkData(texAtlasSegment);
@@ -83,18 +63,6 @@ namespace mtge {
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
 					if (cubes[i][j][k]->type != 'x') {
-						//CubeData cubeData(texAtlasSegment);
-						//cubeData.addBufferSubData(
-						//	math::Vec3(xOffset, yOffset, zOffset),
-						//	LENGTH_IN_CUBES,
-						//	cubeHasTopNeighbor(i, j, k),
-						//	cubeHasBottomNeighbor(i, j, k),
-						//	cubeHasLeftNeighbor(i, j, k),
-						//	cubeHasRightNeighbor(i, j, k),
-						//	cubeHasFrontNeighbor(i, j, k),
-						//	cubeHasBackNeighbor(i, j, k)
-						//);
-
 						chunkData.addCube(
 							math::Vec3(xOffset, yOffset, zOffset),
 							LENGTH_IN_CUBES,
@@ -109,6 +77,7 @@ namespace mtge {
 				}
 			}
 		}
+		verticesInLastBufferGen = chunkData.getVerticesInBuffer();
 		chunkData.sendBuffer();
 
 		if (shouldSetVertexAttributes) {
@@ -140,25 +109,22 @@ namespace mtge {
 	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
 			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x') ||
-			(xIndex == 0 && leftNeighbor != nullptr/* && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x'*/);
+			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x');
 	}
 	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return true;
 		return
 			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x') ||
-			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor != nullptr/* && rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x'*/);
+			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x');
 	}
 	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return true;
 		return
 			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]->type != 'x') ||
-			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor != nullptr/* && frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type != 'x'*/);
+			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type != 'x');
 	}
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return true;
 		return
 			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x') ||
-			(zIndex == 0 && backNeighbor != nullptr/* && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type != 'x'*/);
+			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type != 'x');
 	}
 	bool Chunk::cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
@@ -231,7 +197,7 @@ namespace mtge {
 		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, verticesInLastBufferGen);
 	}
 	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
