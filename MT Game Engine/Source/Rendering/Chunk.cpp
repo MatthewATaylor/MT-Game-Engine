@@ -20,8 +20,15 @@ namespace mtge {
 					//	cubes[i][j][k] = new Cube{ 'x' };
 					//}
 					//else {
-						cubes[i][j][k] = new Cube{ 'd' };
+					//	cubes[i][j][k] = new Cube{ 'd' };
 					//}
+
+					if (i == 0 || j == 0 || k == 0 || i == LENGTH_IN_CUBES - 1 || j == LENGTH_IN_CUBES - 1 || k == LENGTH_IN_CUBES - 1) {
+						cubes[i][j][k] = new Cube{ 'd' };
+					}
+					else {
+						cubes[i][j][k] = nullptr;
+					}
 				}
 			}
 		}
@@ -62,7 +69,7 @@ namespace mtge {
 					float yOffset = -1.0f + cubeSize / 2 + j * cubeSize;
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
-					if (cubes[i][j][k]->type != 'x') {
+					if (cubes[i][j][k]) {
 						chunkData.addCube(
 							math::Vec3(xOffset, yOffset, zOffset),
 							LENGTH_IN_CUBES,
@@ -101,30 +108,30 @@ namespace mtge {
 	const float Chunk::CHUNK_SIZE = LENGTH_IN_CUBES * CUBE_SIZE;
 
 	bool Chunk::cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex]->type != 'x';
+		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex];
 	}
 	bool Chunk::cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex]->type != 'x';
+		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex];
 	}
 	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x') ||
-			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x');
+			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]) ||
+			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex));
 	}
 	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x') ||
-			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x');
+			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]) ||
+			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex));
 	}
 	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]->type != 'x') ||
-			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type != 'x');
+			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]) ||
+			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0));
 	}
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x') ||
-			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type != 'x');
+			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]) ||
+			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1));
 	}
 	bool Chunk::cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
