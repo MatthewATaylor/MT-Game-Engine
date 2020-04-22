@@ -5,6 +5,7 @@ namespace mtge {
 	Chunk::Chunk(TextureAtlasSegment *texAtlasSegment, math::Vec2 position) {
 		this->texAtlasSegment = texAtlasSegment;
 		this->position = position;
+		positionIndices = math::Vec<int, 2>((int)roundf(position.getX() / CHUNK_SIZE), (int)roundf(position.getY() / CHUNK_SIZE));
 
 		glGenVertexArrays(1, &vertexArrayID);
 		glGenBuffers(1, &vertexBufferID);
@@ -15,12 +16,19 @@ namespace mtge {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				cubes[i][j] = new Cube*[LENGTH_IN_CUBES];
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
-					if (j == LENGTH_IN_CUBES - 1 && i % 3 == 0 && k % 3 == 0) {
-						cubes[i][j][k] = new Cube{ 'x' };
-					}
-					else {
+					//if (j == LENGTH_IN_CUBES - 1 && i % 3 == 0 && k % 3 == 0) {
+					//	cubes[i][j][k] = new Cube{ 'x' };
+					//}
+					//else {
 						cubes[i][j][k] = new Cube{ 'd' };
-					}
+					//}
+
+					//if (k == LENGTH_IN_CUBES - 1) {
+					//	cubes[i][j][k] = new Cube{ 'd' };
+					//}
+					//else {
+					//	cubes[i][j][k] = new Cube{ 'x' };
+					//}
 				}
 			}
 		}
@@ -46,6 +54,13 @@ namespace mtge {
 		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
 		cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
 		*/
+
+		/*
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 1][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
+		cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
+		*/
 	}
 
 	//Private
@@ -53,11 +68,12 @@ namespace mtge {
 		glBindVertexArray(vertexArrayID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 
-		glBufferData(GL_ARRAY_BUFFER, NUM_CUBES * CubeData::VERTEX_BUFFER_SIZE, 0, GL_STATIC_DRAW);
+		//glBufferData(GL_ARRAY_BUFFER, NUM_CUBES * CubeData::VERTEX_BUFFER_SIZE, 0, GL_STATIC_DRAW);
 
-		CubeData::resetBufferOffsetCounter();
+		//CubeData::resetBufferOffsetCounter();
 
 		//Add each cube's vertex buffer as sub data
+		ChunkData chunkData(texAtlasSegment);
 		float cubeSize = 2.0f / LENGTH_IN_CUBES;
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
@@ -67,8 +83,19 @@ namespace mtge {
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
 					if (cubes[i][j][k]->type != 'x') {
-						CubeData cubeData(texAtlasSegment);
-						cubeData.addBufferSubData(
+						//CubeData cubeData(texAtlasSegment);
+						//cubeData.addBufferSubData(
+						//	math::Vec3(xOffset, yOffset, zOffset),
+						//	LENGTH_IN_CUBES,
+						//	cubeHasTopNeighbor(i, j, k),
+						//	cubeHasBottomNeighbor(i, j, k),
+						//	cubeHasLeftNeighbor(i, j, k),
+						//	cubeHasRightNeighbor(i, j, k),
+						//	cubeHasFrontNeighbor(i, j, k),
+						//	cubeHasBackNeighbor(i, j, k)
+						//);
+
+						chunkData.addCube(
 							math::Vec3(xOffset, yOffset, zOffset),
 							LENGTH_IN_CUBES,
 							cubeHasTopNeighbor(i, j, k),
@@ -82,14 +109,22 @@ namespace mtge {
 				}
 			}
 		}
+		chunkData.sendBuffer();
 
-		//Position vertex attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-		glEnableVertexAttribArray(0);
+		if (shouldSetVertexAttributes) {
+			//Position vertex attribute
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+			glEnableVertexAttribArray(0);
 
-		//Color vertex attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
+			//Color vertex attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(1);
+
+			shouldSetVertexAttributes = false;
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 
 	//Public
@@ -103,24 +138,27 @@ namespace mtge {
 		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex]->type != 'x';
 	}
 	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return 
-			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x') || 
-			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x');
+		return
+			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]->type != 'x') ||
+			(xIndex == 0 && leftNeighbor != nullptr/* && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x'*/);
 	}
 	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return 
-			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x') || 
-			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x');
+		return true;
+		return
+			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]->type != 'x') ||
+			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor != nullptr/* && rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x'*/);
 	}
 	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return 
-			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex ][yIndex][zIndex + 1]->type != 'x') || 
-			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'x');
+		return true;
+		return
+			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]->type != 'x') ||
+			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor != nullptr/* && frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type != 'x'*/);
 	}
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return 
-			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x') || 
-			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'x');
+		return true;
+		return
+			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]->type != 'x') ||
+			(zIndex == 0 && backNeighbor != nullptr/* && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type != 'x'*/);
 	}
 	bool Chunk::cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
@@ -134,18 +172,30 @@ namespace mtge {
 	void Chunk::setFrontNeighbor(Chunk *chunk) {
 		frontNeighbor = chunk;
 		chunk->backNeighbor = this;
+
+		shouldGenBuffer = true;
+		chunk->enableBufferRegenNextFrame();
 	}
 	void Chunk::setBackNeighbor(Chunk *chunk) {
 		backNeighbor = chunk;
 		chunk->frontNeighbor = this;
+
+		shouldGenBuffer = true;
+		chunk->enableBufferRegenNextFrame();
 	}
 	void Chunk::setLeftNeighbor(Chunk *chunk) {
 		leftNeighbor = chunk;
 		chunk->rightNeighbor = this;
+
+		shouldGenBuffer = true;
+		chunk->enableBufferRegenNextFrame();
 	}
 	void Chunk::setRightNeighbor(Chunk *chunk) {
 		rightNeighbor = chunk;
 		chunk->leftNeighbor = this;
+
+		shouldGenBuffer = true;
+		chunk->enableBufferRegenNextFrame();
 	}
 	void Chunk::enableBufferRegenNextFrame() {
 		shouldGenBuffer = true;
@@ -155,9 +205,9 @@ namespace mtge {
 			genBuffer();
 			shouldGenBuffer = false;
 		}
-
-		glBindVertexArray(vertexArrayID);
 		
+		glBindVertexArray(vertexArrayID);
+
 		if (!Texture::getAtlasPtr()) {
 			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
 		}
@@ -181,17 +231,23 @@ namespace mtge {
 		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
-		glEnable(GL_CULL_FACE);
-		glDrawArrays(GL_TRIANGLES, 0, CubeData::getVerticesAdded());
+		//glEnable(GL_CULL_FACE);
+		glDrawArrays(GL_TRIANGLES, 0, verticesInLastBufferGen);
 	}
 	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		if (xIndex >= LENGTH_IN_CUBES || yIndex >= LENGTH_IN_CUBES || zIndex >= LENGTH_IN_CUBES) {
+			return nullptr;
+		}
+		if (xIndex < 0 || yIndex < 0 || zIndex < 0) {
 			return nullptr;
 		}
 		return cubes[xIndex][yIndex][zIndex];
 	}
 	math::Vec2 Chunk::getPosition() {
 		return position;
+	}
+	math::Vec<int, 2> Chunk::getPositionIndices() {
+		return positionIndices;
 	}
 
 	//Destructor

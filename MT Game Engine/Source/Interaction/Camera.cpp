@@ -18,6 +18,10 @@ namespace mtge {
 		movementSize = clock.getTimeChange() * speed;
 		clock.setPrevious();
 
+		if (movementSize > 0.005f) {
+			movementSize = 0.005f;
+		}
+
 		totalMovement = math::Vec3(0.0f, 0.0f, 0.0f);
 		
 		if (glfwGetKey(window->getPtr_GLFW(), forwardKey) == GLFW_PRESS) {

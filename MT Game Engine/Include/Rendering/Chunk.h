@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include <GL/glew.h>
 
 #include "Rendering/Cube.h"
@@ -11,6 +13,7 @@
 #include "Texture/TextureAtlasSegment.h"
 #include "Window.h"
 #include "Interaction/Camera.h"
+#include "Rendering/ChunkData.h"
 
 namespace mtge {
 	class Chunk {
@@ -24,7 +27,10 @@ namespace mtge {
 		unsigned int vertexBufferID;
 		TextureAtlasSegment *texAtlasSegment = nullptr;
 		bool shouldGenBuffer = true;
+		bool shouldSetVertexAttributes = true;
 		math::Vec2 position;
+		math::Vec<int, 2> positionIndices;
+		int verticesInLastBufferGen = 0;
 
 		void genBuffer();
 
@@ -57,6 +63,7 @@ namespace mtge {
 		void render(Camera *camera, Window *window);
 		Cube *getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		math::Vec2 getPosition();
+		math::Vec<int, 2> getPositionIndices();
 
 		~Chunk();
 	};
