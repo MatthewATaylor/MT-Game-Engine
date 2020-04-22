@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 #include "Rendering/CubeData.h"
 #include "Math/Vec.h"

@@ -23,12 +23,12 @@ namespace mtge {
 					//	cubes[i][j][k] = new Cube{ 'd' };
 					//}
 
-					if (i == 0 || j == 0 || k == 0 || i == LENGTH_IN_CUBES - 1 || j == LENGTH_IN_CUBES - 1 || k == LENGTH_IN_CUBES - 1) {
+					//if (i == 0 || j == 0 || k == 0 || i == LENGTH_IN_CUBES - 1 || j == LENGTH_IN_CUBES - 1 || k == LENGTH_IN_CUBES - 1) {
 						cubes[i][j][k] = new Cube{ 'd' };
-					}
-					else {
-						cubes[i][j][k] = nullptr;
-					}
+					//}
+					//else {
+					//	cubes[i][j][k] = nullptr;
+					//}
 				}
 			}
 		}
@@ -98,9 +98,6 @@ namespace mtge {
 
 			shouldSetVertexAttributes = false;
 		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
 	}
 
 	//Public
