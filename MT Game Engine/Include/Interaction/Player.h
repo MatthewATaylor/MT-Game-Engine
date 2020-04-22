@@ -50,6 +50,7 @@ namespace mtge {
 		void manageCollisionZ();
 
 		void applyGravity();
+		void reduceMotion();
 
 		math::Vec<int, 2> getChunkPositionIndices();
 		math::Vec<unsigned int, 3> getPositionIndices();

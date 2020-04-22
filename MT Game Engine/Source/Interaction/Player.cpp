@@ -419,6 +419,18 @@ namespace mtge {
 
 		totalMovement.setY(totalMovement.getY() - gravitySpeed * movementSize);
 	}
+	void Player::reduceMotion() {
+		for (unsigned int i = 0; i < 3; i++) {
+			float maxSpeed = Chunk::CUBE_SIZE + DIMENSIONS.get(i);
+			//float maxSpeed = 0.01f;
+			if (totalMovement.get(i) > maxSpeed) {
+				totalMovement.set(i, maxSpeed);
+			}
+			else if (totalMovement.get(i) < -maxSpeed) {
+				totalMovement.set(i, -maxSpeed);
+			}
+		}
+	}
 	math::Vec<int, 2> Player::getChunkPositionIndices() {
 		float xRelToCorner = position.getX() + Chunk::CHUNK_SIZE / 2.0f;
 		int chunkXIndex = (int)(xRelToCorner / Chunk::CHUNK_SIZE) - (xRelToCorner < 0 ? 1 : 0);
@@ -507,6 +519,9 @@ namespace mtge {
 		float movementMagnitude = (sinTheta != 0) ? (totalMovement.getZ() / sinTheta) : totalMovement.getX();
 		totalMovement.setX(totalMovement.getX() * ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0));
 		totalMovement.setZ(totalMovement.getZ() * ((movementMagnitude != 0) ? (movementSize / movementMagnitude) : 0));
+
+		//Reduce speed for accurate collision detection
+		reduceMotion();
 
 		if (canApplyCollisions) {
 			setCollisionCoordsToCheck();
