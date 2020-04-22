@@ -31,16 +31,16 @@ namespace mtge {
 
 		math::Vec3 getCubePosFromIndices(math::Vec<unsigned int, 3> indices, unsigned int chunkIndex);
 
-		void setBottomCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setTopCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setFrontCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setBackCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setFrontRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setBackRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setFrontLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
-		void setBackLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices);
+		void setBottomCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setTopCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setFrontCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setBackCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setFrontRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setBackRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setFrontLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setBackLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
 
 		void setCollisionCoordsToCheck();
 
