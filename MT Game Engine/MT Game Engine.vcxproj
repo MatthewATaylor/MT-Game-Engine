@@ -179,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Math\Mat.inl" />
+    <None Include="Source\Math\Util.inl" />
     <None Include="Source\Math\Vec.inl" />
     <None Include="Source\Math\Vec_2.inl" />
     <None Include="Source\Math\Vec_3.inl" />
