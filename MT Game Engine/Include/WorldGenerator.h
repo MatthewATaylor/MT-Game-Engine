@@ -16,7 +16,9 @@ namespace mtge {
 		};
 		struct ChunkGenQueueMember {
 			Chunk *baseChunk = nullptr;
-			math::Vec2 newChunkPosition;
+			TextureAtlasSegment *texAtlasSegment;
+			math::Vec2 position;
+			math::Vec<int, 2> positionIndices;
 			ChunkNeighborDirection direction;
 		};
 		Player *player = nullptr;
@@ -24,6 +26,7 @@ namespace mtge {
 
 		void setNeighborChunks(Chunk *addedChunk, bool testLeft, bool testRight, bool testFront, bool testBack);
 		void generateChunksFromBase(TextureAtlasSegment *texAtlasSegment, Chunk *baseChunk);
+		void generateChunksForBaseNeighbors(TextureAtlasSegment *texAtlasSegment, Chunk *baseChunk);
 
 	public:
 		WorldGenerator(Player *player);

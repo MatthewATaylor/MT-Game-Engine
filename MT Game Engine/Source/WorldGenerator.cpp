@@ -46,30 +46,62 @@ namespace mtge {
 		}
 	}
 	void WorldGenerator::generateChunksFromBase(TextureAtlasSegment *texAtlasSegment, Chunk *baseChunk) {
-		math::Vec2 chunkPosition = baseChunk->getPosition();
-		if (!baseChunk->leftNeighbor) {
-			Chunk *addedChunk = new Chunk(texAtlasSegment, math::Vec2(chunkPosition.getX() - Chunk::CHUNK_SIZE, chunkPosition.getY()));
-			baseChunk->setLeftNeighbor(addedChunk);
-			WorldMap::addChunk(addedChunk);
-			setNeighborChunks(addedChunk, true, false, true, true);
+		math::Vec<int, 2> baseChunkPositionIndices = baseChunk->getPositionIndices();
+		math::Vec<int, 2> leftChunkPositionIndices = math::Vec<int, 2>(baseChunkPositionIndices.getX() - 1, baseChunkPositionIndices.getY());
+		math::Vec<int, 2> rightChunkPositionIndices = math::Vec<int, 2>(baseChunkPositionIndices.getX() + 1, baseChunkPositionIndices.getY());
+		math::Vec<int, 2> frontChunkPositionIndices = math::Vec<int, 2>(baseChunkPositionIndices.getX(), baseChunkPositionIndices.getY() + 1);
+		math::Vec<int, 2> backChunkPositionIndices = math::Vec<int, 2>(baseChunkPositionIndices.getX(), baseChunkPositionIndices.getY() - 1);
+
+		math::Vec2 leftChunkPosition(baseChunk->getPosition().getX() - Chunk::CHUNK_SIZE, baseChunk->getPosition().getY());
+		math::Vec2 rightChunkPosition(baseChunk->getPosition().getX() + Chunk::CHUNK_SIZE, baseChunk->getPosition().getY());
+		math::Vec2 frontChunkPosition(baseChunk->getPosition().getX(), baseChunk->getPosition().getY() + Chunk::CHUNK_SIZE);
+		math::Vec2 backChunkPosition(baseChunk->getPosition().getX(), baseChunk->getPosition().getY() - Chunk::CHUNK_SIZE);
+
+		bool leftChunkInQueue = false;
+		bool rightChunkInQueue = false;
+		bool frontChunkInQueue = false;
+		bool backChunkInQueue = false;
+
+		for (unsigned int i = 0; i < chunkGenQueue.size(); i++) {
+			if (chunkGenQueue[i].positionIndices == leftChunkPositionIndices) {
+				leftChunkInQueue = true;
+			}
+			if (chunkGenQueue[i].positionIndices == rightChunkPositionIndices) {
+				rightChunkInQueue = true;
+			}
+			if (chunkGenQueue[i].positionIndices == frontChunkPositionIndices) {
+				frontChunkInQueue = true;
+			}
+			if (chunkGenQueue[i].positionIndices == backChunkPositionIndices) {
+				backChunkInQueue = true;
+			}
 		}
-		if (!baseChunk->rightNeighbor) {
-			Chunk *addedChunk = new Chunk(texAtlasSegment, math::Vec2(chunkPosition.getX() + Chunk::CHUNK_SIZE, chunkPosition.getY()));
-			baseChunk->setRightNeighbor(addedChunk);
-			WorldMap::addChunk(addedChunk);
-			setNeighborChunks(addedChunk, false, true, true, true);
+
+		if (!baseChunk->leftNeighbor && !leftChunkInQueue) {
+			chunkGenQueue.push_back({ baseChunk, texAtlasSegment, leftChunkPosition, leftChunkPositionIndices, ChunkNeighborDirection::LEFT });
 		}
-		if (!baseChunk->frontNeighbor) {
-			Chunk *addedChunk = new Chunk(texAtlasSegment, math::Vec2(chunkPosition.getX(), chunkPosition.getY() + Chunk::CHUNK_SIZE));
-			baseChunk->setFrontNeighbor(addedChunk);
-			WorldMap::addChunk(addedChunk);
-			setNeighborChunks(addedChunk, true, true, true, false);
+		if (!baseChunk->rightNeighbor && !rightChunkInQueue) {
+			chunkGenQueue.push_back({ baseChunk, texAtlasSegment, rightChunkPosition, rightChunkPositionIndices, ChunkNeighborDirection::RIGHT });
 		}
-		if (!baseChunk->backNeighbor) {
-			Chunk *addedChunk = new Chunk(texAtlasSegment, math::Vec2(chunkPosition.getX(), chunkPosition.getY() - Chunk::CHUNK_SIZE));
-			baseChunk->setBackNeighbor(addedChunk);
-			WorldMap::addChunk(addedChunk);
-			setNeighborChunks(addedChunk, true, true, false, true);
+		if (!baseChunk->frontNeighbor && !frontChunkInQueue) {
+			chunkGenQueue.push_back({ baseChunk, texAtlasSegment, frontChunkPosition, frontChunkPositionIndices, ChunkNeighborDirection::FRONT });
+		}
+		if (!baseChunk->backNeighbor && !backChunkInQueue) {
+			chunkGenQueue.push_back({ baseChunk, texAtlasSegment, backChunkPosition, backChunkPositionIndices, ChunkNeighborDirection::BACK });
+		}
+	}
+	void WorldGenerator::generateChunksForBaseNeighbors(TextureAtlasSegment *texAtlasSegment, Chunk *baseChunk) {
+		if (baseChunk->leftNeighbor) {
+			generateChunksFromBase(texAtlasSegment, baseChunk->leftNeighbor);
+		}
+		if (baseChunk->rightNeighbor) {
+			generateChunksFromBase(texAtlasSegment, baseChunk->rightNeighbor);
+		}
+		if (baseChunk->frontNeighbor) {
+			generateChunksFromBase(texAtlasSegment, baseChunk->frontNeighbor);
+		}
+		if (baseChunk->backNeighbor) {
+			generateChunksFromBase(texAtlasSegment, baseChunk->backNeighbor);
 		}
 	}
 
@@ -78,30 +110,54 @@ namespace mtge {
 		Chunk *currentChunk = WorldMap::getChunkPtr(player->getChunkIndex());
 		
 		generateChunksFromBase(texAtlasSegment, currentChunk);
+		generateChunksForBaseNeighbors(texAtlasSegment, currentChunk);
 
-		generateChunksFromBase(texAtlasSegment, currentChunk->leftNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->rightNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->frontNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->backNeighbor);
+		if (currentChunk->leftNeighbor) {
+			generateChunksForBaseNeighbors(texAtlasSegment, currentChunk->leftNeighbor);
+		}
+		if (currentChunk->rightNeighbor) {
+			generateChunksForBaseNeighbors(texAtlasSegment, currentChunk->rightNeighbor);
+		}
+		if (currentChunk->frontNeighbor) {
+			generateChunksForBaseNeighbors(texAtlasSegment, currentChunk->frontNeighbor);
+		}
+		if (currentChunk->backNeighbor) {
+			generateChunksForBaseNeighbors(texAtlasSegment, currentChunk->backNeighbor);
+		}
 
-		generateChunksFromBase(texAtlasSegment, currentChunk->leftNeighbor->leftNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->leftNeighbor->rightNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->leftNeighbor->frontNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->leftNeighbor->backNeighbor);
-
-		generateChunksFromBase(texAtlasSegment, currentChunk->rightNeighbor->leftNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->rightNeighbor->rightNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->rightNeighbor->frontNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->rightNeighbor->backNeighbor);
-
-		generateChunksFromBase(texAtlasSegment, currentChunk->frontNeighbor->leftNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->frontNeighbor->rightNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->frontNeighbor->frontNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->frontNeighbor->backNeighbor);
-
-		generateChunksFromBase(texAtlasSegment, currentChunk->backNeighbor->leftNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->backNeighbor->rightNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->backNeighbor->frontNeighbor);
-		generateChunksFromBase(texAtlasSegment, currentChunk->backNeighbor->backNeighbor);
+		if (chunkGenQueue.size() > 0) {
+			Chunk *baseChunk = chunkGenQueue[0].baseChunk;
+			switch (chunkGenQueue[0].direction) {
+			case ChunkNeighborDirection::LEFT: {
+				Chunk *newChunk = new Chunk(chunkGenQueue[0].texAtlasSegment, chunkGenQueue[0].position);
+				baseChunk->setLeftNeighbor(newChunk);
+				WorldMap::addChunk(newChunk);
+				setNeighborChunks(newChunk, true, false, true, true);
+				break;
+			}
+			case ChunkNeighborDirection::RIGHT: {
+				Chunk *newChunk = new Chunk(chunkGenQueue[0].texAtlasSegment, chunkGenQueue[0].position);
+				baseChunk->setRightNeighbor(newChunk);
+				WorldMap::addChunk(newChunk);
+				setNeighborChunks(newChunk, false, true, true, true);
+				break;
+			}
+			case ChunkNeighborDirection::FRONT: {
+				Chunk *newChunk = new Chunk(chunkGenQueue[0].texAtlasSegment, chunkGenQueue[0].position);
+				baseChunk->setFrontNeighbor(newChunk);
+				WorldMap::addChunk(newChunk);
+				setNeighborChunks(newChunk, true, true, true, false);
+				break;
+			}
+			case ChunkNeighborDirection::BACK: {
+				Chunk *newChunk = new Chunk(chunkGenQueue[0].texAtlasSegment, chunkGenQueue[0].position);
+				baseChunk->setBackNeighbor(newChunk);
+				WorldMap::addChunk(newChunk);
+				setNeighborChunks(newChunk, true, true, false, true);
+				break;
+			}
+			}
+			chunkGenQueue.erase(chunkGenQueue.begin());
+		}
 	}
 }
