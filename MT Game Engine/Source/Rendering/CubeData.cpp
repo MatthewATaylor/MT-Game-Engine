@@ -2,7 +2,7 @@
 
 namespace mtge {
 	//Constructor
-	CubeData::CubeData(TextureAtlasSegment *texAtlasSegment) : texAtlasSegment(texAtlasSegment) {}
+	CubeData::CubeData(CubeTexture *cubeTexture) : cubeTexture(cubeTexture) {}
 
 	//Private
 	void CubeData::transformFace(float face[FACE_VERTEX_BUFFER_LENGTH], math::Vec3 offset, float scale) {

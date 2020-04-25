@@ -1,13 +1,9 @@
 #include "Rendering/ChunkData.h"
 
 namespace mtge {
-	//Constructor
-	ChunkData::ChunkData(TextureAtlasSegment *texAtlasSegment) {
-		this->texAtlasSegment = texAtlasSegment;
-	}
-
 	//Public
-	void ChunkData::addCube(
+	void ChunkData::addSolidCube(
+		CubeTexture *cubeTexture,
 		math::Vec3 offset,
 		float scale,
 		bool hasTopNeighbor,
@@ -17,7 +13,7 @@ namespace mtge {
 		bool hasFrontNeighbor,
 		bool hasBackNeighbor) {
 
-		CubeData cubeData(texAtlasSegment);
+		CubeData cubeData(cubeTexture);
 		cubeData.addCubeToBuffer(
 			&vertexBuffer,
 			offset,
@@ -29,6 +25,29 @@ namespace mtge {
 			hasFrontNeighbor,
 			hasBackNeighbor
 		);
+	}
+	void ChunkData::addWaterToQueue(
+		CubeTexture *cubeTexture,
+		math::Vec3 offset,
+		float scale,
+		bool hasTopNeighbor) {
+
+		CubeData cubeData(cubeTexture);
+		cubeData.addCubeToBuffer(
+			&waterQueue,
+			offset,
+			scale,
+			hasTopNeighbor,
+			true,
+			true,
+			true,
+			true,
+			true
+		);
+	}
+	void ChunkData::addTransparentCubesToBuffer() {
+		vertexBuffer.insert(vertexBuffer.end(), waterQueue.begin(), waterQueue.end());
+		waterQueue.clear();
 	}
 	int ChunkData::getVerticesInBuffer() {
 		return vertexBuffer.size() / CubeData::ELEMENTS_PER_VERTEX;

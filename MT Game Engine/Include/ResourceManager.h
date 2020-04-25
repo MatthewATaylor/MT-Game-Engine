@@ -18,6 +18,7 @@ namespace mtge {
 		static bool startGLFW();
 		static bool startGLFW(int majorOpenGLVersion, int minorOpenGLVersion);
 		static bool startGLEW();
+		static void startOpenGL();
 		static void freeResources();
 	};
 }

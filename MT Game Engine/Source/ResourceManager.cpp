@@ -33,6 +33,10 @@ namespace mtge {
 		}
 		return 0;
 	}
+	void ResourceManager::startOpenGL() {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
 	void ResourceManager::freeResources() {
 		glfwTerminate();
 	}

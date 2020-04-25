@@ -47,9 +47,13 @@ namespace mtge {
 			T get(unsigned int index) const;
 			T getX() const;
 			T getY() const;
+			T getS() const;
+			T getT() const;
 			void set(unsigned int index, T newElement);
 			void setX(T newElement);
 			void setY(T newElement);
+			void setS(T newElement);
+			void setT(T newElement);
 		};
 	}
 }

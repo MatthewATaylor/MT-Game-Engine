@@ -2,8 +2,8 @@
 
 namespace mtge {
 	//Constructor
-	Chunk::Chunk(TextureAtlasSegment *texAtlasSegment, math::Vec2 position) {
-		this->texAtlasSegment = texAtlasSegment;
+	Chunk::Chunk(CubeCharacterizer *cubeCharacterizer, math::Vec2 position) {
+		this->cubeCharacterizer = cubeCharacterizer;
 		this->position = position;
 		positionIndices = math::Vec<int, 2>((int)roundf(position.getX() / CHUNK_SIZE), (int)roundf(position.getY() / CHUNK_SIZE));
 
@@ -29,7 +29,7 @@ namespace mtge {
 					globalCubeY = (float)(-1 * (int)(LENGTH_IN_CUBES - j) + (int)(LENGTH_IN_CUBES * (positionIndices.getY() + 1)));
 				}
 
-				float noise = math::PerlinNoise::get2DWithOctaves(globalCubeX, globalCubeY, 0.03279f, 0.08f, 8);
+				float noise = math::PerlinNoise::get2DWithOctaves(globalCubeX, globalCubeY, 0.05279f, 0.08f, 8);
 				heights[j][i] = (unsigned int)(noise * 15.0f) + 1;
 			}
 		}
@@ -41,7 +41,7 @@ namespace mtge {
 				cubes[i][j] = new Cube*[LENGTH_IN_CUBES];
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
 					if (j < heights[k][i]) {
-						cubes[i][j][k] = new Cube{ 'd' };
+						cubes[i][j][k] = new Cube{ 'g' };
 					}
 					else {
 						cubes[i][j][k] = nullptr;
@@ -118,26 +118,16 @@ namespace mtge {
 				}
 			}
 		}
-		
-		//Origin marker
-		//cubes[0][LENGTH_IN_CUBES - 1][0]->type = 'x';
-		//cubes[1][LENGTH_IN_CUBES - 1][0]->type = 'x';
-		//cubes[0][LENGTH_IN_CUBES - 1][1]->type = 'x';
-		//cubes[1][LENGTH_IN_CUBES - 1][1]->type = 'x';
 
-		//Hole
-		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 1][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
-
-		//Tunnel
-		//cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2 + 1][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 2][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 3][LENGTH_IN_CUBES / 2]->type = 'x';
-		//cubes[LENGTH_IN_CUBES / 2 + 2][LENGTH_IN_CUBES - 4][LENGTH_IN_CUBES / 2]->type = 'x';
+		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
+			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
+				for (unsigned int k = 1; k < 6; k++) {
+					if (!cubes[i][k][j]) {
+						cubes[i][k][j] = new Cube{ 'w' };
+					}
+				}
+			}
+		}
 	}
 
 	//Private
@@ -146,7 +136,7 @@ namespace mtge {
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 
 		//Add each cube's vertex buffer as sub data
-		ChunkData chunkData(texAtlasSegment);
+		ChunkData chunkData;
 		float cubeSize = 2.0f / LENGTH_IN_CUBES;
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
@@ -156,20 +146,32 @@ namespace mtge {
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
 					if (cubes[i][j][k]) {
-						chunkData.addCube(
-							math::Vec3(xOffset, yOffset, zOffset),
-							LENGTH_IN_CUBES,
-							cubeHasTopNeighbor(i, j, k),
-							cubeHasBottomNeighbor(i, j, k),
-							cubeHasLeftNeighbor(i, j, k),
-							cubeHasRightNeighbor(i, j, k),
-							cubeHasFrontNeighbor(i, j, k),
-							cubeHasBackNeighbor(i, j, k)
-						);
+						if (cubes[i][j][k]->type == 'w') {
+							chunkData.addWaterToQueue(
+								cubeCharacterizer->getTextureForCubeType('w'),
+								math::Vec3(xOffset, yOffset, zOffset),
+								LENGTH_IN_CUBES,
+								cubeHasTopNeighbor(i, j, k)
+							);
+						}
+						else {
+							chunkData.addSolidCube(
+								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
+								math::Vec3(xOffset, yOffset, zOffset),
+								LENGTH_IN_CUBES,
+								cubeHasTopNeighbor(i, j, k),
+								cubeHasBottomNeighbor(i, j, k),
+								cubeHasLeftNeighbor(i, j, k),
+								cubeHasRightNeighbor(i, j, k),
+								cubeHasFrontNeighbor(i, j, k),
+								cubeHasBackNeighbor(i, j, k)
+							);
+						}
 					}
 				}
 			}
 		}
+		chunkData.addTransparentCubesToBuffer();
 		verticesInLastBufferGen = chunkData.getVerticesInBuffer();
 		chunkData.sendBuffer();
 
@@ -191,30 +193,37 @@ namespace mtge {
 	const float Chunk::CHUNK_SIZE = LENGTH_IN_CUBES * CUBE_SIZE;
 
 	bool Chunk::cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex];
+		if (cubes[xIndex][yIndex][zIndex] && cubes[xIndex][yIndex][zIndex]->type == 'w') {
+			return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex];
+		}
+		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex] && cubes[xIndex][yIndex + 1][zIndex]->type != 'w';
 	}
 	bool Chunk::cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex];
+		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex] && cubes[xIndex][yIndex - 1][zIndex]->type != 'w';
 	}
 	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]) ||
-			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex));
+			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex] && cubes[xIndex - 1][yIndex][zIndex]->type != 'w') ||
+			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex) && 
+				leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'w');
 	}
 	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]) ||
-			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex));
+			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex] && cubes[xIndex + 1][yIndex][zIndex]->type != 'w') ||
+			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex) &&
+				rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'w');
 	}
 	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]) ||
-			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0));
+			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1] && cubes[xIndex][yIndex][zIndex + 1]->type != 'w') ||
+			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0) && 
+				frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type != 'w');
 	}
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
-			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]) ||
-			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1));
+			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1] && cubes[xIndex][yIndex][zIndex - 1]->type != 'w') ||
+			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1) && 
+				backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type != 'w');
 	}
 	bool Chunk::cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
@@ -259,7 +268,7 @@ namespace mtge {
 	void Chunk::render(Camera *camera, Window *window) {
 		if (shouldGenBuffer) {
 			genBuffer();
-			shouldGenBuffer = false;
+			//shouldGenBuffer = false;
 		}
 		
 		glBindVertexArray(vertexArrayID);

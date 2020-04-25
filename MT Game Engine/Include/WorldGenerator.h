@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Interaction/Player.h"
-#include "Rendering/Texture/TextureAtlasSegment.h"
+#include "CubeCharacterizer.h"
 #include "Math/Vec.h"
 #include "WorldMap.h"
 #include "Rendering/Chunk.h"
@@ -16,7 +16,7 @@ namespace mtge {
 		};
 		struct ChunkGenQueueMember {
 			Chunk *baseChunk = nullptr;
-			TextureAtlasSegment *texAtlasSegment;
+			CubeCharacterizer *cubeCharacterizer;
 			math::Vec2 position;
 			math::Vec<int, 2> positionIndices;
 			ChunkNeighborDirection direction;
@@ -25,11 +25,11 @@ namespace mtge {
 		std::vector<ChunkGenQueueMember> chunkGenQueue;
 
 		void setNeighborChunks(Chunk *addedChunk, bool testLeft, bool testRight, bool testFront, bool testBack);
-		void generateChunksFromBase(TextureAtlasSegment *texAtlasSegment, Chunk *baseChunk);
-		void generateChunksForBaseNeighbors(TextureAtlasSegment *texAtlasSegment, Chunk *baseChunk);
+		void generateChunksFromBase(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk);
+		void generateChunksForBaseNeighbors(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk);
 
 	public:
 		WorldGenerator(Player *player);
-		void generateChunks(TextureAtlasSegment *texAtlasSegment);
+		void generateChunks(CubeCharacterizer *cubeCharacterizer);
 	};
 }

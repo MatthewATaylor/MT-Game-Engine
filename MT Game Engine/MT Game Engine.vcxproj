@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\CubeCharacterizer.cpp" />
     <ClCompile Include="Source\Interaction\Camera.cpp" />
     <ClCompile Include="Source\Math\PerlinNoise.cpp" />
     <ClCompile Include="Source\Rendering\Chunk.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="Source\Interaction\Input.cpp" />
     <ClCompile Include="Source\Interaction\Player.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
+    <ClCompile Include="Source\Rendering\Texture\CubeTexture.cpp" />
     <ClCompile Include="Source\Rendering\Texture\SkyboxTextureContainer.cpp" />
     <ClCompile Include="Source\ResourceManager.cpp" />
     <ClCompile Include="Source\Rendering\Shader.cpp" />
@@ -153,6 +155,7 @@
     <ClCompile Include="Source\WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\CubeCharacterizer.h" />
     <ClInclude Include="Include\Interaction\Camera.h" />
     <ClInclude Include="Include\Math\PerlinNoise.h" />
     <ClInclude Include="Include\Rendering\Chunk.h" />
@@ -165,6 +168,7 @@
     <ClInclude Include="Include\Math\Mat.h" />
     <ClInclude Include="Include\Interaction\Player.h" />
     <ClInclude Include="Include\Rendering\Renderer.h" />
+    <ClInclude Include="Include\Rendering\Texture\CubeTexture.h" />
     <ClInclude Include="Include\Rendering\Texture\SkyboxTextureContainer.h" />
     <ClInclude Include="Include\ResourceManager.h" />
     <ClInclude Include="Include\Rendering\Shader.h" />

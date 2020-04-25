@@ -168,6 +168,14 @@ namespace mtge {
 			return elements[1];
 		}
 		template<typename T>
+		T Vec<T, 2>::getS() const {
+			return elements[0];
+		}
+		template<typename T>
+		T Vec<T, 2>::getT() const {
+			return elements[1];
+		}
+		template<typename T>
 		void Vec<T, 2>::set(unsigned int index, T newElement) {
 			elements[index] = newElement;
 		}
@@ -177,6 +185,14 @@ namespace mtge {
 		}
 		template<typename T>
 		void Vec<T, 2>::setY(T newElement) {
+			elements[1] = newElement;
+		}
+		template<typename T>
+		void Vec<T, 2>::setS(T newElement) {
+			elements[0] = newElement;
+		}
+		template<typename T>
+		void Vec<T, 2>::setT(T newElement) {
 			elements[1] = newElement;
 		}
 	}

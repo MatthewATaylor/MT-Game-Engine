@@ -5,12 +5,12 @@
 #include <GL/glew.h>
 
 #include "Rendering/Cube.h"
-#include "Rendering/CubeData.h"
+#include "CubeCharacterizer.h"
 #include "Math/Vec.h"
 #include "Math/Mat.h"
 #include "Math/Util.h"
 #include "ResourceManager.h"
-#include "Texture/TextureAtlasSegment.h"
+#include "Texture/CubeTexture.h"
 #include "Window.h"
 #include "Interaction/Camera.h"
 #include "Rendering/ChunkData.h"
@@ -27,7 +27,7 @@ namespace mtge {
 		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
 		unsigned int vertexArrayID;
 		unsigned int vertexBufferID;
-		TextureAtlasSegment *texAtlasSegment = nullptr;
+		CubeCharacterizer *cubeCharacterizer = nullptr;
 		bool shouldGenBuffer = true;
 		bool shouldSetVertexAttributes = true;
 		math::Vec2 position;
@@ -46,7 +46,7 @@ namespace mtge {
 		Chunk *leftNeighbor = nullptr;
 		Chunk *rightNeighbor = nullptr;
 
-		Chunk(TextureAtlasSegment *texAtlasSegment, math::Vec2 position);
+		Chunk(CubeCharacterizer *cubeCharacterizer, math::Vec2 position);
 
 		bool cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		bool cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);

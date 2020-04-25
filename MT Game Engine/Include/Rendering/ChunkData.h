@@ -5,17 +5,17 @@
 
 #include "Rendering/CubeData.h"
 #include "Math/Vec.h"
-#include "Texture/TextureAtlasSegment.h"
+#include "Texture/CubeTexture.h"
 
 namespace mtge {
 	class ChunkData {
 	private:
-		TextureAtlasSegment *texAtlasSegment;
 		std::vector<float> vertexBuffer;
+		std::vector<float> waterQueue;
 
 	public:
-		ChunkData(TextureAtlasSegment *texAtlasSegment);
-		void addCube(
+		void addSolidCube(
+			CubeTexture *cubeTexture,
 			math::Vec3 offset,
 			float scale,
 			bool hasTopNeighbor,
@@ -25,6 +25,13 @@ namespace mtge {
 			bool hasFrontNeighbor,
 			bool hasBackNeighbor
 		);
+		void addWaterToQueue(
+			CubeTexture *cubeTexture,
+			math::Vec3 offset,
+			float scale,
+			bool hasTopNeighbor
+		);
+		void addTransparentCubesToBuffer();
 		int getVerticesInBuffer();
 		void sendBuffer();
 	};
