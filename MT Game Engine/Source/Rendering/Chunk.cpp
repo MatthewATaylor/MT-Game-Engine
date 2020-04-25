@@ -10,23 +10,109 @@ namespace mtge {
 		glGenVertexArrays(1, &vertexArrayID);
 		glGenBuffers(1, &vertexBufferID);
 
+		unsigned int heights[LENGTH_IN_CUBES][LENGTH_IN_CUBES];
+		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
+			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
+				float globalCubeX = 0.0f;
+				if (positionIndices.getX() >= 0) {
+					globalCubeX = (float)(i + LENGTH_IN_CUBES * positionIndices.getX());
+				}
+				else {
+					globalCubeX = (float)(-1 * (int)(LENGTH_IN_CUBES - i) + (int)(LENGTH_IN_CUBES * (positionIndices.getX() + 1)));
+				}
+
+				float globalCubeY = 0.0f;
+				if (positionIndices.getY() >= 0) {
+					globalCubeY = (float)(j + LENGTH_IN_CUBES * positionIndices.getY());
+				}
+				else {
+					globalCubeY = (float)(-1 * (int)(LENGTH_IN_CUBES - j) + (int)(LENGTH_IN_CUBES * (positionIndices.getY() + 1)));
+				}
+
+				float noise = math::PerlinNoise::get2D(globalCubeX, globalCubeY, 0.042719f, 0);
+				heights[j][i] = (unsigned int)((noise + 1) * 8.0f);
+			}
+		}
+
 		cubes = new Cube***[LENGTH_IN_CUBES];
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			cubes[i] = new Cube**[LENGTH_IN_CUBES];
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				cubes[i][j] = new Cube*[LENGTH_IN_CUBES];
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
-					//if (j == LENGTH_IN_CUBES - 1 && i % 3 == 0 && k % 3 == 0) {
-					//	cubes[i][j][k] = new Cube{ 'x' };
+					if (j < heights[k][i]) {
+						cubes[i][j][k] = new Cube{ 'd' };
+					}
+					else {
+						cubes[i][j][k] = nullptr;
+					}
+
+					//if (positionIndices.getX() == 0 && positionIndices.getY() == 0) {
+					//	height = 1;
 					//}
 					//else {
+					//	if (i == 0 || i == LENGTH_IN_CUBES - 1 || k == 0 || k == LENGTH_IN_CUBES - 1) {
+					//		height = 16;
+					//	}
+					//	else {
+					//		height = 1;
+					//	}
+					//}
+
+					//if (positionIndices.getX() == 0 && positionIndices.getY() == 0) {
+					//	if (j == 0) {
+					//		cubes[i][j][k] = new Cube{ 'd' };
+					//	}
+					//	else {
+					//		cubes[i][j][k] = nullptr;
+					//	}
+					//}
+					//else {
+					//	if (i == 0 || i == LENGTH_IN_CUBES - 1 || k == 0 || k == LENGTH_IN_CUBES - 1) {
+					//		cubes[i][j][k] = new Cube{ 'd' };
+					//	}
+					//	else {
+					//		if (j == 0) {
+					//			cubes[i][j][k] = new Cube{ 'd' };
+					//		}
+					//		else {
+					//			cubes[i][j][k] = nullptr;
+					//		}
+					//	}
+					//}
+
+					//if (j == 0) {
 					//	cubes[i][j][k] = new Cube{ 'd' };
 					//}
 
-					//if (i == 0 || j == 0 || k == 0 || i == LENGTH_IN_CUBES - 1 || j == LENGTH_IN_CUBES - 1 || k == LENGTH_IN_CUBES - 1) {
-						cubes[i][j][k] = new Cube{ 'd' };
+					//if (/*j < height*/ j == 0 || (!(positionIndices.getX() == 0 && positionIndices.getY() == 0) && (i == 0 || k == 0 /*|| i == LENGTH_IN_CUBES - 1 || k == LENGTH_IN_CUBES - 1*/))) {
+					//	cubes[i][j][k] = new Cube{ 'd' };
 					//}
 					//else {
+					//	cubes[i][j][k] = nullptr;
+					//}
+
+					//if (positionIndices.getX() == 0 && positionIndices.getY() == 0) {
+					//	if (j == 0) {
+					//		cubes[i][j][k] = new Cube{ 'd' };
+					//	}
+					//	else {
+					//		cubes[i][j][k] = nullptr;
+					//	}
+					//}
+					//else {
+					//	if (/*j < height*/ j == 0 || i == 0 || k == 0 /*|| i == LENGTH_IN_CUBES - 1 || k == LENGTH_IN_CUBES - 1*/) {
+					//		cubes[i][j][k] = new Cube{ 'd' };
+					//	}
+					//	else {
+					//		cubes[i][j][k] = nullptr;
+					//	}
+					//}
+
+					//if (positionIndices.getX() == 0 && positionIndices.getY() == 0 && j != 0) {
+					//	if (cubes[i][j][k]) {
+					//		delete cubes[i][j][k];
+					//	}
 					//	cubes[i][j][k] = nullptr;
 					//}
 				}

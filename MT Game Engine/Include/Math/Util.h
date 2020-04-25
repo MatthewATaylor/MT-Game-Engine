@@ -11,9 +11,6 @@ namespace mtge {
 		public:
 			static const float PI;
 
-			template<unsigned int SIZE>
-			void genPerlinNoise2D(unsigned int numOctaves, float scaleBias, float seed[SIZE][SIZE], float output[SIZE][SIZE]);
-
 			template<typename T, unsigned int SIZE>
 			static Vec<T, SIZE> normalized(Vec<T, SIZE> vecToNormalize);
 

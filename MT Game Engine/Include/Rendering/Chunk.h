@@ -14,6 +14,7 @@
 #include "Window.h"
 #include "Interaction/Camera.h"
 #include "Rendering/ChunkData.h"
+#include "Math/PerlinNoise.h"
 
 namespace mtge {
 	class Chunk {
@@ -22,6 +23,7 @@ namespace mtge {
 
 	private:
 		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
+		static const int BASE_SEED = 1234;
 		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
 		unsigned int vertexArrayID;
 		unsigned int vertexBufferID;

@@ -421,8 +421,7 @@ namespace mtge {
 	}
 	void Player::reduceMotion() {
 		for (unsigned int i = 0; i < 3; i++) {
-			float maxSpeed = Chunk::CUBE_SIZE + DIMENSIONS.get(i);
-			//float maxSpeed = 0.01f;
+			float maxSpeed = Chunk::CUBE_SIZE;
 			if (totalMovement.get(i) > maxSpeed) {
 				totalMovement.set(i, maxSpeed);
 			}
@@ -529,11 +528,11 @@ namespace mtge {
 			position.setY(position.getY() + totalMovement.getY());
 			manageCollisionY();
 
-			position.setX(position.getX() + totalMovement.getX());
-			manageCollisionX();
-
 			position.setZ(position.getZ() + totalMovement.getZ());
 			manageCollisionZ();
+
+			position.setX(position.getX() + totalMovement.getX());
+			manageCollisionX();
 		}
 		else {
 			position += totalMovement;

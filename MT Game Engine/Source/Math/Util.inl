@@ -2,52 +2,6 @@
 
 namespace mtge {
 	namespace math {
-		template<unsigned int SIZE>
-		void Util::genPerlinNoise2D(unsigned int numOctaves, float scaleBias, float seed[SIZE][SIZE], float output[SIZE][SIZE]) {
-			const unsigned int MAX_NUM_OCTAVES = (int)(log(SIZE) / log(2));
-			if (numOctaves > MAX_NUM_OCTAVES) {
-				std::cout << "WARNING [FUNCTION: genPerlinNoise2D]: OCTAVE COUNT TOO HIGH, REDUCED TO " << MAX_NUM_OCTAVES << std::endl;
-				numOctaves = MAX_NUM_OCTAVES;
-			}
-
-			for (unsigned int xPos = 0; xPos < SIZE; xPos++) {
-				for (unsigned int yPos = 0; yPos < SIZE; yPos++) {
-					float value = 0.0f;
-					float accumulatedScale = 0.0f;
-					float scale = 1.0f;
-					unsigned int pitch = SIZE;
-
-					for (unsigned int octave = 0; octave < numOctaves; octave++) {
-						//Column indices for seed array
-						unsigned int sampleX1 = (xPos / pitch) * pitch;
-						unsigned int sampleX2 = (sampleX1 + pitch) % SIZE;
-
-						//Row indices for seed array
-						unsigned int sampleY1 = (yPos / pitch) * pitch;
-						unsigned int sampleY2 = (sampleY1 + pitch) % SIZE;
-
-						//Fraction (0 to 1) of distance between sample 1 and sample 2
-						float normalizedXPos = (float)(xPos - sampleX1) / (float)pitch;
-						float normalizedYPos = (float)(yPos - sampleY1) / (float)pitch;
-
-						//Linear interpolations across each each row of seeds
-						float row1Interpolation = (1.0f - normalizedXPos) * seed[sampleY1][sampleX1] + normalizedXPos * seed[sampleY1][sampleX2];
-						float row2Interpolation = (1.0f - normalizedXPos) * seed[sampleY2][sampleX1] + normalizedXPos * seed[sampleY2][sampleX2];
-
-						//Linear interpolation between rows
-						float newValue = (1.0f - normalizedYPos) * row1Interpolation + normalizedYPos * row2Interpolation;
-
-						value += newValue * scale;
-						accumulatedScale += scale;
-						scale /= scaleBias;
-						pitch /= 2;
-					}
-
-					output[yPos][xPos] = value / accumulatedScale;
-				}
-			}
-		}
-
 		template<typename T, unsigned int SIZE>
 		Vec<T, SIZE> Util::normalized(Vec<T, SIZE> vecToNormalize) {
 			T magnitude = vecToNormalize.mag();

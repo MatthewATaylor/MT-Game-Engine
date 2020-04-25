@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Interaction\Camera.cpp" />
+    <ClCompile Include="Source\Math\PerlinNoise.cpp" />
     <ClCompile Include="Source\Rendering\Chunk.cpp" />
     <ClCompile Include="Source\Clock.cpp" />
     <ClCompile Include="Source\Math\Util.cpp" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Interaction\Camera.h" />
+    <ClInclude Include="Include\Math\PerlinNoise.h" />
     <ClInclude Include="Include\Rendering\Chunk.h" />
     <ClInclude Include="Include\Clock.h" />
     <ClInclude Include="Include\Math\Util.h" />
