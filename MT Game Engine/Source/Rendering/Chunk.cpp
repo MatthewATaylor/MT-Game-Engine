@@ -29,8 +29,8 @@ namespace mtge {
 					globalCubeY = (float)(-1 * (int)(LENGTH_IN_CUBES - j) + (int)(LENGTH_IN_CUBES * (positionIndices.getY() + 1)));
 				}
 
-				float noise = math::PerlinNoise::get2D(globalCubeX, globalCubeY, 0.042719f, 0);
-				heights[j][i] = (unsigned int)((noise + 1) * 8.0f);
+				float noise = math::PerlinNoise::get2DWithOctaves(globalCubeX, globalCubeY, 0.03279f, 0.08f, 8);
+				heights[j][i] = (unsigned int)(noise * 15.0f) + 1;
 			}
 		}
 

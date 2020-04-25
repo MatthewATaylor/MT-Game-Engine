@@ -86,7 +86,22 @@ namespace mtge {
 			float  topLerpX = lerp(dot3, dot4, pointInSquareFadeX);
 			float lerpY = lerp(bottomLerpX, topLerpX, pointInSquareFadeY);
 
-			return lerpY;
+			return (lerpY + 1.0f) / 2.0f;
+		}
+		float PerlinNoise::get2DWithOctaves(float x, float y, float startFrequency, float persistence, unsigned int numOctaves, int sizeToWrap) {
+			float total = 0.0f;
+			float maxValue = 0.0f;
+			float frequency = startFrequency;
+			float amplitude = 1.0f;
+
+			for (unsigned int i = 0; i < numOctaves; i++) {
+				total += get2D(x, y, frequency, sizeToWrap) * amplitude;
+				maxValue += amplitude;
+				frequency /= 2.0f;
+				amplitude *= persistence;
+			}
+
+			return total / maxValue;
 		}
 	}
 }
