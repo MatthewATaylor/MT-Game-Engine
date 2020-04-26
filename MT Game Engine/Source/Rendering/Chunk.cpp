@@ -7,8 +7,11 @@ namespace mtge {
 		this->position = position;
 		positionIndices = math::Vec<int, 2>((int)roundf(position.getX() / CHUNK_SIZE), (int)roundf(position.getY() / CHUNK_SIZE));
 
-		glGenVertexArrays(1, &vertexArrayID);
-		glGenBuffers(1, &vertexBufferID);
+		glGenVertexArrays(1, &solidCubesVertexArrayID);
+		glGenBuffers(1, &solidCubesVertexBufferID);
+
+		glGenVertexArrays(1, &transparentCubesVertexArrayID);
+		glGenBuffers(1, &transparentCubesVertexBufferID);
 
 		unsigned int heights[LENGTH_IN_CUBES][LENGTH_IN_CUBES];
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
@@ -131,12 +134,14 @@ namespace mtge {
 	}
 
 	//Private
-	void Chunk::genBuffer() {
-		glBindVertexArray(vertexArrayID);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	void Chunk::genBuffers() {
+		glBindVertexArray(solidCubesVertexArrayID);
+		glBindBuffer(GL_ARRAY_BUFFER, solidCubesVertexBufferID);
+
+		std::vector<QueuedWater> queuedWater;
 
 		//Add each cube's vertex buffer as sub data
-		ChunkData chunkData;
+		ChunkData solidCubeChunkData;
 		float cubeSize = 2.0f / LENGTH_IN_CUBES;
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
@@ -147,15 +152,10 @@ namespace mtge {
 
 					if (cubes[i][j][k]) {
 						if (cubes[i][j][k]->type == 'w') {
-							chunkData.addWaterToQueue(
-								cubeCharacterizer->getTextureForCubeType('w'),
-								math::Vec3(xOffset, yOffset, zOffset),
-								LENGTH_IN_CUBES,
-								cubeHasTopNeighbor(i, j, k)
-							);
+							queuedWater.push_back({ math::Vec3(xOffset, yOffset, zOffset), cubeHasTopNeighbor(i, j, k) });
 						}
 						else {
-							chunkData.addSolidCube(
+							solidCubeChunkData.addCube(
 								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
 								math::Vec3(xOffset, yOffset, zOffset),
 								LENGTH_IN_CUBES,
@@ -171,11 +171,10 @@ namespace mtge {
 				}
 			}
 		}
-		chunkData.addTransparentCubesToBuffer();
-		verticesInLastBufferGen = chunkData.getVerticesInBuffer();
-		chunkData.sendBuffer();
+		solidCubeVerticesInLastBufferGen = solidCubeChunkData.getVerticesInBuffer();
+		solidCubeChunkData.sendBuffer();
 
-		if (shouldSetVertexAttributes) {
+		if (shouldSetSolidCubeVertexAttributes) {
 			//Position vertex attribute
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 			glEnableVertexAttribArray(0);
@@ -184,7 +183,38 @@ namespace mtge {
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 			glEnableVertexAttribArray(1);
 
-			shouldSetVertexAttributes = false;
+			shouldSetSolidCubeVertexAttributes = false;
+		}
+
+		glBindVertexArray(transparentCubesVertexArrayID);
+		glBindBuffer(GL_ARRAY_BUFFER, transparentCubesVertexBufferID);
+		ChunkData transparentCubeChunkData;
+		for (unsigned int i = 0; i < queuedWater.size(); i++) {
+			transparentCubeChunkData.addCube(
+				cubeCharacterizer->getTextureForCubeType('w'),
+				queuedWater[i].offset,
+				LENGTH_IN_CUBES,
+				queuedWater[i].hasTopNeighbor,
+				true,
+				true,
+				true,
+				true,
+				true
+			);
+		}
+		transparentCubeVerticesInLastBufferGen = transparentCubeChunkData.getVerticesInBuffer();
+		transparentCubeChunkData.sendBuffer();
+
+		if (shouldSetTransparentCubeVertexAttributes) {
+			//Position vertex attribute
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+			glEnableVertexAttribArray(0);
+
+			//Color vertex attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(1);
+
+			shouldSetTransparentCubeVertexAttributes = false;
 		}
 	}
 
@@ -265,13 +295,13 @@ namespace mtge {
 	void Chunk::enableBufferRegenNextFrame() {
 		shouldGenBuffer = true;
 	}
-	void Chunk::render(Camera *camera, Window *window) {
+	void Chunk::renderSolidCubes(Camera *camera, Window *window) {
 		if (shouldGenBuffer) {
-			genBuffer();
-			//shouldGenBuffer = false;
+			genBuffers();
+			shouldGenBuffer = false;
 		}
 		
-		glBindVertexArray(vertexArrayID);
+		glBindVertexArray(solidCubesVertexArrayID);
 
 		if (!Texture::getAtlasPtr()) {
 			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
@@ -297,7 +327,41 @@ namespace mtge {
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
 		glEnable(GL_CULL_FACE);
-		glDrawArrays(GL_TRIANGLES, 0, verticesInLastBufferGen);
+		glDrawArrays(GL_TRIANGLES, 0, solidCubeVerticesInLastBufferGen);
+	}
+	void Chunk::renderTransparentCubes(Camera *camera, Window *window) {
+		if (shouldGenBuffer) {
+			genBuffers();
+			shouldGenBuffer = false;
+		}
+
+		glBindVertexArray(transparentCubesVertexArrayID);
+
+		if (!Texture::getAtlasPtr()) {
+			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
+		}
+
+		Shader *shader = Shader::getTexturedShapePtr();
+		if (!shader) {
+			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED TEXTURED SHAPE SHADER" << std::endl << std::endl;
+			return;
+		}
+		shader->useProgram();
+
+		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f));
+		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(
+			math::Vec3(position.getX(), -(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f) + CUBE_SIZE / 2.0f, position.getY())
+		);
+		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
+
+		math::Mat4 viewMatrix = camera->getViewMatrix();
+		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
+
+		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
+		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
+
+		glEnable(GL_CULL_FACE);
+		glDrawArrays(GL_TRIANGLES, 0, transparentCubeVerticesInLastBufferGen);
 	}
 	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		if (xIndex >= LENGTH_IN_CUBES || yIndex >= LENGTH_IN_CUBES || zIndex >= LENGTH_IN_CUBES) {
@@ -325,7 +389,10 @@ namespace mtge {
 		}
 		delete[] cubes;
 
-		glDeleteVertexArrays(1, &vertexArrayID);
-		glDeleteBuffers(1, &vertexBufferID);
+		glDeleteVertexArrays(1, &solidCubesVertexArrayID);
+		glDeleteBuffers(1, &solidCubesVertexBufferID);
+
+		glDeleteVertexArrays(1, &transparentCubesVertexArrayID);
+		glDeleteBuffers(1, &transparentCubesVertexBufferID);
 	}
 }

@@ -25,16 +25,25 @@ namespace mtge {
 		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
 		static const int BASE_SEED = 1234;
 		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
-		unsigned int vertexArrayID;
-		unsigned int vertexBufferID;
+		unsigned int solidCubesVertexArrayID;
+		unsigned int solidCubesVertexBufferID;
+		unsigned int transparentCubesVertexArrayID;
+		unsigned int transparentCubesVertexBufferID;
 		CubeCharacterizer *cubeCharacterizer = nullptr;
 		bool shouldGenBuffer = true;
-		bool shouldSetVertexAttributes = true;
+		bool shouldSetSolidCubeVertexAttributes = true;
+		bool shouldSetTransparentCubeVertexAttributes = true;
 		math::Vec2 position;
 		math::Vec<int, 2> positionIndices;
-		int verticesInLastBufferGen = 0;
+		int solidCubeVerticesInLastBufferGen = 0;
+		int transparentCubeVerticesInLastBufferGen = 0;
 
-		void genBuffer();
+		struct QueuedWater {
+			math::Vec3 offset;
+			bool hasTopNeighbor;
+		};
+
+		void genBuffers();
 
 	public:
 		static const float CUBE_SIZE;
@@ -62,7 +71,8 @@ namespace mtge {
 		void setRightNeighbor(Chunk *chunk);
 
 		void enableBufferRegenNextFrame();
-		void render(Camera *camera, Window *window);
+		void renderSolidCubes(Camera *camera, Window *window);
+		void renderTransparentCubes(Camera *camera, Window *window);
 		Cube *getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		math::Vec2 getPosition();
 		math::Vec<int, 2> getPositionIndices();

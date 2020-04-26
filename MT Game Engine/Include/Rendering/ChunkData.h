@@ -11,10 +11,9 @@ namespace mtge {
 	class ChunkData {
 	private:
 		std::vector<float> vertexBuffer;
-		std::vector<float> waterQueue;
 
 	public:
-		void addSolidCube(
+		void addCube(
 			CubeTexture *cubeTexture,
 			math::Vec3 offset,
 			float scale,
@@ -25,13 +24,6 @@ namespace mtge {
 			bool hasFrontNeighbor,
 			bool hasBackNeighbor
 		);
-		void addWaterToQueue(
-			CubeTexture *cubeTexture,
-			math::Vec3 offset,
-			float scale,
-			bool hasTopNeighbor
-		);
-		void addTransparentCubesToBuffer();
 		int getVerticesInBuffer();
 		void sendBuffer();
 	};

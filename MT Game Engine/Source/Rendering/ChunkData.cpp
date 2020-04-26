@@ -2,7 +2,7 @@
 
 namespace mtge {
 	//Public
-	void ChunkData::addSolidCube(
+	void ChunkData::addCube(
 		CubeTexture *cubeTexture,
 		math::Vec3 offset,
 		float scale,
@@ -25,29 +25,6 @@ namespace mtge {
 			hasFrontNeighbor,
 			hasBackNeighbor
 		);
-	}
-	void ChunkData::addWaterToQueue(
-		CubeTexture *cubeTexture,
-		math::Vec3 offset,
-		float scale,
-		bool hasTopNeighbor) {
-
-		CubeData cubeData(cubeTexture);
-		cubeData.addCubeToBuffer(
-			&waterQueue,
-			offset,
-			scale,
-			hasTopNeighbor,
-			true,
-			true,
-			true,
-			true,
-			true
-		);
-	}
-	void ChunkData::addTransparentCubesToBuffer() {
-		vertexBuffer.insert(vertexBuffer.end(), waterQueue.begin(), waterQueue.end());
-		waterQueue.clear();
 	}
 	int ChunkData::getVerticesInBuffer() {
 		return vertexBuffer.size() / CubeData::ELEMENTS_PER_VERTEX;

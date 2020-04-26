@@ -15,6 +15,15 @@ namespace mtge {
 	Chunk *WorldMap::getChunkPtr(unsigned int index) {
 		return chunks[index];
 	}
+	void WorldMap::renderAllChunks(Camera *camera, Window *window) {
+		for (unsigned int i = 0; i < chunks.size(); i++) {
+			chunks[i]->renderSolidCubes(camera, window);
+		}
+
+		for (unsigned int i = 0; i < chunks.size(); i++) {
+			chunks[i]->renderTransparentCubes(camera, window);
+		}
+	}
 	void WorldMap::freeResources() {
 		for (unsigned int i = 0; i < chunks.size(); i++) {
 			delete chunks[i];
