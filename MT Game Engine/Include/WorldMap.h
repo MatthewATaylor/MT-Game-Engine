@@ -6,6 +6,9 @@
 #include "Rendering/ChunkData.h"
 #include "Window.h"
 #include "Interaction/Camera.h"
+#include "Rendering/Texture/Texture.h"
+#include "Rendering/Shader.h"
+#include "Math/Mat.h"
 
 namespace mtge {
 	class WorldMap {

@@ -16,12 +16,29 @@ namespace mtge {
 		return chunks[index];
 	}
 	void WorldMap::renderAllChunks(Camera *camera, Window *window) {
+		if (!Texture::getAtlasPtr()) {
+			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
+		}
+
+		Shader *shader = Shader::getTexturedShapePtr();
+		if (!shader) {
+			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED TEXTURED SHAPE SHADER" << std::endl << std::endl;
+			return;
+		}
+		shader->useProgram();
+
+		math::Mat4 viewMatrix = camera->getViewMatrix();
+		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
+
+		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
+		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
+
 		for (unsigned int i = 0; i < chunks.size(); i++) {
-			chunks[i]->renderSolidCubes(camera, window);
+			chunks[i]->renderSolidCubes(camera, window, shader);
 		}
 
 		for (unsigned int i = 0; i < chunks.size(); i++) {
-			chunks[i]->renderTransparentCubes(camera, window);
+			chunks[i]->renderTransparentCubes(camera, window, shader);
 		}
 	}
 	void WorldMap::freeResources() {

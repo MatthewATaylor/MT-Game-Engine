@@ -15,6 +15,7 @@
 #include "Interaction/Camera.h"
 #include "Rendering/ChunkData.h"
 #include "Math/PerlinNoise.h"
+#include "Shader.h"
 
 namespace mtge {
 	class Chunk {
@@ -23,7 +24,6 @@ namespace mtge {
 
 	private:
 		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
-		static const int BASE_SEED = 1234;
 		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
 		unsigned int solidCubesVertexArrayID;
 		unsigned int solidCubesVertexBufferID;
@@ -70,9 +70,10 @@ namespace mtge {
 		void setLeftNeighbor(Chunk *chunk);
 		void setRightNeighbor(Chunk *chunk);
 
+		void renderSolidCubes(Camera *camera, Window *window, Shader *shader);
+		void renderTransparentCubes(Camera *camera, Window *window, Shader *shader);
+
 		void enableBufferRegenNextFrame();
-		void renderSolidCubes(Camera *camera, Window *window);
-		void renderTransparentCubes(Camera *camera, Window *window);
 		Cube *getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		math::Vec2 getPosition();
 		math::Vec<int, 2> getPositionIndices();

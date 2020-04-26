@@ -32,7 +32,7 @@ namespace mtge {
 					globalCubeY = (float)(-1 * (int)(LENGTH_IN_CUBES - j) + (int)(LENGTH_IN_CUBES * (positionIndices.getY() + 1)));
 				}
 
-				float noise = math::PerlinNoise::get2DWithOctaves(globalCubeX, globalCubeY, 0.05279f, 0.08f, 8);
+				float noise = math::PerlinNoise::get2DWithOctaves(globalCubeX, globalCubeY, 0.03559f, 0.05f, 6);
 				heights[j][i] = (unsigned int)(noise * 15.0f) + 1;
 			}
 		}
@@ -44,7 +44,18 @@ namespace mtge {
 				cubes[i][j] = new Cube*[LENGTH_IN_CUBES];
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
 					if (j < heights[k][i]) {
-						cubes[i][j][k] = new Cube{ 'g' };
+						if (j == 5) {
+							cubes[i][j][k] = new Cube{ 's' };
+						}
+						else if (j > 10) {
+							cubes[i][j][k] = new Cube{ 'r' };
+						}
+						else if (j == heights[k][i] - 1) {
+							cubes[i][j][k] = new Cube{ 'g' };
+						}
+						else {
+							cubes[i][j][k] = new Cube{ 'd' };
+						}
 					}
 					else {
 						cubes[i][j][k] = nullptr;
@@ -292,44 +303,24 @@ namespace mtge {
 		shouldGenBuffer = true;
 		chunk->enableBufferRegenNextFrame();
 	}
-	void Chunk::enableBufferRegenNextFrame() {
-		shouldGenBuffer = true;
-	}
-	void Chunk::renderSolidCubes(Camera *camera, Window *window) {
+	void Chunk::renderSolidCubes(Camera *camera, Window *window, Shader *shader) {
 		if (shouldGenBuffer) {
 			genBuffers();
 			shouldGenBuffer = false;
 		}
-		
+
 		glBindVertexArray(solidCubesVertexArrayID);
 
-		if (!Texture::getAtlasPtr()) {
-			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
-		}
-
-		Shader *shader = Shader::getTexturedShapePtr();
-		if (!shader) {
-			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED TEXTURED SHAPE SHADER" << std::endl << std::endl;
-			return;
-		}
-		shader->useProgram();
-		
 		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f));
 		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(
 			math::Vec3(position.getX(), -(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f) + CUBE_SIZE / 2.0f, position.getY())
 		);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
-		math::Mat4 viewMatrix = camera->getViewMatrix();
-		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
-
-		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
-		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
-
 		glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, solidCubeVerticesInLastBufferGen);
 	}
-	void Chunk::renderTransparentCubes(Camera *camera, Window *window) {
+	void Chunk::renderTransparentCubes(Camera *camera, Window *window, Shader *shader) {
 		if (shouldGenBuffer) {
 			genBuffers();
 			shouldGenBuffer = false;
@@ -337,31 +328,17 @@ namespace mtge {
 
 		glBindVertexArray(transparentCubesVertexArrayID);
 
-		if (!Texture::getAtlasPtr()) {
-			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
-		}
-
-		Shader *shader = Shader::getTexturedShapePtr();
-		if (!shader) {
-			std::cout << "ERROR [FUNCTION: render]: UNINITIALIZED TEXTURED SHAPE SHADER" << std::endl << std::endl;
-			return;
-		}
-		shader->useProgram();
-
 		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f));
 		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(
 			math::Vec3(position.getX(), -(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f) + CUBE_SIZE / 2.0f, position.getY())
 		);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
-		math::Mat4 viewMatrix = camera->getViewMatrix();
-		glUniformMatrix4fv(shader->getViewLocation(), 1, GL_FALSE, viewMatrix.getPtr());
-
-		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
-		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
-
 		glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, transparentCubeVerticesInLastBufferGen);
+	}
+	void Chunk::enableBufferRegenNextFrame() {
+		shouldGenBuffer = true;
 	}
 	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		if (xIndex >= LENGTH_IN_CUBES || yIndex >= LENGTH_IN_CUBES || zIndex >= LENGTH_IN_CUBES) {
