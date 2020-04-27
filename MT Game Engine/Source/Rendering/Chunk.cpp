@@ -146,13 +146,8 @@ namespace mtge {
 
 	//Private
 	void Chunk::genBuffers() {
-		glBindVertexArray(solidCubesVertexArrayID);
-		glBindBuffer(GL_ARRAY_BUFFER, solidCubesVertexBufferID);
-
-		std::vector<QueuedWater> queuedWater;
-
-		//Add each cube's vertex buffer as sub data
 		ChunkData solidCubeChunkData;
+		ChunkData transparentCubeChunkData;
 		float cubeSize = 2.0f / LENGTH_IN_CUBES;
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
@@ -162,8 +157,18 @@ namespace mtge {
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
 					if (cubes[i][j][k]) {
-						if (cubes[i][j][k]->type == 'w') {
-							queuedWater.push_back({ math::Vec3(xOffset, yOffset, zOffset), cubeHasTopNeighbor(i, j, k) });
+						if (isCubeTransparent(cubes[i][j][k]->type)) {
+							transparentCubeChunkData.addCube(
+								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
+								math::Vec3(xOffset, yOffset, zOffset),
+								LENGTH_IN_CUBES,
+								cubeHasTopNeighbor(i, j, k),
+								cubeHasBottomNeighbor(i, j, k),
+								cubeHasLeftNeighbor(i, j, k),
+								cubeHasRightNeighbor(i, j, k),
+								cubeHasFrontNeighbor(i, j, k),
+								cubeHasBackNeighbor(i, j, k)
+							);
 						}
 						else {
 							solidCubeChunkData.addCube(
@@ -183,8 +188,11 @@ namespace mtge {
 			}
 		}
 		solidCubeVerticesInLastBufferGen = solidCubeChunkData.getVerticesInBuffer();
-		solidCubeChunkData.sendBuffer();
+		transparentCubeVerticesInLastBufferGen = transparentCubeChunkData.getVerticesInBuffer();
 
+		glBindVertexArray(solidCubesVertexArrayID);
+		glBindBuffer(GL_ARRAY_BUFFER, solidCubesVertexBufferID);
+		solidCubeChunkData.sendBuffer();
 		if (shouldSetSolidCubeVertexAttributes) {
 			//Position vertex attribute
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
@@ -199,23 +207,7 @@ namespace mtge {
 
 		glBindVertexArray(transparentCubesVertexArrayID);
 		glBindBuffer(GL_ARRAY_BUFFER, transparentCubesVertexBufferID);
-		ChunkData transparentCubeChunkData;
-		for (unsigned int i = 0; i < queuedWater.size(); i++) {
-			transparentCubeChunkData.addCube(
-				cubeCharacterizer->getTextureForCubeType('w'),
-				queuedWater[i].offset,
-				LENGTH_IN_CUBES,
-				queuedWater[i].hasTopNeighbor,
-				true,
-				true,
-				true,
-				true,
-				true
-			);
-		}
-		transparentCubeVerticesInLastBufferGen = transparentCubeChunkData.getVerticesInBuffer();
 		transparentCubeChunkData.sendBuffer();
-
 		if (shouldSetTransparentCubeVertexAttributes) {
 			//Position vertex attribute
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
@@ -228,43 +220,159 @@ namespace mtge {
 			shouldSetTransparentCubeVertexAttributes = false;
 		}
 	}
+	void Chunk::genSolidCubeBuffer() {
+		ChunkData solidCubeChunkData;
+		float cubeSize = 2.0f / LENGTH_IN_CUBES;
+		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
+			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
+				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
+					float xOffset = -1.0f + cubeSize / 2 + i * cubeSize;
+					float yOffset = -1.0f + cubeSize / 2 + j * cubeSize;
+					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
+
+					if (cubes[i][j][k]) {
+						if (!isCubeTransparent(cubes[i][j][k]->type)) {
+							solidCubeChunkData.addCube(
+								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
+								math::Vec3(xOffset, yOffset, zOffset),
+								LENGTH_IN_CUBES,
+								cubeHasTopNeighbor(i, j, k),
+								cubeHasBottomNeighbor(i, j, k),
+								cubeHasLeftNeighbor(i, j, k),
+								cubeHasRightNeighbor(i, j, k),
+								cubeHasFrontNeighbor(i, j, k),
+								cubeHasBackNeighbor(i, j, k)
+							);
+						}
+					}
+				}
+			}
+		}
+		solidCubeVerticesInLastBufferGen = solidCubeChunkData.getVerticesInBuffer();
+
+		glBindVertexArray(solidCubesVertexArrayID);
+		glBindBuffer(GL_ARRAY_BUFFER, solidCubesVertexBufferID);
+		solidCubeChunkData.sendBuffer();
+		if (shouldSetSolidCubeVertexAttributes) {
+			//Position vertex attribute
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+			glEnableVertexAttribArray(0);
+
+			//Color vertex attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(1);
+
+			shouldSetSolidCubeVertexAttributes = false;
+		}
+	}
+	void Chunk::genTransparentCubeBuffer() {
+		ChunkData transparentCubeChunkData;
+		float cubeSize = 2.0f / LENGTH_IN_CUBES;
+		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
+			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
+				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
+					float xOffset = -1.0f + cubeSize / 2 + i * cubeSize;
+					float yOffset = -1.0f + cubeSize / 2 + j * cubeSize;
+					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
+
+					if (cubes[i][j][k]) {
+						if (isCubeTransparent(cubes[i][j][k]->type)) {
+							transparentCubeChunkData.addCube(
+								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
+								math::Vec3(xOffset, yOffset, zOffset),
+								LENGTH_IN_CUBES,
+								cubeHasTopNeighbor(i, j, k),
+								true,
+								true,
+								true,
+								true,
+								true
+							);
+						}
+					}
+				}
+			}
+		}
+		transparentCubeVerticesInLastBufferGen = transparentCubeChunkData.getVerticesInBuffer();
+
+		glBindVertexArray(transparentCubesVertexArrayID);
+		glBindBuffer(GL_ARRAY_BUFFER, transparentCubesVertexBufferID);
+		transparentCubeChunkData.sendBuffer();
+		if (shouldSetTransparentCubeVertexAttributes) {
+			//Position vertex attribute
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+			glEnableVertexAttribArray(0);
+
+			//Color vertex attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+			glEnableVertexAttribArray(1);
+
+			shouldSetTransparentCubeVertexAttributes = false;
+		}
+	}
+	bool Chunk::isCubeTransparent(char typeSymbol) {
+		return typeSymbol == 'w' || typeSymbol == 'l';
+	}
 
 	//Public
 	const float Chunk::CUBE_SIZE = 0.06f;
 	const float Chunk::CHUNK_SIZE = LENGTH_IN_CUBES * CUBE_SIZE;
 
 	bool Chunk::cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (cubes[xIndex][yIndex][zIndex] && cubes[xIndex][yIndex][zIndex]->type == 'w') {
+		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
 			return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex];
 		}
-		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex] && cubes[xIndex][yIndex + 1][zIndex]->type != 'w';
+		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex] && !isCubeTransparent(cubes[xIndex][yIndex + 1][zIndex]->type);
 	}
 	bool Chunk::cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex] && cubes[xIndex][yIndex - 1][zIndex]->type != 'w';
+		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+			return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex];
+		}
+		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex] && !isCubeTransparent(cubes[xIndex][yIndex - 1][zIndex]->type);
 	}
 	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+			return
+				(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]) ||
+				(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex));
+		}
 		return
-			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex] && cubes[xIndex - 1][yIndex][zIndex]->type != 'w') ||
+			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex] && !isCubeTransparent(cubes[xIndex - 1][yIndex][zIndex]->type)) ||
 			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex) && 
-				leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type != 'w');
+				!isCubeTransparent(leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type));
 	}
 	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+			return
+				(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]) ||
+				(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex));
+		}
 		return
-			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex] && cubes[xIndex + 1][yIndex][zIndex]->type != 'w') ||
+			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex] && !isCubeTransparent(cubes[xIndex + 1][yIndex][zIndex]->type)) ||
 			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex) &&
-				rightNeighbor->getCubePtr(0, yIndex, zIndex)->type != 'w');
+				!isCubeTransparent(rightNeighbor->getCubePtr(0, yIndex, zIndex)->type));
 	}
 	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+			return
+				(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]) ||
+				(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0));
+		}
 		return
-			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1] && cubes[xIndex][yIndex][zIndex + 1]->type != 'w') ||
+			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1] && !isCubeTransparent(cubes[xIndex][yIndex][zIndex + 1]->type)) ||
 			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0) && 
-				frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type != 'w');
+				!isCubeTransparent(frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type));
 	}
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+			return
+				(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]) ||
+				(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1));
+		}
 		return
-			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1] && cubes[xIndex][yIndex][zIndex - 1]->type != 'w') ||
+			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1] && !isCubeTransparent(cubes[xIndex][yIndex][zIndex - 1]->type)) ||
 			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1) && 
-				backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type != 'w');
+				!isCubeTransparent(backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type));
 	}
 	bool Chunk::cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		return
@@ -279,34 +387,38 @@ namespace mtge {
 		frontNeighbor = chunk;
 		chunk->backNeighbor = this;
 
-		shouldGenBuffer = true;
-		chunk->enableBufferRegenNextFrame();
+		shouldGenAllBuffers = true;
+		chunk->enableAllBufferRegenNextFrame();
 	}
 	void Chunk::setBackNeighbor(Chunk *chunk) {
 		backNeighbor = chunk;
 		chunk->frontNeighbor = this;
 
-		shouldGenBuffer = true;
-		chunk->enableBufferRegenNextFrame();
+		shouldGenAllBuffers = true;
+		chunk->enableAllBufferRegenNextFrame();
 	}
 	void Chunk::setLeftNeighbor(Chunk *chunk) {
 		leftNeighbor = chunk;
 		chunk->rightNeighbor = this;
 
-		shouldGenBuffer = true;
-		chunk->enableBufferRegenNextFrame();
+		shouldGenAllBuffers = true;
+		chunk->enableAllBufferRegenNextFrame();
 	}
 	void Chunk::setRightNeighbor(Chunk *chunk) {
 		rightNeighbor = chunk;
 		chunk->leftNeighbor = this;
 
-		shouldGenBuffer = true;
-		chunk->enableBufferRegenNextFrame();
+		shouldGenAllBuffers = true;
+		chunk->enableAllBufferRegenNextFrame();
 	}
 	void Chunk::renderSolidCubes(Camera *camera, Window *window, Shader *shader) {
-		if (shouldGenBuffer) {
+		if (shouldGenAllBuffers) {
 			genBuffers();
-			shouldGenBuffer = false;
+			shouldGenAllBuffers = false;
+		}
+		else if (shouldGenSolidCubeBuffer) {
+			genSolidCubeBuffer();
+			shouldGenSolidCubeBuffer = false;
 		}
 
 		glBindVertexArray(solidCubesVertexArrayID);
@@ -317,13 +429,16 @@ namespace mtge {
 		);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
-		glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, solidCubeVerticesInLastBufferGen);
 	}
 	void Chunk::renderTransparentCubes(Camera *camera, Window *window, Shader *shader) {
-		if (shouldGenBuffer) {
+		if (shouldGenAllBuffers) {
 			genBuffers();
-			shouldGenBuffer = false;
+			shouldGenAllBuffers = false;
+		}
+		else if (shouldGenTransparentCubeBuffer) {
+			genTransparentCubeBuffer();
+			shouldGenTransparentCubeBuffer = false;
 		}
 
 		glBindVertexArray(transparentCubesVertexArrayID);
@@ -334,11 +449,16 @@ namespace mtge {
 		);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
-		glEnable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, transparentCubeVerticesInLastBufferGen);
 	}
-	void Chunk::enableBufferRegenNextFrame() {
-		shouldGenBuffer = true;
+	void Chunk::enableAllBufferRegenNextFrame() {
+		shouldGenAllBuffers = true;
+	}
+	void Chunk::enableSolidCubeBufferRegenNextFrame() {
+		shouldGenSolidCubeBuffer = true;
+	}
+	void Chunk::enableTransparentCubeBufferRegenNextFrame() {
+		shouldGenTransparentCubeBuffer = true;
 	}
 	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
 		if (xIndex >= LENGTH_IN_CUBES || yIndex >= LENGTH_IN_CUBES || zIndex >= LENGTH_IN_CUBES) {

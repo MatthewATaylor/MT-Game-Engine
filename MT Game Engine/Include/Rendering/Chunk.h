@@ -30,7 +30,9 @@ namespace mtge {
 		unsigned int transparentCubesVertexArrayID;
 		unsigned int transparentCubesVertexBufferID;
 		CubeCharacterizer *cubeCharacterizer = nullptr;
-		bool shouldGenBuffer = true;
+		bool shouldGenAllBuffers = true;
+		bool shouldGenSolidCubeBuffer = false;
+		bool shouldGenTransparentCubeBuffer = false;
 		bool shouldSetSolidCubeVertexAttributes = true;
 		bool shouldSetTransparentCubeVertexAttributes = true;
 		math::Vec2 position;
@@ -38,12 +40,10 @@ namespace mtge {
 		int solidCubeVerticesInLastBufferGen = 0;
 		int transparentCubeVerticesInLastBufferGen = 0;
 
-		struct QueuedWater {
-			math::Vec3 offset;
-			bool hasTopNeighbor;
-		};
-
 		void genBuffers();
+		void genSolidCubeBuffer();
+		void genTransparentCubeBuffer();
+		static bool isCubeTransparent(char typeSymbol);
 
 	public:
 		static const float CUBE_SIZE;
@@ -73,7 +73,9 @@ namespace mtge {
 		void renderSolidCubes(Camera *camera, Window *window, Shader *shader);
 		void renderTransparentCubes(Camera *camera, Window *window, Shader *shader);
 
-		void enableBufferRegenNextFrame();
+		void enableAllBufferRegenNextFrame();
+		void enableSolidCubeBufferRegenNextFrame();
+		void enableTransparentCubeBufferRegenNextFrame();
 		Cube *getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
 		math::Vec2 getPosition();
 		math::Vec<int, 2> getPositionIndices();

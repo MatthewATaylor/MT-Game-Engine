@@ -15,7 +15,7 @@ namespace mtge {
 	Chunk *WorldMap::getChunkPtr(unsigned int index) {
 		return chunks[index];
 	}
-	void WorldMap::renderAllChunks(Camera *camera, Window *window) {
+	void WorldMap::renderScene(Camera *camera, Window *window) {
 		if (!Texture::getAtlasPtr()) {
 			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
 		}
@@ -32,6 +32,8 @@ namespace mtge {
 
 		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
+
+		glEnable(GL_CULL_FACE);
 
 		for (unsigned int i = 0; i < chunks.size(); i++) {
 			chunks[i]->renderSolidCubes(camera, window, shader);
