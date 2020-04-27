@@ -57,7 +57,7 @@ namespace mtge {
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
 		glBindVertexArray(vertexArrayID);
-		glEnable(GL_CULL_FACE);
+		glDisable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, numVertices);
 	}
 }

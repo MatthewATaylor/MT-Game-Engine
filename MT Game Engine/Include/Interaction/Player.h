@@ -11,6 +11,8 @@
 #include "Math/Util.h"
 #include "WorldMap.h"
 #include "Rendering/Chunk.h"
+#include "Rendering/Texture/CubeTexture.h"
+#include "Rendering/RenderedCube.h"
 
 namespace mtge {
 	class Player : public Camera {
