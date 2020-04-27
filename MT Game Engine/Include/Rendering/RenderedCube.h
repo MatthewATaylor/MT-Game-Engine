@@ -10,6 +10,7 @@
 #include "Texture/Texture.h"
 #include "Shader.h"
 #include "CubeCharacterizer.h"
+#include "Math/Mat.h"
 
 namespace mtge {
 	class RenderedCube : public Cube, public Renderable {
@@ -17,6 +18,7 @@ namespace mtge {
 		int numVertices = 0;
 		math::Vec3 position;
 		math::Vec3 dimensions;
+		math::Mat4 modelMatrix;
 
 	public:
 		RenderedCube(CubeTexture *texture, math::Vec3 position, math::Vec3 dimensions);

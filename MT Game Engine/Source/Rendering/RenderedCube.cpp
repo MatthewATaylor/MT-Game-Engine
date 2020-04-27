@@ -6,6 +6,9 @@ namespace mtge {
 		this->position = position;
 		this->dimensions = dimensions;
 
+		modelMatrix = math::Util::MatGen::scale<float, 4>(dimensions);
+		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(position);
+
 		ChunkData data;
 		data.addCube(
 			texture,
@@ -52,8 +55,6 @@ namespace mtge {
 		math::Mat4 projectionMatrix = camera->getProjectionMatrix(window);
 		glUniformMatrix4fv(shader->getProjectionLocation(), 1, GL_FALSE, projectionMatrix.getPtr());
 
-		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(dimensions);
-		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(position);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
 		glBindVertexArray(vertexArrayID);
