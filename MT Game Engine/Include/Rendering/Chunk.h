@@ -37,6 +37,7 @@ namespace mtge {
 		bool shouldSetTransparentCubeVertexAttributes = true;
 		math::Vec2 position;
 		math::Vec<int, 2> positionIndices;
+		math::Mat4 modelMatrix;
 		int solidCubeVerticesInLastBufferGen = 0;
 		int transparentCubeVerticesInLastBufferGen = 0;
 

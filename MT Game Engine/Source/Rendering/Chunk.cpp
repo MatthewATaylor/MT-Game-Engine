@@ -7,6 +7,11 @@ namespace mtge {
 		this->position = position;
 		positionIndices = math::Vec<int, 2>((int)roundf(position.getX() / CHUNK_SIZE), (int)roundf(position.getY() / CHUNK_SIZE));
 
+		modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f));
+		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(
+			math::Vec3(position.getX(), -(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f) + CUBE_SIZE / 2.0f, position.getY())
+		);
+
 		glGenVertexArrays(1, &solidCubesVertexArrayID);
 		glGenBuffers(1, &solidCubesVertexBufferID);
 
@@ -351,10 +356,6 @@ namespace mtge {
 
 		glBindVertexArray(solidCubesVertexArrayID);
 
-		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f));
-		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(
-			math::Vec3(position.getX(), -(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f) + CUBE_SIZE / 2.0f, position.getY())
-		);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
 		glDrawArrays(GL_TRIANGLES, 0, solidCubeVerticesInLastBufferGen);
@@ -371,10 +372,6 @@ namespace mtge {
 
 		glBindVertexArray(transparentCubesVertexArrayID);
 
-		math::Mat4 modelMatrix = math::Util::MatGen::scale<float, 4>(math::Vec3(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f));
-		modelMatrix = modelMatrix * math::Util::MatGen::translation<float, 4>(
-			math::Vec3(position.getX(), -(LENGTH_IN_CUBES * CUBE_SIZE / 2.0f) + CUBE_SIZE / 2.0f, position.getY())
-		);
 		glUniformMatrix4fv(shader->getModelLocation(), 1, GL_FALSE, modelMatrix.getPtr());
 
 		glDrawArrays(GL_TRIANGLES, 0, transparentCubeVerticesInLastBufferGen);
