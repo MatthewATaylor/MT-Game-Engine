@@ -147,14 +147,23 @@ namespace mtge {
 			layout(location = 1) in vec2 vertexTextureCoord;
 
 			out vec2 fragmentTextureCoord;
+			out float visibility;
 
 			uniform mat4 model;
 			uniform mat4 view;
 			uniform mat4 projection;
 
+			const float FOG_DENSITY = 0.2f;
+			const float FOG_GRADIENT = 10.0f;
+
 			void main() {
-				gl_Position = projection * view * model * vec4(vertexPosition, 1.0f);
+				vec4 eyePosition = view * model * vec4(vertexPosition, 1.0f);
+				gl_Position = projection * eyePosition;
 				fragmentTextureCoord = vertexTextureCoord;
+				
+				float distance = length(eyePosition.xyz);
+				visibility = exp(-pow((distance * FOG_DENSITY), FOG_GRADIENT));
+				visibility = clamp(visibility, 0.0f, 1.0f);
 			}
 		)";
 
@@ -162,6 +171,7 @@ namespace mtge {
 			#version 330 core
 
 			in vec2 fragmentTextureCoord;
+			in float visibility;
 
 			out vec4 finalFragmentColor;
 
@@ -169,6 +179,7 @@ namespace mtge {
 
 			void main() {
 				finalFragmentColor = texture(texture1, fragmentTextureCoord);
+				finalFragmentColor = mix(vec4(0.0f, 0.0f, 0.0f, 1.0f), finalFragmentColor, visibility);
 			}
 		)";
 
