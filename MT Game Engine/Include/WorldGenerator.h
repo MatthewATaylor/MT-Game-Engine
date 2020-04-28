@@ -23,10 +23,11 @@ namespace mtge {
 		};
 		Player *player = nullptr;
 		std::vector<ChunkGenQueueMember> chunkGenQueue;
+		unsigned int framesSinceLastNewChunk = 0;
 
 		void setNeighborChunks(Chunk *addedChunk, bool testLeft, bool testRight, bool testFront, bool testBack);
 		void generateChunksFromBase(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk);
-		void generateChunksForBaseNeighbors(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk);
+		void generateChunksForBaseNeighbors(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk, unsigned int levels);
 
 	public:
 		WorldGenerator(Player *player);

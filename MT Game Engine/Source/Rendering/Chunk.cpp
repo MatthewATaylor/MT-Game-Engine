@@ -37,7 +37,8 @@ namespace mtge {
 					globalCubeY = (float)(-1 * (int)(LENGTH_IN_CUBES - j) + (int)(LENGTH_IN_CUBES * (positionIndices.getY() + 1)));
 				}
 
-				float noise = math::PerlinNoise::get2DWithOctaves(globalCubeX, globalCubeY, 0.03559f, 0.1f, 4);
+				//float noise = math::PerlinNoise::get2DWithOctaves(globalCubeX, globalCubeY, 0.03559f, 0.1f, 4);
+				float noise = 0.5f;
 				heights[j][i] = (unsigned int)(noise * 15.0f) + 1;
 			}
 		}
@@ -258,12 +259,18 @@ namespace mtge {
 		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex] && !isCubeTransparent(cubes[xIndex][yIndex + 1][zIndex]->type);
 	}
 	bool Chunk::cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (yIndex == 0) {
+			return true;
+		}
 		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
 			return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex];
 		}
 		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex] && !isCubeTransparent(cubes[xIndex][yIndex - 1][zIndex]->type);
 	}
 	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (!leftNeighbor && xIndex == 0) {
+			return true;
+		}
 		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
 			return
 				(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]) ||
@@ -275,6 +282,9 @@ namespace mtge {
 				!isCubeTransparent(leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type));
 	}
 	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (!rightNeighbor && xIndex == LENGTH_IN_CUBES - 1) {
+			return true;
+		}
 		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
 			return
 				(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]) ||
@@ -286,6 +296,9 @@ namespace mtge {
 				!isCubeTransparent(rightNeighbor->getCubePtr(0, yIndex, zIndex)->type));
 	}
 	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (!frontNeighbor && zIndex == LENGTH_IN_CUBES - 1) {
+			return true;
+		}
 		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
 			return
 				(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]) ||
@@ -297,6 +310,9 @@ namespace mtge {
 				!isCubeTransparent(frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type));
 	}
 	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+		if (!backNeighbor && zIndex == 0) {
+			return true;
+		}
 		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
 			return
 				(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]) ||
@@ -345,11 +361,11 @@ namespace mtge {
 		chunk->enableAllBufferRegenNextFrame();
 	}
 	void Chunk::renderSolidCubes(Camera *camera, Window *window, Shader *shader) {
-		if (shouldGenAllBuffers) {
+		if (shouldGenAllBuffers && leftNeighbor && rightNeighbor && frontNeighbor && backNeighbor) {
 			genBuffers();
 			shouldGenAllBuffers = false;
 		}
-		else if (shouldGenSolidCubeBuffer) {
+		else if (shouldGenSolidCubeBuffer && leftNeighbor && rightNeighbor && frontNeighbor && backNeighbor) {
 			genSolidCubeBuffer();
 			shouldGenSolidCubeBuffer = false;
 		}
@@ -361,11 +377,11 @@ namespace mtge {
 		glDrawArrays(GL_TRIANGLES, 0, solidCubeVerticesInLastBufferGen);
 	}
 	void Chunk::renderTransparentCubes(Camera *camera, Window *window, Shader *shader) {
-		if (shouldGenAllBuffers) {
+		if (shouldGenAllBuffers && leftNeighbor && rightNeighbor && frontNeighbor && backNeighbor) {
 			genBuffers();
 			shouldGenAllBuffers = false;
 		}
-		else if (shouldGenTransparentCubeBuffer) {
+		else if (shouldGenTransparentCubeBuffer && leftNeighbor && rightNeighbor && frontNeighbor && backNeighbor) {
 			genTransparentCubeBuffer();
 			shouldGenTransparentCubeBuffer = false;
 		}

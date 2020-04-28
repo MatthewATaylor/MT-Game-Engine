@@ -90,18 +90,27 @@ namespace mtge {
 			chunkGenQueue.push_back({ baseChunk, cubeCharacterizer, backChunkPosition, backChunkPositionIndices, ChunkNeighborDirection::BACK });
 		}
 	}
-	void WorldGenerator::generateChunksForBaseNeighbors(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk) {
-		if (baseChunk->leftNeighbor) {
-			generateChunksFromBase(cubeCharacterizer, baseChunk->leftNeighbor);
+	void WorldGenerator::generateChunksForBaseNeighbors(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk, unsigned int levels) {
+		if (levels == 0) {
+			generateChunksFromBase(cubeCharacterizer, baseChunk);
 		}
-		if (baseChunk->rightNeighbor) {
-			generateChunksFromBase(cubeCharacterizer, baseChunk->rightNeighbor);
-		}
-		if (baseChunk->frontNeighbor) {
-			generateChunksFromBase(cubeCharacterizer, baseChunk->frontNeighbor);
-		}
-		if (baseChunk->backNeighbor) {
-			generateChunksFromBase(cubeCharacterizer, baseChunk->backNeighbor);
+		else {
+			if (baseChunk->leftNeighbor) {
+				generateChunksFromBase(cubeCharacterizer, baseChunk->leftNeighbor);
+				generateChunksForBaseNeighbors(cubeCharacterizer, baseChunk->leftNeighbor, levels - 1);
+			}
+			if (baseChunk->rightNeighbor) {
+				generateChunksFromBase(cubeCharacterizer, baseChunk->rightNeighbor);
+				generateChunksForBaseNeighbors(cubeCharacterizer, baseChunk->rightNeighbor, levels - 1);
+			}
+			if (baseChunk->frontNeighbor) {
+				generateChunksFromBase(cubeCharacterizer, baseChunk->frontNeighbor);
+				generateChunksForBaseNeighbors(cubeCharacterizer, baseChunk->frontNeighbor, levels - 1);
+			}
+			if (baseChunk->backNeighbor) {
+				generateChunksFromBase(cubeCharacterizer, baseChunk->backNeighbor);
+				generateChunksForBaseNeighbors(cubeCharacterizer, baseChunk->backNeighbor, levels - 1);
+			}
 		}
 	}
 
@@ -110,22 +119,9 @@ namespace mtge {
 		Chunk *currentChunk = WorldMap::getChunkPtr(player->getChunkIndex());
 		
 		generateChunksFromBase(cubeCharacterizer, currentChunk);
-		generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk);
+		generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 4);
 
-		if (currentChunk->leftNeighbor) {
-			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk->leftNeighbor);
-		}
-		if (currentChunk->rightNeighbor) {
-			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk->rightNeighbor);
-		}
-		if (currentChunk->frontNeighbor) {
-			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk->frontNeighbor);
-		}
-		if (currentChunk->backNeighbor) {
-			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk->backNeighbor);
-		}
-
-		if (chunkGenQueue.size() > 0) {
+		if (chunkGenQueue.size() > 0 && framesSinceLastNewChunk > 32) {
 			Chunk *baseChunk = chunkGenQueue[0].baseChunk;
 			switch (chunkGenQueue[0].direction) {
 			case ChunkNeighborDirection::LEFT: {
@@ -158,6 +154,8 @@ namespace mtge {
 			}
 			}
 			chunkGenQueue.erase(chunkGenQueue.begin());
+			framesSinceLastNewChunk = 0;
 		}
+		framesSinceLastNewChunk++;
 	}
 }
