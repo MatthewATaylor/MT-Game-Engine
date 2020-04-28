@@ -20,7 +20,7 @@
 namespace mtge {
 	class Chunk {
 	public:
-		static const unsigned int LENGTH_IN_CUBES = 24;
+		static const unsigned int LENGTH_IN_CUBES = 16;
 
 	private:
 		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
