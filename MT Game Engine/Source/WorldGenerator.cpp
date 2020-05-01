@@ -119,7 +119,7 @@ namespace mtge {
 		Chunk *currentChunk = WorldMap::getChunkPtr(player->getChunkIndex());
 		
 		generateChunksFromBase(cubeCharacterizer, currentChunk);
-		generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 5);
+		generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 1);
 
 		if (chunkGenQueue.size() > 0 && framesSinceLastNewChunk > 0) {
 			Chunk *baseChunk = chunkGenQueue[0].baseChunk;
