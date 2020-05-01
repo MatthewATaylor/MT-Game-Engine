@@ -56,8 +56,7 @@ namespace mtge {
 	void WorldMap::deleteChunk(Chunk *chunk) {
 		for (unsigned int i = 0; i < chunks.size(); i++) {
 			if (chunks[i] == chunk) {
-				delete chunks[i];
-				chunks.erase(chunks.begin() + i);
+				deleteChunk(i);
 				break;
 			}
 		}
