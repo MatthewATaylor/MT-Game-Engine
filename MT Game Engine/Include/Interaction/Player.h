@@ -26,23 +26,23 @@ namespace mtge {
 		bool canApplyCollisions = false;
 		bool canApplyGravity = false;
 		std::vector<math::Vec3> collisionCoordsToCheck;
-		math::Vec<int, 2> prevChunkIndices;
-		unsigned int mapChunkIndex = 0;
+		Chunk *currentChunk = nullptr;
+		math::Vec<unsigned int, 3> positionIndices;
 		unsigned int playerHeightInCubes;
 		unsigned int jumpHeightInCubes = 0;
 
-		math::Vec3 getCubePosFromIndices(math::Vec<unsigned int, 3> indices, unsigned int chunkIndex);
+		math::Vec3 getCubePosFromIndices(const math::Vec<unsigned int, 3> &indices, Chunk *chunk);
 
-		void setBottomCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setTopCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setFrontCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setBackCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setFrontRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setBackRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setFrontLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
-		void setBackLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex);
+		void setBottomCollisionCoordsToCheck();
+		void setTopCollisionCoordsToCheck();
+		void setFrontCollisionCoordsToCheck();
+		void setBackCollisionCoordsToCheck();
+		void setLeftCollisionCoordsToCheck();
+		void setRightCollisionCoordsToCheck();
+		void setFrontRightCollisionCoordsToCheck();
+		void setBackRightCollisionCoordsToCheck();
+		void setFrontLeftCollisionCoordsToCheck();
+		void setBackLeftCollisionCoordsToCheck();
 
 		void setCollisionCoordsToCheck();
 
@@ -54,9 +54,8 @@ namespace mtge {
 		void applyGravity();
 		void reduceMotion();
 
-		math::Vec<int, 2> getChunkPositionIndices();
-		math::Vec<unsigned int, 3> getPositionIndices();
-		void setMapChunkIndex();
+		void setCurrentChunk();
+		void setPositionIndices();
 
 	public:
 		Player(math::Vec3 position, const math::Vec3 DIMENSIONS);
@@ -67,7 +66,7 @@ namespace mtge {
 		void controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey);
 		void controlReset(Window *window, float resetHeight);
 		math::Vec3 getPosition();
-		unsigned int getChunkIndex();
+		Chunk *getCurrentChunk();
 		math::Mat4 getViewMatrix() override;
 	};
 }

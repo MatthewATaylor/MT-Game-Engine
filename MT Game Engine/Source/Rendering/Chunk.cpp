@@ -91,17 +91,18 @@ namespace mtge {
 					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
 
 					if (cubes[i][j][k]) {
+						math::Vec<unsigned int, 3> indexVec(i, j, k);
 						if (isCubeTransparent(cubes[i][j][k]->type)) {
 							transparentCubeChunkData.addCube(
 								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
 								math::Vec3(xOffset, yOffset, zOffset),
 								LENGTH_IN_CUBES,
-								cubeHasTopNeighbor(i, j, k),
-								cubeHasBottomNeighbor(i, j, k),
-								cubeHasLeftNeighbor(i, j, k),
-								cubeHasRightNeighbor(i, j, k),
-								cubeHasFrontNeighbor(i, j, k),
-								cubeHasBackNeighbor(i, j, k)
+								cubeHasTopNeighbor(indexVec),
+								cubeHasBottomNeighbor(indexVec),
+								cubeHasLeftNeighbor(indexVec),
+								cubeHasRightNeighbor(indexVec),
+								cubeHasFrontNeighbor(indexVec),
+								cubeHasBackNeighbor(indexVec)
 							);
 						}
 						else {
@@ -109,12 +110,12 @@ namespace mtge {
 								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
 								math::Vec3(xOffset, yOffset, zOffset),
 								LENGTH_IN_CUBES,
-								cubeHasTopNeighbor(i, j, k),
-								cubeHasBottomNeighbor(i, j, k),
-								cubeHasLeftNeighbor(i, j, k),
-								cubeHasRightNeighbor(i, j, k),
-								cubeHasFrontNeighbor(i, j, k),
-								cubeHasBackNeighbor(i, j, k)
+								cubeHasTopNeighbor(indexVec),
+								cubeHasBottomNeighbor(indexVec),
+								cubeHasLeftNeighbor(indexVec),
+								cubeHasRightNeighbor(indexVec),
+								cubeHasFrontNeighbor(indexVec),
+								cubeHasBackNeighbor(indexVec)
 							);
 						}
 					}
@@ -166,16 +167,17 @@ namespace mtge {
 
 					if (cubes[i][j][k]) {
 						if (!isCubeTransparent(cubes[i][j][k]->type)) {
+							math::Vec<unsigned int, 3> indexVec(i, j, k);
 							solidCubeChunkData.addCube(
 								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
 								math::Vec3(xOffset, yOffset, zOffset),
 								LENGTH_IN_CUBES,
-								cubeHasTopNeighbor(i, j, k),
-								cubeHasBottomNeighbor(i, j, k),
-								cubeHasLeftNeighbor(i, j, k),
-								cubeHasRightNeighbor(i, j, k),
-								cubeHasFrontNeighbor(i, j, k),
-								cubeHasBackNeighbor(i, j, k)
+								cubeHasTopNeighbor(indexVec),
+								cubeHasBottomNeighbor(indexVec),
+								cubeHasLeftNeighbor(indexVec),
+								cubeHasRightNeighbor(indexVec),
+								cubeHasFrontNeighbor(indexVec),
+								cubeHasBackNeighbor(indexVec)
 							);
 						}
 					}
@@ -215,7 +217,7 @@ namespace mtge {
 								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
 								math::Vec3(xOffset, yOffset, zOffset),
 								LENGTH_IN_CUBES,
-								cubeHasTopNeighbor(i, j, k),
+								cubeHasTopNeighbor(math::Vec<unsigned int, 3>(i, j, k)),
 								true,
 								true,
 								true,
@@ -252,85 +254,99 @@ namespace mtge {
 	const float Chunk::CUBE_SIZE = 0.06f;
 	const float Chunk::CHUNK_SIZE = LENGTH_IN_CUBES * CUBE_SIZE;
 
-	bool Chunk::cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
-			return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex];
+	bool Chunk::cubeHasTopNeighbor(const math::Vec<unsigned int, 3> &indices) {
+		if (cubes[indices.getX()][indices.getY()][indices.getZ()] && isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ()]->type)) {
+			return indices.getY() != LENGTH_IN_CUBES - 1 && cubes[indices.getX()][indices.getY() + 1][indices.getZ()];
 		}
-		return yIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex + 1][zIndex] && !isCubeTransparent(cubes[xIndex][yIndex + 1][zIndex]->type);
+		return indices.getY() != LENGTH_IN_CUBES - 1 && cubes[indices.getX()][indices.getY() + 1][indices.getZ()] && 
+			!isCubeTransparent(cubes[indices.getX()][indices.getY() + 1][indices.getZ()]->type);
 	}
-	bool Chunk::cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (yIndex == 0) {
+	bool Chunk::cubeHasBottomNeighbor(const math::Vec<unsigned int, 3> &indices) {
+		if (indices.getY() == 0) {
 			return true;
 		}
-		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
-			return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex];
+		if (cubes[indices.getX()][indices.getY()][indices.getZ()] && isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ()]->type)) {
+			return indices.getY() != 0 && cubes[indices.getX()][indices.getY() - 1][indices.getZ()];
 		}
-		return yIndex != 0 && cubes[xIndex][yIndex - 1][zIndex] && !isCubeTransparent(cubes[xIndex][yIndex - 1][zIndex]->type);
+		return indices.getY() != 0 && cubes[indices.getX()][indices.getY() - 1][indices.getZ()] && 
+			!isCubeTransparent(cubes[indices.getX()][indices.getY() - 1][indices.getZ()]->type);
 	}
-	bool Chunk::cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (!leftNeighbor && xIndex == 0) {
+	bool Chunk::cubeHasLeftNeighbor(const math::Vec<unsigned int, 3> &indices) {
+		if (!leftNeighbor && indices.getX() == 0) {
 			return true;
 		}
-		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+		if (cubes[indices.getX()][indices.getY()][indices.getZ()] && isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ()]->type)) {
 			return
-				(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex]) ||
-				(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex));
+				(indices.getX() != 0 && cubes[indices.getX() - 1][indices.getY()][indices.getZ()]) ||
+				(indices.getX() == 0 && leftNeighbor && 
+					leftNeighbor->getCubePtr(math::Vec<unsigned int, 3>(LENGTH_IN_CUBES - 1, indices.getY(), indices.getZ())));
 		}
 		return
-			(xIndex != 0 && cubes[xIndex - 1][yIndex][zIndex] && !isCubeTransparent(cubes[xIndex - 1][yIndex][zIndex]->type)) ||
-			(xIndex == 0 && leftNeighbor && leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex) && 
-				!isCubeTransparent(leftNeighbor->getCubePtr(LENGTH_IN_CUBES - 1, yIndex, zIndex)->type));
+			(indices.getX() != 0 && cubes[indices.getX() - 1][indices.getY()][indices.getZ()] && 
+				!isCubeTransparent(cubes[indices.getX() - 1][indices.getY()][indices.getZ()]->type)) ||
+			(indices.getX() == 0 && leftNeighbor && 
+				leftNeighbor->getCubePtr(math::Vec<unsigned int, 3>(LENGTH_IN_CUBES - 1, indices.getY(), indices.getZ())) &&
+				!isCubeTransparent(leftNeighbor->getCubePtr(math::Vec<unsigned int, 3>(LENGTH_IN_CUBES - 1, indices.getY(), indices.getZ()))->type));
 	}
-	bool Chunk::cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (!rightNeighbor && xIndex == LENGTH_IN_CUBES - 1) {
+	bool Chunk::cubeHasRightNeighbor(const math::Vec<unsigned int, 3> &indices) {
+		if (!rightNeighbor && indices.getX() == LENGTH_IN_CUBES - 1) {
 			return true;
 		}
-		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+		if (cubes[indices.getX()][indices.getY()][indices.getZ()] && isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ()]->type)) {
 			return
-				(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex]) ||
-				(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex));
+				(indices.getX() != LENGTH_IN_CUBES - 1 && cubes[indices.getX() + 1][indices.getY()][indices.getZ()]) ||
+				(indices.getX() == LENGTH_IN_CUBES - 1 && rightNeighbor && 
+					rightNeighbor->getCubePtr(math::Vec<unsigned int, 3>(0, indices.getY(), indices.getZ())));
 		}
 		return
-			(xIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex + 1][yIndex][zIndex] && !isCubeTransparent(cubes[xIndex + 1][yIndex][zIndex]->type)) ||
-			(xIndex == LENGTH_IN_CUBES - 1 && rightNeighbor && rightNeighbor->getCubePtr(0, yIndex, zIndex) &&
-				!isCubeTransparent(rightNeighbor->getCubePtr(0, yIndex, zIndex)->type));
+			(indices.getX() != LENGTH_IN_CUBES - 1 && cubes[indices.getX() + 1][indices.getY()][indices.getZ()] && 
+				!isCubeTransparent(cubes[indices.getX() + 1][indices.getY()][indices.getZ()]->type)) ||
+			(indices.getX() == LENGTH_IN_CUBES - 1 && rightNeighbor && 
+				rightNeighbor->getCubePtr(math::Vec<unsigned int, 3>(0, indices.getY(), indices.getZ())) &&
+				!isCubeTransparent(rightNeighbor->getCubePtr(math::Vec<unsigned int, 3>(0, indices.getY(), indices.getZ()))->type));
 	}
-	bool Chunk::cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (!frontNeighbor && zIndex == LENGTH_IN_CUBES - 1) {
+	bool Chunk::cubeHasFrontNeighbor(const math::Vec<unsigned int, 3> &indices) {
+		if (!frontNeighbor && indices.getZ() == LENGTH_IN_CUBES - 1) {
 			return true;
 		}
-		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+		if (cubes[indices.getX()][indices.getY()][indices.getZ()] && isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ()]->type)) {
 			return
-				(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1]) ||
-				(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0));
+				(indices.getZ() != LENGTH_IN_CUBES - 1 && cubes[indices.getX()][indices.getY()][indices.getZ() + 1]) ||
+				(indices.getZ() == LENGTH_IN_CUBES - 1 && frontNeighbor && 
+					frontNeighbor->getCubePtr(math::Vec<unsigned int, 3>(indices.getX(), indices.getY(), 0)));
 		}
 		return
-			(zIndex != LENGTH_IN_CUBES - 1 && cubes[xIndex][yIndex][zIndex + 1] && !isCubeTransparent(cubes[xIndex][yIndex][zIndex + 1]->type)) ||
-			(zIndex == LENGTH_IN_CUBES - 1 && frontNeighbor && frontNeighbor->getCubePtr(xIndex, yIndex, 0) && 
-				!isCubeTransparent(frontNeighbor->getCubePtr(xIndex, yIndex, 0)->type));
+			(indices.getZ() != LENGTH_IN_CUBES - 1 && cubes[indices.getX()][indices.getY()][indices.getZ() + 1] && 
+				!isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ() + 1]->type)) ||
+			(indices.getZ() == LENGTH_IN_CUBES - 1 && frontNeighbor && 
+				frontNeighbor->getCubePtr(math::Vec<unsigned int, 3>(indices.getX(), indices.getY(), 0)) && 
+				!isCubeTransparent(frontNeighbor->getCubePtr(math::Vec<unsigned int, 3>(indices.getX(), indices.getY(), 0))->type));
 	}
-	bool Chunk::cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (!backNeighbor && zIndex == 0) {
+	bool Chunk::cubeHasBackNeighbor(const math::Vec<unsigned int, 3> &indices) {
+		if (!backNeighbor && indices.getZ() == 0) {
 			return true;
 		}
-		if (cubes[xIndex][yIndex][zIndex] && isCubeTransparent(cubes[xIndex][yIndex][zIndex]->type)) {
+		if (cubes[indices.getX()][indices.getY()][indices.getZ()] && isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ()]->type)) {
 			return
-				(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1]) ||
-				(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1));
+				(indices.getZ() != 0 && cubes[indices.getX()][indices.getY()][indices.getZ() - 1]) ||
+				(indices.getZ() == 0 && backNeighbor && 
+					backNeighbor->getCubePtr(math::Vec<unsigned int, 3>(indices.getX(), indices.getY(), LENGTH_IN_CUBES - 1)));
 		}
 		return
-			(zIndex != 0 && cubes[xIndex][yIndex][zIndex - 1] && !isCubeTransparent(cubes[xIndex][yIndex][zIndex - 1]->type)) ||
-			(zIndex == 0 && backNeighbor && backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1) && 
-				!isCubeTransparent(backNeighbor->getCubePtr(xIndex, yIndex, LENGTH_IN_CUBES - 1)->type));
+			(indices.getZ() != 0 && cubes[indices.getX()][indices.getY()][indices.getZ() - 1] && !
+				isCubeTransparent(cubes[indices.getX()][indices.getY()][indices.getZ() - 1]->type)) ||
+			(indices.getZ() == 0 && backNeighbor && 
+				backNeighbor->getCubePtr(math::Vec<unsigned int, 3>(indices.getX(), indices.getY(), LENGTH_IN_CUBES - 1)) && 
+				!isCubeTransparent(backNeighbor->getCubePtr(math::Vec<unsigned int, 3>(indices.getX(), indices.getY(), LENGTH_IN_CUBES - 1))->type));
 	}
-	bool Chunk::cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
+	bool Chunk::cubeIsSurrounded(const math::Vec<unsigned int, 3> &indices) {
 		return
-			cubeHasTopNeighbor(xIndex, yIndex, zIndex) &&
-			cubeHasBottomNeighbor(xIndex, yIndex, zIndex) &&
-			cubeHasLeftNeighbor(xIndex, yIndex, zIndex) &&
-			cubeHasRightNeighbor(xIndex, yIndex, zIndex) &&
-			cubeHasFrontNeighbor(xIndex, yIndex, zIndex) &&
-			cubeHasBackNeighbor(xIndex, yIndex, zIndex);
+			cubeHasTopNeighbor(indices) &&
+			cubeHasBottomNeighbor(indices) &&
+			cubeHasLeftNeighbor(indices) &&
+			cubeHasRightNeighbor(indices) &&
+			cubeHasFrontNeighbor(indices) &&
+			cubeHasBackNeighbor(indices);
 	}
 	void Chunk::setFrontNeighbor(Chunk *chunk) {
 		frontNeighbor = chunk;
@@ -401,14 +417,14 @@ namespace mtge {
 	void Chunk::enableTransparentCubeBufferRegenNextFrame() {
 		shouldGenTransparentCubeBuffer = true;
 	}
-	Cube *Chunk::getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex) {
-		if (xIndex >= LENGTH_IN_CUBES || yIndex >= LENGTH_IN_CUBES || zIndex >= LENGTH_IN_CUBES) {
+	Cube *Chunk::getCubePtr(const math::Vec<unsigned int, 3> &indices) {
+		if (indices.getX() >= LENGTH_IN_CUBES || indices.getY() >= LENGTH_IN_CUBES || indices.getZ() >= LENGTH_IN_CUBES) {
 			return nullptr;
 		}
-		if (xIndex < 0 || yIndex < 0 || zIndex < 0) {
+		if (indices.getX() < 0 || indices.getY() < 0 || indices.getZ() < 0) {
 			return nullptr;
 		}
-		return cubes[xIndex][yIndex][zIndex];
+		return cubes[indices.getX()][indices.getY()][indices.getZ()];
 	}
 	math::Vec2 Chunk::getPosition() {
 		return position;

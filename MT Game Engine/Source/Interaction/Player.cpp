@@ -9,346 +9,350 @@ namespace mtge {
 	}
 
 	//Private
-	math::Vec3 Player::getCubePosFromIndices(math::Vec<unsigned int, 3> indices, unsigned int chunkIndex) {
+	math::Vec3 Player::getCubePosFromIndices(const math::Vec<unsigned int, 3> &indices, Chunk *chunk) {
 		int chunkLength = (int)Chunk::LENGTH_IN_CUBES;
 		float cubeX =
 			-(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + indices.getX() * Chunk::CUBE_SIZE +
-			WorldMap::getChunkPtr(chunkIndex)->getPosition().getX();
+			chunk->getPosition().getX();
 		float cubeY = -chunkLength * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE + indices.getY() * Chunk::CUBE_SIZE;
 		float cubeZ = -(chunkLength / 2.0f) * Chunk::CUBE_SIZE + Chunk::CUBE_SIZE / 2.0f + indices.getZ() * Chunk::CUBE_SIZE +
-			WorldMap::getChunkPtr(chunkIndex)->getPosition().getY();
+			chunk->getPosition().getY();
 		return math::Vec3(cubeX, cubeY, cubeZ);
 	}
-	void Player::setBottomCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			if (WorldMap::getChunkPtr(chunkIndex)->getCubePtr(posIndices.getX(), posIndices.getY(), posIndices.getZ())) {
-				math::Vec3 cubeCoords = getCubePosFromIndices(posIndices, chunkIndex);
+	
+	void Player::setBottomCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			if (currentChunk->getCubePtr(positionIndices)) {
+				math::Vec3 cubeCoords = getCubePosFromIndices(positionIndices, currentChunk);
 				collisionCoordsToCheck.push_back(cubeCoords);
 			}
 		}
 	}
-	void Player::setTopCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
+	void Player::setTopCollisionCoordsToCheck() {
 		for (unsigned int i = 0; i <= jumpHeightInCubes; i++) {
-			unsigned int yIndexToTest = posIndices.getY() + playerHeightInCubes + i;
+			unsigned int yIndexToTest = positionIndices.getY() + playerHeightInCubes + i;
 			if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
-				math::Vec<unsigned int, 3> indicesToTest(posIndices.getX(), yIndexToTest, posIndices.getZ());
-				if (WorldMap::getChunkPtr(chunkIndex)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-					math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndex);
+				math::Vec<unsigned int, 3> indicesToTest(positionIndices.getX(), yIndexToTest, positionIndices.getZ());
+				if (currentChunk->getCubePtr(indicesToTest)) {
+					math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, currentChunk);
 					collisionCoordsToCheck.push_back(cubeCoords);
 				}
 			}
 		}
 	}
-	void Player::setFrontCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			unsigned int zIndexToTest = posIndices.getZ() + 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setFrontCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			unsigned int zIndexToTest = positionIndices.getZ() + 1;
+			Chunk *chunkToTest = currentChunk;
 			if (zIndexToTest >= Chunk::LENGTH_IN_CUBES) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->frontNeighbor) {
+				if (!currentChunk->frontNeighbor) {
 					return;
 				}
 				zIndexToTest = 0;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->frontNeighbor->indexInMap;
+				chunkToTest = currentChunk->frontNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
-					math::Vec<unsigned int, 3> indicesToTest(posIndices.getX(), yIndexToTest, zIndexToTest);
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					math::Vec<unsigned int, 3> indicesToTest(positionIndices.getX(), yIndexToTest, zIndexToTest);
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
-	void Player::setBackCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			int zIndexToTest = (int)posIndices.getZ() - 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setBackCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			int zIndexToTest = (int)positionIndices.getZ() - 1;
+			Chunk *chunkToTest = currentChunk;
 			if (zIndexToTest < 0) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->backNeighbor) {
+				if (!currentChunk->backNeighbor) {
 					return;
 				}
 				zIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->backNeighbor->indexInMap;
+				chunkToTest = currentChunk->backNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
-					math::Vec<unsigned int, 3> indicesToTest(posIndices.getX(), yIndexToTest, (unsigned int)zIndexToTest);
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					math::Vec<unsigned int, 3> indicesToTest(positionIndices.getX(), yIndexToTest, (unsigned int)zIndexToTest);
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
-	void Player::setLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			int xIndexToTest = (int)posIndices.getX() - 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setLeftCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			int xIndexToTest = (int)positionIndices.getX() - 1;
+			Chunk *chunkToTest = currentChunk;
 			if (xIndexToTest < 0) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->leftNeighbor) {
+				if (!currentChunk->leftNeighbor) {
 					return;
 				}
 				xIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->leftNeighbor->indexInMap;
+				chunkToTest = currentChunk->leftNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
-					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, posIndices.getZ());
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, positionIndices.getZ());
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
-	void Player::setRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			unsigned int xIndexToTest = posIndices.getX() + 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setRightCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			unsigned int xIndexToTest = positionIndices.getX() + 1;
+			Chunk *chunkToTest = currentChunk;
 			if (xIndexToTest >= Chunk::LENGTH_IN_CUBES) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->rightNeighbor) {
+				if (!currentChunk->rightNeighbor) {
 					return;
 				}
 				xIndexToTest = 0;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->rightNeighbor->indexInMap;
+				chunkToTest = currentChunk->rightNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
-					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, posIndices.getZ());
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, positionIndices.getZ());
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
-	void Player::setFrontRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			unsigned int xIndexToTest = posIndices.getX() + 1;
-			unsigned int zIndexToTest = posIndices.getZ() + 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setFrontRightCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			unsigned int xIndexToTest = positionIndices.getX() + 1;
+			unsigned int zIndexToTest = positionIndices.getZ() + 1;
+			Chunk *chunkToTest = currentChunk;
 
 			if (xIndexToTest >= Chunk::LENGTH_IN_CUBES && zIndexToTest >= Chunk::LENGTH_IN_CUBES) {
 				xIndexToTest = 0;
 				zIndexToTest = 0;
-				if (!WorldMap::getChunkPtr(chunkIndex)->rightNeighbor || 
-					!WorldMap::getChunkPtr(chunkIndex)->rightNeighbor->frontNeighbor) {
+				if (!currentChunk->rightNeighbor ||
+					!currentChunk->rightNeighbor->frontNeighbor) {
 
-					if (!WorldMap::getChunkPtr(chunkIndex)->frontNeighbor ||
-						!WorldMap::getChunkPtr(chunkIndex)->frontNeighbor->rightNeighbor) {
+					if (!currentChunk->frontNeighbor ||
+						!currentChunk->frontNeighbor->rightNeighbor) {
 
 						return;
 					}
 					else {
-						chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->frontNeighbor->rightNeighbor->indexInMap;
+						chunkToTest = currentChunk->frontNeighbor->rightNeighbor;
 					}
 				}
 				else {
-					chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->rightNeighbor->frontNeighbor->indexInMap;
+					chunkToTest = currentChunk->rightNeighbor->frontNeighbor;
 				}
 			}
 			else if (xIndexToTest >= Chunk::LENGTH_IN_CUBES) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->rightNeighbor) {
+				if (!currentChunk->rightNeighbor) {
 					return;
 				}
 				xIndexToTest = 0;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->rightNeighbor->indexInMap;
+				chunkToTest = currentChunk->rightNeighbor;
 			}
 			else if (zIndexToTest >= Chunk::LENGTH_IN_CUBES) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->frontNeighbor) {
+				if (!currentChunk->frontNeighbor) {
 					return;
 				}
 				zIndexToTest = 0;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->frontNeighbor->indexInMap;
+				chunkToTest = currentChunk->frontNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, zIndexToTest);
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
-	void Player::setBackRightCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			unsigned int xIndexToTest = posIndices.getX() + 1;
-			int zIndexToTest = (int)posIndices.getZ() - 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setBackRightCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			unsigned int xIndexToTest = positionIndices.getX() + 1;
+			int zIndexToTest = (int)positionIndices.getZ() - 1;
+			Chunk *chunkToTest = currentChunk;
 
 			if (xIndexToTest >= Chunk::LENGTH_IN_CUBES && zIndexToTest < 0) {
 				xIndexToTest = 0;
 				zIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				if (!WorldMap::getChunkPtr(chunkIndex)->rightNeighbor ||
-					!WorldMap::getChunkPtr(chunkIndex)->rightNeighbor->backNeighbor) {
+				if (!currentChunk->rightNeighbor ||
+					!currentChunk->rightNeighbor->backNeighbor) {
 
-					if (!WorldMap::getChunkPtr(chunkIndex)->backNeighbor ||
-						!WorldMap::getChunkPtr(chunkIndex)->backNeighbor->rightNeighbor) {
+					if (!currentChunk->backNeighbor ||
+						!currentChunk->backNeighbor->rightNeighbor) {
 
 						return;
 					}
 					else {
-						chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->backNeighbor->rightNeighbor->indexInMap;
+						chunkToTest = currentChunk->backNeighbor->rightNeighbor;
 					}
 				}
 				else {
-					chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->rightNeighbor->backNeighbor->indexInMap;
+					chunkToTest = currentChunk->rightNeighbor->backNeighbor;
 				}
 			}
 			else if (xIndexToTest >= Chunk::LENGTH_IN_CUBES) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->rightNeighbor) {
+				if (!currentChunk->rightNeighbor) {
 					return;
 				}
 				xIndexToTest = 0;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->rightNeighbor->indexInMap;
+				chunkToTest = currentChunk->rightNeighbor;
 			}
 			else if (zIndexToTest < 0) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->backNeighbor) {
+				if (!currentChunk->backNeighbor) {
 					return;
 				}
 				zIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->backNeighbor->indexInMap;
+				chunkToTest = currentChunk->backNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, (unsigned int)zIndexToTest);
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
-	void Player::setFrontLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			int xIndexToTest = posIndices.getX() - 1;
-			unsigned int zIndexToTest = posIndices.getZ() + 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setFrontLeftCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			int xIndexToTest = positionIndices.getX() - 1;
+			unsigned int zIndexToTest = positionIndices.getZ() + 1;
+			Chunk *chunkToTest = currentChunk;
 
 			if (xIndexToTest < 0 && zIndexToTest >= Chunk::LENGTH_IN_CUBES) {
 				xIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
 				zIndexToTest = 0;
-				if (!WorldMap::getChunkPtr(chunkIndex)->leftNeighbor ||
-					!WorldMap::getChunkPtr(chunkIndex)->leftNeighbor->frontNeighbor) {
+				if (!currentChunk->leftNeighbor ||
+					!currentChunk->leftNeighbor->frontNeighbor) {
 
-					if (!WorldMap::getChunkPtr(chunkIndex)->frontNeighbor ||
-						!WorldMap::getChunkPtr(chunkIndex)->frontNeighbor->leftNeighbor) {
+					if (!currentChunk->frontNeighbor ||
+						!currentChunk->frontNeighbor->leftNeighbor) {
 
 						return;
 					}
 					else {
-						chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->frontNeighbor->leftNeighbor->indexInMap;
+						chunkToTest = currentChunk->frontNeighbor->leftNeighbor;
 					}
 				}
 				else {
-					chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->leftNeighbor->frontNeighbor->indexInMap;
+					chunkToTest = currentChunk->leftNeighbor->frontNeighbor;
 				}
 			}
 			else if (xIndexToTest < 0) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->leftNeighbor) {
+				if (!currentChunk->leftNeighbor) {
 					return;
 				}
 				xIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->leftNeighbor->indexInMap;
+				chunkToTest = currentChunk->leftNeighbor;
 			}
 			else if (zIndexToTest >= Chunk::LENGTH_IN_CUBES) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->frontNeighbor) {
+				if (!currentChunk->frontNeighbor) {
 					return;
 				}
 				zIndexToTest = 0;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->frontNeighbor->indexInMap;
+				chunkToTest = currentChunk->frontNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, zIndexToTest);
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
-	void Player::setBackLeftCollisionCoordsToCheck(const math::Vec<unsigned int, 3> &posIndices, unsigned int chunkIndex) {
-		if (posIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			int xIndexToTest = posIndices.getX() - 1;
-			int zIndexToTest = posIndices.getZ() - 1;
-			unsigned int chunkIndexToTest = chunkIndex;
+	void Player::setBackLeftCollisionCoordsToCheck() {
+		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
+			int xIndexToTest = positionIndices.getX() - 1;
+			int zIndexToTest = positionIndices.getZ() - 1;
+			Chunk *chunkToTest = currentChunk;
 
 			if (xIndexToTest < 0 && zIndexToTest < 0) {
 				xIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
 				zIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				if (!WorldMap::getChunkPtr(chunkIndex)->leftNeighbor ||
-					!WorldMap::getChunkPtr(chunkIndex)->leftNeighbor->backNeighbor) {
+				if (!currentChunk->leftNeighbor ||
+					!currentChunk->leftNeighbor->backNeighbor) {
 
-					if (!WorldMap::getChunkPtr(chunkIndex)->backNeighbor ||
-						!WorldMap::getChunkPtr(chunkIndex)->backNeighbor->leftNeighbor) {
+					if (!currentChunk->backNeighbor ||
+						!currentChunk->backNeighbor->leftNeighbor) {
 
 						return;
 					}
 					else {
-						chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->backNeighbor->leftNeighbor->indexInMap;
+						chunkToTest = currentChunk->backNeighbor->leftNeighbor;
 					}
 				}
 				else {
-					chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->leftNeighbor->backNeighbor->indexInMap;
+					chunkToTest = currentChunk->leftNeighbor->backNeighbor;
 				}
 			}
 			else if (xIndexToTest < 0) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->leftNeighbor) {
+				if (!currentChunk->leftNeighbor) {
 					return;
 				}
 				xIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->leftNeighbor->indexInMap;
+				chunkToTest = currentChunk->leftNeighbor;
 			}
 			else if (zIndexToTest < 0) {
-				if (!WorldMap::getChunkPtr(chunkIndex)->backNeighbor) {
+				if (!currentChunk->backNeighbor) {
 					return;
 				}
 				zIndexToTest = Chunk::LENGTH_IN_CUBES - 1;
-				chunkIndexToTest = WorldMap::getChunkPtr(chunkIndex)->backNeighbor->indexInMap;
+				chunkToTest = currentChunk->backNeighbor;
 			}
 			for (unsigned int i = 0; i <= playerHeightInCubes + 1; i++) {
-				unsigned int yIndexToTest = posIndices.getY() + i;
+				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, (unsigned int)zIndexToTest);
-					if (WorldMap::getChunkPtr(chunkIndexToTest)->getCubePtr(indicesToTest.getX(), indicesToTest.getY(), indicesToTest.getZ())) {
-						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkIndexToTest);
+					if (chunkToTest->getCubePtr(indicesToTest)) {
+						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
 				}
 			}
 		}
 	}
+	
 	void Player::setCollisionCoordsToCheck() {
 		collisionCoordsToCheck.clear();
-		math::Vec<unsigned int, 3> posIndices = getPositionIndices();
-		
-		setBottomCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setTopCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setFrontCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setBackCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setLeftCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setRightCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setFrontRightCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setBackRightCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setFrontLeftCollisionCoordsToCheck(posIndices, mapChunkIndex);
-		setBackLeftCollisionCoordsToCheck(posIndices, mapChunkIndex);
+		if (!currentChunk) {
+			return;
+		}
+
+		setBottomCollisionCoordsToCheck();
+		setTopCollisionCoordsToCheck();
+		setFrontCollisionCoordsToCheck();
+		setBackCollisionCoordsToCheck();
+		setLeftCollisionCoordsToCheck();
+		setRightCollisionCoordsToCheck();
+		setFrontRightCollisionCoordsToCheck();
+		setBackRightCollisionCoordsToCheck();
+		setFrontLeftCollisionCoordsToCheck();
+		setBackLeftCollisionCoordsToCheck();
 	}
 	bool Player::isCubeCollision(math::Vec3 cubePos, math::Vec3 cubeDimens) {
 		//Positions refer to center point
@@ -410,6 +414,7 @@ namespace mtge {
 			}
 		}
 	}
+	
 	void Player::applyGravity() {
 		gravitySpeed += gravityAddend * movementSize;
 
@@ -430,48 +435,33 @@ namespace mtge {
 			}
 		}
 	}
-	math::Vec<int, 2> Player::getChunkPositionIndices() {
+	void Player::setCurrentChunk() {
 		float xRelToCorner = position.getX() + Chunk::CHUNK_SIZE / 2.0f;
 		int chunkXIndex = (int)(xRelToCorner / Chunk::CHUNK_SIZE) - (xRelToCorner < 0 ? 1 : 0);
 
 		float zRelToCorner = position.getZ() + Chunk::CHUNK_SIZE / 2.0f;
 		int chunkZIndex = (int)(zRelToCorner / Chunk::CHUNK_SIZE) - (zRelToCorner < 0 ? 1 : 0);
 
-		return math::Vec<int, 2>(chunkXIndex, chunkZIndex);
+		Chunk *newCurrentChunk = WorldMap::getChunkPtr(math::Vec<int, 2>(chunkXIndex, chunkZIndex));
+		if (newCurrentChunk) {
+			currentChunk = newCurrentChunk;
+		}
 	}
-	math::Vec<unsigned int, 3> Player::getPositionIndices() {
-		int chunkXIndex = getChunkPositionIndices().getX();
-		int chunkZIndex = getChunkPositionIndices().getY();
-		float chunkX = chunkXIndex * Chunk::CHUNK_SIZE;
-		float chunkZ = chunkZIndex * Chunk::CHUNK_SIZE;
-		float xRel = position.getX() - chunkX + Chunk::CHUNK_SIZE / 2.0f;
-		float zRel = position.getZ() - chunkZ + Chunk::CHUNK_SIZE / 2.0f;
-		int xIndex = (int)(xRel / Chunk::CUBE_SIZE);
-		int yIndex = (int)((position.getY() - DIMENSIONS.getY() / 2.0f + Chunk::CHUNK_SIZE) / Chunk::CUBE_SIZE) - 1;
-		int zIndex = (int)(zRel / Chunk::CUBE_SIZE);
-		xIndex = xIndex < 0 ? 0 : xIndex;
-		yIndex = yIndex < 0 ? 0 : yIndex;
-		zIndex = zIndex < 0 ? 0 : zIndex;
-		return math::Vec<unsigned int, 3>(xIndex, yIndex, zIndex);
-	}
-	void Player::setMapChunkIndex() {
-		math::Vec<int, 2> currentChunkIndices = getChunkPositionIndices();
-		Chunk *currentChunk = WorldMap::getChunkPtr(mapChunkIndex);
-		if (currentChunkIndices.getX() - prevChunkIndices.getX() > 0 && currentChunk->rightNeighbor) {
-			mapChunkIndex = currentChunk->rightNeighbor->indexInMap;
-			prevChunkIndices = currentChunkIndices;
-		}
-		else if (currentChunkIndices.getX() - prevChunkIndices.getX() < 0 && currentChunk->leftNeighbor) {
-			mapChunkIndex = currentChunk->leftNeighbor->indexInMap;
-			prevChunkIndices = currentChunkIndices;
-		}
-		else if (currentChunkIndices.getY() - prevChunkIndices.getY() > 0 && currentChunk->frontNeighbor) {
-			mapChunkIndex = currentChunk->frontNeighbor->indexInMap;
-			prevChunkIndices = currentChunkIndices;
-		}
-		else if (currentChunkIndices.getY() - prevChunkIndices.getY() < 0 && currentChunk->backNeighbor) {
-			mapChunkIndex = currentChunk->backNeighbor->indexInMap;
-			prevChunkIndices = currentChunkIndices;
+	void Player::setPositionIndices() {
+		if (currentChunk) {
+			int chunkXIndex = currentChunk->getPositionIndices().getX();
+			int chunkZIndex = currentChunk->getPositionIndices().getY();
+			float chunkX = chunkXIndex * Chunk::CHUNK_SIZE;
+			float chunkZ = chunkZIndex * Chunk::CHUNK_SIZE;
+			float xRel = position.getX() - chunkX + Chunk::CHUNK_SIZE / 2.0f;
+			float zRel = position.getZ() - chunkZ + Chunk::CHUNK_SIZE / 2.0f;
+			int xIndex = (int)(xRel / Chunk::CUBE_SIZE);
+			int yIndex = (int)((position.getY() - DIMENSIONS.getY() / 2.0f + Chunk::CHUNK_SIZE) / Chunk::CUBE_SIZE) - 1;
+			int zIndex = (int)(zRel / Chunk::CUBE_SIZE);
+			xIndex = xIndex < 0 ? 0 : xIndex;
+			yIndex = yIndex < 0 ? 0 : yIndex;
+			zIndex = zIndex < 0 ? 0 : zIndex;
+			positionIndices = math::Vec<unsigned int, 3>(xIndex, yIndex, zIndex);
 		}
 	}
 
@@ -505,6 +495,9 @@ namespace mtge {
 		}
 	}
 	void Player::controlMotion(Window *window, float speed, int forwardKey, int reverseKey, int leftKey, int rightKey) {
+		setCurrentChunk();
+		setPositionIndices();
+
 		math::Vec3 movementDirection = math::Vec3(front.getX(), 0.0f, front.getZ());
 		controlRawMotion(window, speed, forwardKey, reverseKey, leftKey, rightKey, movementDirection);
 
@@ -537,22 +530,18 @@ namespace mtge {
 		else {
 			position += totalMovement;
 		}
-		
-		setMapChunkIndex();
 	}
 	void Player::controlReset(Window *window, float resetHeight) {
 		if (glfwGetKey(window->getPtr_GLFW(), GLFW_KEY_R) == GLFW_PRESS) {
 			gravitySpeed = startGravitySpeed;
 			position = math::Vec3(0.0f, resetHeight, 0.0f);
-			mapChunkIndex = 0;
-			prevChunkIndices = math::Vec<int, 2>(0, 0);
 		}
 	}
 	math::Vec3 Player::getPosition() {
 		return position;
 	}
-	unsigned int Player::getChunkIndex() {
-		return mapChunkIndex;
+	Chunk *Player::getCurrentChunk() {
+		return currentChunk;
 	}
 	math::Mat4 Player::getViewMatrix() {
 		math::Vec3 eye(position.getX(), position.getY() + 0.4f * DIMENSIONS.getY(), position.getZ());

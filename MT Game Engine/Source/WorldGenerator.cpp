@@ -9,9 +9,8 @@ namespace mtge {
 	//Private
 	void WorldGenerator::setNeighborChunks(Chunk *addedChunk, bool testLeft, bool testRight, bool testFront, bool testBack) {
 		math::Vec<int, 2> addedChunkIndices = addedChunk->getPositionIndices();
-		for (unsigned int i = 0; i < WorldMap::getNumChunks(); i++) {
-			Chunk *testChunk = WorldMap::getChunkPtr(i);
-
+		for (auto iterator = WorldMap::getChunksBegin(); iterator != WorldMap::getChunksEnd(); iterator++) {
+			Chunk *testChunk = iterator->second;
 			if (testLeft) {
 				if (testChunk->getPositionIndices().getX() == addedChunkIndices.getX() - 1 &&
 					testChunk->getPositionIndices().getY() == addedChunkIndices.getY()) {
@@ -116,10 +115,11 @@ namespace mtge {
 
 	//Public
 	void WorldGenerator::generateChunks(CubeCharacterizer *cubeCharacterizer) {
-		Chunk *currentChunk = WorldMap::getChunkPtr(player->getChunkIndex());
-		
-		generateChunksFromBase(cubeCharacterizer, currentChunk);
-		generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 1);
+		Chunk *currentChunk = player->getCurrentChunk();
+		if (currentChunk) {
+			generateChunksFromBase(cubeCharacterizer, currentChunk);
+			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 5);
+		}
 
 		if (chunkGenQueue.size() > 0 && framesSinceLastNewChunk > 0) {
 			Chunk *baseChunk = chunkGenQueue[0].baseChunk;

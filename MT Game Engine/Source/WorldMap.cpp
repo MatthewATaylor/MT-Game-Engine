@@ -2,18 +2,55 @@
 
 namespace mtge {
 	//Private
-	std::vector<Chunk*> WorldMap::chunks;
+	std::size_t WorldMap::ChunkIndexPairHash::operator()(const math::Vec<int, 2> &chunkIndices) const noexcept {
+		int chunkXIndex = chunkIndices.getX();
+		int chunkZIndex = chunkIndices.getY();
+		chunkXIndex = chunkXIndex >= 0 ? chunkXIndex * 2 : chunkXIndex * -2 - 1;
+		chunkZIndex = chunkZIndex >= 0 ? chunkZIndex * 2 : chunkZIndex * -2 - 1;
+		return chunkXIndex >= chunkZIndex ? chunkXIndex * chunkXIndex + chunkXIndex + chunkZIndex : chunkXIndex + chunkZIndex * chunkZIndex;
+	}
+	std::unordered_map<const math::Vec<int, 2>, Chunk*, WorldMap::ChunkIndexPairHash> WorldMap::chunks;
 
 	//Public
-	unsigned int WorldMap::getNumChunks() {
-		return chunks.size();
+	std::unordered_map<const math::Vec<int, 2>, Chunk*>::iterator WorldMap::getChunksBegin() {
+		return chunks.begin();
+	}
+	std::unordered_map<const math::Vec<int, 2>, Chunk*>::iterator WorldMap::getChunksEnd() {
+		return chunks.end();
 	}
 	void WorldMap::addChunk(Chunk *chunk) {
-		chunk->indexInMap = chunks.size();
-		chunks.push_back(chunk);
+		math::Vec<int, 2> chunkIndices = chunk->getPositionIndices();
+		chunks[chunkIndices] = chunk;
+
+		Chunk *frontNeighbor = getChunkPtr(math::Vec<int, 2>(chunkIndices.getX(), chunkIndices.getY() + 1));
+		if (frontNeighbor) {
+			chunk->setFrontNeighbor(frontNeighbor);
+		}
+
+		Chunk *backNeighbor = getChunkPtr(math::Vec<int, 2>(chunkIndices.getX(), chunkIndices.getY() - 1));
+		if (backNeighbor) {
+			chunk->setBackNeighbor(backNeighbor);
+		}
+
+		Chunk *leftNeighbor = getChunkPtr(math::Vec<int, 2>(chunkIndices.getX() - 1, chunkIndices.getY()));
+		if (leftNeighbor) {
+			chunk->setLeftNeighbor(leftNeighbor);
+		}
+
+		Chunk *rightNeighbor = getChunkPtr(math::Vec<int, 2>(chunkIndices.getX() + 1, chunkIndices.getY()));
+		if (rightNeighbor) {
+			chunk->setRightNeighbor(rightNeighbor);
+		}
 	}
-	Chunk *WorldMap::getChunkPtr(unsigned int index) {
-		return chunks[index];
+	Chunk *WorldMap::getChunkPtr(math::Vec<int, 2> chunkIndices) {
+		Chunk *chunk = nullptr;
+		try {
+			chunk = chunks.at(chunkIndices);
+		}
+		catch (std::out_of_range) {
+			return nullptr;
+		}
+		return chunk;
 	}
 	void WorldMap::renderScene(Camera *camera, Window *window) {
 		if (!Texture::getAtlasPtr()) {
@@ -35,30 +72,38 @@ namespace mtge {
 
 		glEnable(GL_CULL_FACE);
 
-		for (unsigned int i = 0; i < chunks.size(); i++) {
-			chunks[i]->renderSolidCubes(camera, window, shader);
+		for (std::pair<math::Vec<int, 2>, Chunk*> element : chunks) {
+			element.second->renderSolidCubes(camera, window, shader);
 		}
-
-		for (unsigned int i = 0; i < chunks.size(); i++) {
-			chunks[i]->renderTransparentCubes(camera, window, shader);
+		for (std::pair<math::Vec<int, 2>, Chunk*> element : chunks) {
+			element.second->renderTransparentCubes(camera, window, shader);
 		}
 	}
 	void WorldMap::freeResources() {
-		for (unsigned int i = 0; i < chunks.size(); i++) {
-			delete chunks[i];
+		for (std::pair<math::Vec<int, 2>, Chunk*> element : chunks) {
+			if (element.second) {
+				delete element.second;
+			}
 		}
 		chunks.clear();
 	}
-	void WorldMap::deleteChunk(unsigned int index) {
-		delete chunks[index];
-		chunks.erase(chunks.begin() + index);
-	}
-	void WorldMap::deleteChunk(Chunk *chunk) {
-		for (unsigned int i = 0; i < chunks.size(); i++) {
-			if (chunks[i] == chunk) {
-				deleteChunk(i);
-				break;
+	void WorldMap::deleteChunk(math::Vec<int, 2> chunkIndices) {
+		Chunk *chunk = getChunkPtr(chunkIndices);
+		if (chunk) {
+			if (chunk->frontNeighbor) {
+				chunk->frontNeighbor->backNeighbor = nullptr;
 			}
+			if (chunk->backNeighbor) {
+				chunk->backNeighbor->frontNeighbor = nullptr;
+			}
+			if (chunk->leftNeighbor) {
+				chunk->leftNeighbor->rightNeighbor = nullptr;
+			}
+			if (chunk->rightNeighbor) {
+				chunk->rightNeighbor->leftNeighbor = nullptr;
+			}
+			delete chunk;
 		}
+		chunks.erase(chunkIndices);
 	}
 }

@@ -25,19 +25,26 @@ namespace mtge {
 	private:
 		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
 		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
+		
 		unsigned int solidCubesVertexArrayID;
 		unsigned int solidCubesVertexBufferID;
+		
 		unsigned int transparentCubesVertexArrayID;
 		unsigned int transparentCubesVertexBufferID;
+
 		CubeCharacterizer *cubeCharacterizer = nullptr;
+		
 		bool shouldGenAllBuffers = true;
 		bool shouldGenSolidCubeBuffer = false;
 		bool shouldGenTransparentCubeBuffer = false;
+		
 		bool shouldSetSolidCubeVertexAttributes = true;
 		bool shouldSetTransparentCubeVertexAttributes = true;
+		
 		math::Vec2 position;
 		math::Vec<int, 2> positionIndices;
 		math::Mat4 modelMatrix;
+
 		int solidCubeVerticesInLastBufferGen = 0;
 		int transparentCubeVerticesInLastBufferGen = 0;
 
@@ -49,7 +56,6 @@ namespace mtge {
 	public:
 		static const float CUBE_SIZE;
 		static const float CHUNK_SIZE;
-		unsigned int indexInMap = 0;
 
 		Chunk *frontNeighbor = nullptr;
 		Chunk *backNeighbor = nullptr;
@@ -58,13 +64,13 @@ namespace mtge {
 
 		Chunk(CubeCharacterizer *cubeCharacterizer, math::Vec2 position);
 
-		bool cubeHasTopNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
-		bool cubeHasBottomNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
-		bool cubeHasLeftNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
-		bool cubeHasRightNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
-		bool cubeHasFrontNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
-		bool cubeHasBackNeighbor(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
-		bool cubeIsSurrounded(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
+		bool cubeHasTopNeighbor(const math::Vec<unsigned int, 3> &indices);
+		bool cubeHasBottomNeighbor(const math::Vec<unsigned int, 3> &indices);
+		bool cubeHasLeftNeighbor(const math::Vec<unsigned int, 3> &indices);
+		bool cubeHasRightNeighbor(const math::Vec<unsigned int, 3> &indices);
+		bool cubeHasFrontNeighbor(const math::Vec<unsigned int, 3> &indices);
+		bool cubeHasBackNeighbor(const math::Vec<unsigned int, 3> &indices);
+		bool cubeIsSurrounded(const math::Vec<unsigned int, 3> &indices);
 
 		void setFrontNeighbor(Chunk *chunk);
 		void setBackNeighbor(Chunk *chunk);
@@ -77,7 +83,7 @@ namespace mtge {
 		void enableAllBufferRegenNextFrame();
 		void enableSolidCubeBufferRegenNextFrame();
 		void enableTransparentCubeBufferRegenNextFrame();
-		Cube *getCubePtr(unsigned int xIndex, unsigned int yIndex, unsigned int zIndex);
+		Cube *getCubePtr(const math::Vec<unsigned int, 3> &indices);
 		math::Vec2 getPosition();
 		math::Vec<int, 2> getPositionIndices();
 
