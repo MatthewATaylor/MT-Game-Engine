@@ -7,6 +7,7 @@
 #include "Math/Vec.h"
 #include "WorldMap.h"
 #include "Rendering/Chunk.h"
+#include "Rendering/Frustum.h"
 
 namespace mtge {
 	class WorldGenerator {

@@ -39,6 +39,7 @@ namespace mtge {
 		float getFieldOfView();
 		float getMovementSize();
 		math::Vec3 getPosition();
+		math::Vec3 getFront();
 		math::Mat4 getProjectionMatrix(Window *window);
 		virtual math::Mat4 getViewMatrix();
 	};

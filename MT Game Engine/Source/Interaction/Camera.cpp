@@ -95,6 +95,9 @@ namespace mtge {
 	math::Vec3 Camera::getPosition() {
 		return position;
 	}
+	math::Vec3 Camera::getFront() {
+		return front;
+	}
 	math::Mat4 Camera::getProjectionMatrix(Window *window) {
 		return math::Util::MatGen::perspective<float>(math::Util::toRadians(fieldOfView), (float)window->getWidth(), (float)window->getHeight(), 0.01f, 100.0f);
 	}

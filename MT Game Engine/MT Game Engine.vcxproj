@@ -141,6 +141,7 @@
     </ClCompile>
     <ClCompile Include="Source\Interaction\Input.cpp" />
     <ClCompile Include="Source\Interaction\Player.cpp" />
+    <ClCompile Include="Source\Rendering\Frustum.cpp" />
     <ClCompile Include="Source\Rendering\Renderable.cpp" />
     <ClCompile Include="Source\Rendering\RenderedCube.cpp" />
     <ClCompile Include="Source\Rendering\Renderer.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Include\Interaction\Input.h" />
     <ClInclude Include="Include\Math\Mat.h" />
     <ClInclude Include="Include\Interaction\Player.h" />
+    <ClInclude Include="Include\Rendering\Frustum.h" />
     <ClInclude Include="Include\Rendering\Renderable.h" />
     <ClInclude Include="Include\Rendering\RenderedCube.h" />
     <ClInclude Include="Include\Rendering\Renderer.h" />

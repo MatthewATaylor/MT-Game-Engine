@@ -121,41 +121,63 @@ namespace mtge {
 			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 5);
 		}
 
-		if (chunkGenQueue.size() > 0 && framesSinceLastNewChunk > 0) {
-			Chunk *baseChunk = chunkGenQueue[0].baseChunk;
-			switch (chunkGenQueue[0].direction) {
-			case ChunkNeighborDirection::LEFT: {
-				Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
-				baseChunk->setLeftNeighbor(newChunk);
-				WorldMap::addChunk(newChunk);
-				setNeighborChunks(newChunk, true, false, true, true);
-				break;
-			}
-			case ChunkNeighborDirection::RIGHT: {
-				Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
-				baseChunk->setRightNeighbor(newChunk);
-				WorldMap::addChunk(newChunk);
-				setNeighborChunks(newChunk, false, true, true, true);
-				break;
-			}
-			case ChunkNeighborDirection::FRONT: {
-				Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
-				baseChunk->setFrontNeighbor(newChunk);
-				WorldMap::addChunk(newChunk);
-				setNeighborChunks(newChunk, true, true, true, false);
-				break;
-			}
-			case ChunkNeighborDirection::BACK: {
-				Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
-				baseChunk->setBackNeighbor(newChunk);
-				WorldMap::addChunk(newChunk);
-				setNeighborChunks(newChunk, true, true, false, true);
-				break;
-			}
+		bool chunkAdded = false;
+		Frustum viewFrustum(math::Vec2(player->getFront().getX(), player->getFront().getZ()), 0.75f);
+		while (chunkGenQueue.size() > 0 && !chunkAdded && framesSinceLastNewChunk > 0) {
+			math::Vec2 point1(chunkGenQueue[0].position.getX() - Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getX(), 
+				chunkGenQueue[0].position.getY() - Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getZ());
+			math::Vec2 point2(chunkGenQueue[0].position.getX() - Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getX(),
+				chunkGenQueue[0].position.getY() + Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getZ());
+			math::Vec2 point3(chunkGenQueue[0].position.getX() + Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getX(),
+				chunkGenQueue[0].position.getY() - Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getZ());
+			math::Vec2 point4(chunkGenQueue[0].position.getX() + Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getX(),
+				chunkGenQueue[0].position.getY() + Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getZ());
+			
+			if (viewFrustum.pointIsInFrustum(point1) ||
+				viewFrustum.pointIsInFrustum(point2) || 
+				viewFrustum.pointIsInFrustum(point3) || 
+				viewFrustum.pointIsInFrustum(point4)) {
+
+				Chunk *baseChunk = chunkGenQueue[0].baseChunk;
+				switch (chunkGenQueue[0].direction) {
+				case ChunkNeighborDirection::LEFT: {
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					baseChunk->setLeftNeighbor(newChunk);
+					WorldMap::addChunk(newChunk);
+					setNeighborChunks(newChunk, true, false, true, true);
+					break;
+				}
+				case ChunkNeighborDirection::RIGHT: {
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					baseChunk->setRightNeighbor(newChunk);
+					WorldMap::addChunk(newChunk);
+					setNeighborChunks(newChunk, false, true, true, true);
+					break;
+				}
+				case ChunkNeighborDirection::FRONT: {
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					baseChunk->setFrontNeighbor(newChunk);
+					WorldMap::addChunk(newChunk);
+					setNeighborChunks(newChunk, true, true, true, false);
+					break;
+				}
+				case ChunkNeighborDirection::BACK: {
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					baseChunk->setBackNeighbor(newChunk);
+					WorldMap::addChunk(newChunk);
+					setNeighborChunks(newChunk, true, true, false, true);
+					break;
+				}
+				}
+				chunkAdded = true;
 			}
 			chunkGenQueue.erase(chunkGenQueue.begin());
+		}
+		if (chunkAdded) {
 			framesSinceLastNewChunk = 0;
 		}
-		framesSinceLastNewChunk++;
+		else {
+			framesSinceLastNewChunk++;
+		}	
 	}
 }
