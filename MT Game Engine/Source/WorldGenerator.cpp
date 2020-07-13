@@ -122,7 +122,7 @@ namespace mtge {
 		}
 
 		bool chunkAdded = false;
-		Frustum viewFrustum(math::Vec2(player->getFront().getX(), player->getFront().getZ()), 6.27f);
+		Frustum viewFrustum(math::Vec2(player->getFront().getX(), player->getFront().getZ()), 0.75f);
 		while (chunkGenQueue.size() > 0 && !chunkAdded && framesSinceLastNewChunk > 0) {
 			math::Vec2 point1(chunkGenQueue[0].position.getX() - Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getX(), 
 				chunkGenQueue[0].position.getY() - Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getZ());
