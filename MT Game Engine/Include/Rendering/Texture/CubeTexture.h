@@ -4,6 +4,8 @@
 
 namespace mtge {
 	struct CubeTexture {
+		float face[30];
+
 		TextureAtlasSegment *frontTexAtlasSegment = nullptr;
 		TextureAtlasSegment *backTexAtlasSegment = nullptr;
 		TextureAtlasSegment *leftTexAtlasSegment = nullptr;

@@ -16,6 +16,21 @@ namespace mtge {
 		this->rightTexAtlasSegment = rightTexAtlasSegment;
 		this->topTexAtlasSegment = topTexAtlasSegment;
 		this->bottomTexAtlasSegment = bottomTexAtlasSegment;
+
+		float faceTemplate[] = {
+			//Triangle 1
+			-1.0f,  1.0f, -1.0f, topTexAtlasSegment->TOP_LEFT.getS(),     topTexAtlasSegment->TOP_LEFT.getT(),     //Top Left
+			-1.0f,  1.0f,  1.0f, topTexAtlasSegment->BOTTOM_LEFT.getS(),  topTexAtlasSegment->BOTTOM_LEFT.getT(),  //Bottom Left
+			 1.0f,  1.0f,  1.0f, topTexAtlasSegment->BOTTOM_RIGHT.getS(), topTexAtlasSegment->BOTTOM_RIGHT.getT(), //Bottom Right
+			//Triangle 2
+			-1.0f,  1.0f, -1.0f, topTexAtlasSegment->TOP_LEFT.getS(),     topTexAtlasSegment->TOP_LEFT.getT(),     //Top Left
+			 1.0f,  1.0f,  1.0f, topTexAtlasSegment->BOTTOM_RIGHT.getS(), topTexAtlasSegment->BOTTOM_RIGHT.getT(), //Bottom Right
+			 1.0f,  1.0f, -1.0f, topTexAtlasSegment->TOP_RIGHT.getS(),    topTexAtlasSegment->TOP_RIGHT.getT(),    //Top Right
+		};
+
+		for (unsigned int i = 0; i < 30; i++) {
+			face[i] = faceTemplate[i];
+		}
 	}
 	CubeTexture::CubeTexture(
 		TextureAtlasSegment *sideTexAtlasSegment,
