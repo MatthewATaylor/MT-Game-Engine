@@ -22,8 +22,7 @@ namespace mtge {
 		CubeData(CubeTexture *cubeTexture);
 		void addCubeToBuffer(
 			std::vector<float> *vertexBuffer,
-			math::Vec3 offset,
-			float scale,
+			math::Vec<unsigned int, 3> indices,
 			bool hasTopNeighbor,
 			bool hasBottomNeighbor,
 			bool hasLeftNeighbor,

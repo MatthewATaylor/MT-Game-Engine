@@ -4,8 +4,7 @@ namespace mtge {
 	//Public
 	void ChunkData::addCube(
 		CubeTexture *cubeTexture,
-		math::Vec3 offset,
-		float scale,
+		math::Vec<unsigned int, 3> indices,
 		bool hasTopNeighbor,
 		bool hasBottomNeighbor,
 		bool hasLeftNeighbor,
@@ -16,8 +15,7 @@ namespace mtge {
 		CubeData cubeData(cubeTexture);
 		cubeData.addCubeToBuffer(
 			&vertexBuffer,
-			offset,
-			scale,
+			indices,
 			hasTopNeighbor,
 			hasBottomNeighbor,
 			hasLeftNeighbor,

@@ -3,6 +3,7 @@
 namespace mtge {
 	//Constructor
 	RenderedCube::RenderedCube(CubeTexture *texture, math::Vec3 position, math::Vec3 dimensions) : Renderable() {
+		/*
 		this->position = position;
 		this->dimensions = dimensions;
 
@@ -34,10 +35,12 @@ namespace mtge {
 		//Color vertex attribute
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
+		*/
 	}
 
 	//Public
 	void RenderedCube::render(Camera *camera, Window *window) {
+		/*
 		if (!Texture::getAtlasPtr()) {
 			std::cout << "WARNING [FUNCTION: render]: TEXTURE ATLAS UNINITIALIZED" << std::endl << std::endl;
 		}
@@ -60,5 +63,6 @@ namespace mtge {
 		glBindVertexArray(vertexArrayID);
 		glDisable(GL_CULL_FACE);
 		glDrawArrays(GL_TRIANGLES, 0, numVertices);
+		*/
 	}
 }

@@ -1,10 +1,20 @@
 #pragma once
 
+#include <vector>
+#include <algorithm>
+
 #include "TextureAtlasSegment.h"
 
 namespace mtge {
-	struct CubeTexture {
-		float face[30];
+	class CubeTexture {
+	private:
+		static const unsigned int LENGTH_IN_CUBES = 16;
+		static const unsigned int FACE_VERTEX_BUFFER_LENGTH = 30;
+
+		void genFaces();
+
+	public:
+		float *****faces = nullptr;
 
 		TextureAtlasSegment *frontTexAtlasSegment = nullptr;
 		TextureAtlasSegment *backTexAtlasSegment = nullptr;
@@ -29,5 +39,7 @@ namespace mtge {
 		CubeTexture(
 			TextureAtlasSegment *texAtlasSegment
 		);
+
+		~CubeTexture();
 	};
 }

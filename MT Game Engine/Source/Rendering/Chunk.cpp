@@ -82,21 +82,17 @@ namespace mtge {
 	void Chunk::genBuffers() {
 		ChunkData solidCubeChunkData;
 		ChunkData transparentCubeChunkData;
-		float cubeSize = 2.0f / LENGTH_IN_CUBES;
+		CubeTexture *texture = cubeCharacterizer->getTextureForCubeType('g');
+
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
-					float xOffset = -1.0f + cubeSize / 2 + i * cubeSize;
-					float yOffset = -1.0f + cubeSize / 2 + j * cubeSize;
-					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
-
 					if (cubes[i][j][k]) {
 						math::Vec<unsigned int, 3> indexVec(i, j, k);
 						if (isCubeTransparent(cubes[i][j][k]->type)) {
 							transparentCubeChunkData.addCube(
-								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
-								math::Vec3(xOffset, yOffset, zOffset),
-								LENGTH_IN_CUBES,
+								texture,
+								indexVec,
 								cubeHasTopNeighbor(indexVec),
 								cubeHasBottomNeighbor(indexVec),
 								cubeHasLeftNeighbor(indexVec),
@@ -107,9 +103,8 @@ namespace mtge {
 						}
 						else {
 							solidCubeChunkData.addCube(
-								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
-								math::Vec3(xOffset, yOffset, zOffset),
-								LENGTH_IN_CUBES,
+								texture,
+								indexVec,
 								cubeHasTopNeighbor(indexVec),
 								cubeHasBottomNeighbor(indexVec),
 								cubeHasLeftNeighbor(indexVec),
@@ -157,21 +152,16 @@ namespace mtge {
 	}
 	void Chunk::genSolidCubeBuffer() {
 		ChunkData solidCubeChunkData;
-		float cubeSize = 2.0f / LENGTH_IN_CUBES;
+
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
-					float xOffset = -1.0f + cubeSize / 2 + i * cubeSize;
-					float yOffset = -1.0f + cubeSize / 2 + j * cubeSize;
-					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
-
 					if (cubes[i][j][k]) {
 						if (!isCubeTransparent(cubes[i][j][k]->type)) {
 							math::Vec<unsigned int, 3> indexVec(i, j, k);
 							solidCubeChunkData.addCube(
 								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
-								math::Vec3(xOffset, yOffset, zOffset),
-								LENGTH_IN_CUBES,
+								indexVec,
 								cubeHasTopNeighbor(indexVec),
 								cubeHasBottomNeighbor(indexVec),
 								cubeHasLeftNeighbor(indexVec),
@@ -203,20 +193,15 @@ namespace mtge {
 	}
 	void Chunk::genTransparentCubeBuffer() {
 		ChunkData transparentCubeChunkData;
-		float cubeSize = 2.0f / LENGTH_IN_CUBES;
+
 		for (unsigned int i = 0; i < LENGTH_IN_CUBES; i++) {
 			for (unsigned int j = 0; j < LENGTH_IN_CUBES; j++) {
 				for (unsigned int k = 0; k < LENGTH_IN_CUBES; k++) {
-					float xOffset = -1.0f + cubeSize / 2 + i * cubeSize;
-					float yOffset = -1.0f + cubeSize / 2 + j * cubeSize;
-					float zOffset = -1.0f + cubeSize / 2 + k * cubeSize;
-
 					if (cubes[i][j][k]) {
 						if (isCubeTransparent(cubes[i][j][k]->type)) {
 							transparentCubeChunkData.addCube(
 								cubeCharacterizer->getTextureForCubeType(cubes[i][j][k]->type),
-								math::Vec3(xOffset, yOffset, zOffset),
-								LENGTH_IN_CUBES,
+								math::Vec<unsigned int, 3>(i, j, k),
 								cubeHasTopNeighbor(math::Vec<unsigned int, 3>(i, j, k)),
 								true,
 								true,
