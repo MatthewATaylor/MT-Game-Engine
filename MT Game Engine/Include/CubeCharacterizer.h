@@ -1,16 +1,17 @@
 #pragma once
 
-#include <unordered_map>
+#include <algorithm>
 
 #include "Rendering/Texture/CubeTexture.h"
 
 namespace mtge {
 	class CubeCharacterizer {
 	private:
-		std::unordered_map<char, CubeTexture*> cubeTypeMap;
+		unsigned char cubeTypesSize = 0;
+		CubeTexture **cubeTypes = nullptr;
 
 	public:
-		void addCubeType(char symbol, CubeTexture *texture);
-		CubeTexture *getTextureForCubeType(char symbol);
+		void addCubeType(unsigned char id, CubeTexture *texture);
+		CubeTexture *getTextureForID(unsigned char id);
 	};
 }
