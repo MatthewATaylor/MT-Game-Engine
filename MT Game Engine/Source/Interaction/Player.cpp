@@ -22,7 +22,7 @@ namespace mtge {
 	
 	void Player::setBottomCollisionCoordsToCheck() {
 		if (positionIndices.getY() < Chunk::LENGTH_IN_CUBES) {
-			if (currentChunk->getCubePtr(positionIndices)) {
+			if (currentChunk->getCube(positionIndices)) {
 				math::Vec3 cubeCoords = getCubePosFromIndices(positionIndices, currentChunk);
 				collisionCoordsToCheck.push_back(cubeCoords);
 			}
@@ -33,7 +33,7 @@ namespace mtge {
 			unsigned int yIndexToTest = positionIndices.getY() + playerHeightInCubes + i;
 			if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 				math::Vec<unsigned int, 3> indicesToTest(positionIndices.getX(), yIndexToTest, positionIndices.getZ());
-				if (currentChunk->getCubePtr(indicesToTest)) {
+				if (currentChunk->getCube(indicesToTest)) {
 					math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, currentChunk);
 					collisionCoordsToCheck.push_back(cubeCoords);
 				}
@@ -55,7 +55,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest(positionIndices.getX(), yIndexToTest, zIndexToTest);
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
@@ -78,7 +78,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest(positionIndices.getX(), yIndexToTest, (unsigned int)zIndexToTest);
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
@@ -101,7 +101,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, positionIndices.getZ());
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
@@ -124,7 +124,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, positionIndices.getZ());
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
@@ -175,7 +175,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, zIndexToTest);
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
@@ -226,7 +226,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest(xIndexToTest, yIndexToTest, (unsigned int)zIndexToTest);
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
@@ -277,7 +277,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, zIndexToTest);
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}
@@ -328,7 +328,7 @@ namespace mtge {
 				unsigned int yIndexToTest = positionIndices.getY() + i;
 				if (yIndexToTest < Chunk::LENGTH_IN_CUBES) {
 					math::Vec<unsigned int, 3> indicesToTest((unsigned int)xIndexToTest, yIndexToTest, (unsigned int)zIndexToTest);
-					if (chunkToTest->getCubePtr(indicesToTest)) {
+					if (chunkToTest->getCube(indicesToTest)) {
 						math::Vec3 cubeCoords = getCubePosFromIndices(indicesToTest, chunkToTest);
 						collisionCoordsToCheck.push_back(cubeCoords);
 					}

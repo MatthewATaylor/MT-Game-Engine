@@ -4,7 +4,6 @@
 
 #include <GL/glew.h>
 
-#include "Rendering/Cube.h"
 #include "CubeCharacterizer.h"
 #include "Math/Vec.h"
 #include "Math/Mat.h"
@@ -24,7 +23,7 @@ namespace mtge {
 
 	private:
 		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
-		Cube ****cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
+		char ***cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
 		
 		unsigned int solidCubesVertexArrayID;
 		unsigned int solidCubesVertexBufferID;
@@ -83,7 +82,7 @@ namespace mtge {
 		void enableAllBufferRegenNextFrame();
 		void enableSolidCubeBufferRegenNextFrame();
 		void enableTransparentCubeBufferRegenNextFrame();
-		Cube *getCubePtr(const math::Vec<unsigned int, 3> &indices);
+		char getCube(const math::Vec<unsigned int, 3> &indices);
 		math::Vec2 getPosition();
 		math::Vec<int, 2> getPositionIndices();
 

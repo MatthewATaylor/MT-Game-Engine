@@ -119,9 +119,6 @@
     <ClInclude Include="Include\Math\Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Rendering\Cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Rendering\CubeData.h">
       <Filter>Header Files</Filter>
     </ClInclude>

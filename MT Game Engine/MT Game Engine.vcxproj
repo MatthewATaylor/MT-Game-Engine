@@ -165,7 +165,6 @@
     <ClInclude Include="Include\Clock.h" />
     <ClInclude Include="Include\Math\Util.h" />
     <ClInclude Include="Include\Rendering\ChunkData.h" />
-    <ClInclude Include="Include\Rendering\Cube.h" />
     <ClInclude Include="Include\Rendering\CubeData.h" />
     <ClInclude Include="Include\Interaction\Input.h" />
     <ClInclude Include="Include\Math\Mat.h" />

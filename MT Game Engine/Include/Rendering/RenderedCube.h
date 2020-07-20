@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "Cube.h"
 #include "Math/Vec.h"
 #include "Renderable.h"
 #include "Texture/CubeTexture.h"
@@ -13,7 +12,7 @@
 #include "Math/Mat.h"
 
 namespace mtge {
-	class RenderedCube : public Cube, public Renderable {
+	class RenderedCube : public Renderable {
 	private:
 		int numVertices = 0;
 		math::Vec3 position;
