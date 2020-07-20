@@ -7,7 +7,7 @@
 namespace mtge {
 	class CubeCharacterizer {
 	private:
-		unsigned char cubeTypesSize = 0;
+		unsigned char cubeTypesLength = 0;
 		CubeTexture **cubeTypes = nullptr;
 
 	public:

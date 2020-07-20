@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <iostream>
+#include <cmath>
 
 #include "Rendering/CubeData.h"
 #include "Math/Vec.h"
@@ -10,9 +9,15 @@
 namespace mtge {
 	class ChunkData {
 	private:
-		std::vector<float> vertexBuffer;
+		static const unsigned int LENGTH_IN_CUBES = 8;
+		static const unsigned int NUM_FACES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES * 6;
+		static const unsigned int MAX_VERTEX_BUFFER_SIZE = NUM_FACES * CubeData::FACE_VERTEX_BUFFER_LENGTH;
+
+		unsigned int vertexBufferLength = 0;
+		float *vertexBuffer = nullptr;
 
 	public:
+		ChunkData();
 		void addCube(
 			CubeTexture *cubeTexture,
 			math::Vec<unsigned int, 3> indices,
@@ -25,5 +30,6 @@ namespace mtge {
 		);
 		int getVerticesInBuffer();
 		void sendBuffer();
+		~ChunkData();
 	};
 }

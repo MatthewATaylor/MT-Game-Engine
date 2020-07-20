@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <algorithm>
 
 #include <GL/glew.h>
 
@@ -21,7 +21,8 @@ namespace mtge {
 
 		CubeData(CubeTexture *cubeTexture);
 		void addCubeToBuffer(
-			std::vector<float> *vertexBuffer,
+			float *vertexBuffer,
+			unsigned int &vertexBufferLength,
 			math::Vec<unsigned int, 3> indices,
 			bool hasTopNeighbor,
 			bool hasBottomNeighbor,

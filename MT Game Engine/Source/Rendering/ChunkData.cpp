@@ -1,6 +1,11 @@
 #include "Rendering/ChunkData.h"
 
 namespace mtge {
+	//Constructor
+	ChunkData::ChunkData() {
+		vertexBuffer = new float[MAX_VERTEX_BUFFER_SIZE];
+	}
+
 	//Public
 	void ChunkData::addCube(
 		CubeTexture *cubeTexture,
@@ -14,7 +19,8 @@ namespace mtge {
 
 		CubeData cubeData(cubeTexture);
 		cubeData.addCubeToBuffer(
-			&vertexBuffer,
+			vertexBuffer,
+			vertexBufferLength,
 			indices,
 			hasTopNeighbor,
 			hasBottomNeighbor,
@@ -25,9 +31,14 @@ namespace mtge {
 		);
 	}
 	int ChunkData::getVerticesInBuffer() {
-		return vertexBuffer.size() / CubeData::ELEMENTS_PER_VERTEX;
+		return vertexBufferLength / CubeData::ELEMENTS_PER_VERTEX;
 	}
 	void ChunkData::sendBuffer() {
-		glBufferData(GL_ARRAY_BUFFER, vertexBuffer.size() * sizeof(float), vertexBuffer.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertexBufferLength * sizeof(float), vertexBuffer, GL_STATIC_DRAW);
+	}
+
+	//Destructor
+	ChunkData::~ChunkData() {
+		delete[] vertexBuffer;
 	}
 }
