@@ -153,8 +153,8 @@ namespace mtge {
 			uniform mat4 view;
 			uniform mat4 projection;
 
-			const float FOG_DENSITY = 0.25f;
-			const float FOG_GRADIENT = 9.0f;
+			const float FOG_DENSITY = 0.6f;
+			const float FOG_GRADIENT = 0.5f;
 
 			void main() {
 				vec4 eyePosition = view * model * vec4(vertexPosition, 1.0f);
