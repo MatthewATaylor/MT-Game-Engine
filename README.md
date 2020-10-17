@@ -17,6 +17,8 @@ A voxel game engine written in C++ with OpenGL
     * Default shaders for basic rendering
 * **Math tools**
     * Built-in linear algebra library
+        * Templated Mat and Vec classes with basic operator overloads
+        * Generating inverse, normal, perspective, look at, rotation, translation, and scale matrices
     * Terrain generation with Perlin noise
     * Frustum culling
 * **Control**
