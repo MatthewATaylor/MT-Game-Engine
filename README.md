@@ -1,7 +1,7 @@
 # MT-Game-Engine
 A voxel game engine written in C++ with OpenGL
 
-<img src="Screenshot.png" width="400" />
+<img src="Screenshot.png" width="520" />
 
 ## Dependencies
 * [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h): For image loading
