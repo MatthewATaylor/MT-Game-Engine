@@ -139,7 +139,7 @@ namespace mtge {
 		texturedShape = new Shader(texturedShapeVertexShaderPath, texturedShapeFragmentShaderPath, true);
 		skybox = new Shader(skyboxVertexShaderPath, skyboxFragmentShaderPath, true);
 	}
-	void Shader::loadDefaultShaders() {
+	void Shader::loadDefaultShaders(float fogDensity, float fogGradient, float fogWeight, float fogBias) {
 		std::string defaultTexturedShapeVertexShader = R"(
 			#version 330 core
 
@@ -153,8 +153,10 @@ namespace mtge {
 			uniform mat4 view;
 			uniform mat4 projection;
 
-			const float FOG_DENSITY = 0.6f;
-			const float FOG_GRADIENT = 0.5f;
+			uniform float fogDensity = 0.0f;
+			uniform float fogGradient = 0.0f;
+			uniform float fogWeight = 0.0f;
+			uniform float fogBias = 1.0f;
 
 			void main() {
 				vec4 eyePosition = view * model * vec4(vertexPosition, 1.0f);
@@ -162,7 +164,7 @@ namespace mtge {
 				fragmentTextureCoord = vertexTextureCoord;
 				
 				float distance = length(eyePosition.xyz);
-				visibility = exp(-pow((distance * FOG_DENSITY), FOG_GRADIENT));
+				visibility = fogWeight * exp(-pow((distance * fogDensity), fogGradient)) + fogBias;
 				visibility = clamp(visibility, 0.0f, 1.0f);
 			}
 		)";
@@ -216,6 +218,11 @@ namespace mtge {
 		)";
 
 		texturedShape = new Shader(defaultTexturedShapeVertexShader, defaultTexturedShapeFragmentShader, false);
+		texturedShape->useProgram();
+		texturedShape->setFloatUniform(texturedShape->getUniformLocation("fogDensity"), fogDensity);
+		texturedShape->setFloatUniform(texturedShape->getUniformLocation("fogGradient"), fogGradient);
+		texturedShape->setFloatUniform(texturedShape->getUniformLocation("fogWeight"), fogWeight);
+		texturedShape->setFloatUniform(texturedShape->getUniformLocation("fogBias"), fogBias);
 		skybox = new Shader(defaultSkyboxVertexShader, defaultSkyboxFragmentShader, false);
 	}
 	Shader *Shader::getTexturedShapePtr() {

@@ -1,9 +1,30 @@
 # MT-Game-Engine
-The MT Game Engine is a library containing wrapper classes for much of OpenGL functionality in addition to game creation utilities, including:
-* Pre-managed shaders and buffer configuration
-* Texture loading and application
-* 2D and 3D shape rendering, transformation, and collision
-* A controllable camera, with free-form and first-person camera modes
-* Chunk-based rendering for improved performance
+A voxel game engine written in C++ with OpenGL
 
-The library also wraps GLFW functionality for portable input handling and OpenGL context creation.
+<img src="Screenshot.png" width="400" />
+
+## Dependencies
+* [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h): For image loading
+* [GLFW](https://github.com/glfw/glfw): For handling windows and user inputs
+* [GLEW](https://github.com/nigels-com/glew)
+
+## Features
+* **Textures**
+    * Loading textures from a texture atlas
+    * Skyboxes
+* **Shaders**
+    * Wrapper for shader loading and compilation
+    * Default shaders for basic rendering
+* **Math tools**
+    * Built-in linear algebra library
+    * Terrain generation with Perlin noise
+    * Frustum culling
+* **Control**
+    * Camera control
+    * Player control
+        * Gravity
+        * Collision detection
+* **Chunk-based rendering**
+    * Queued chunk loading
+    * Chunk storage via std::unordered_map
+        * Accessed through (x, y) position hash

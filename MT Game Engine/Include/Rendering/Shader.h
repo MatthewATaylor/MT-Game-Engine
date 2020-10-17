@@ -48,7 +48,7 @@ namespace mtge {
 			std::string skyboxVertexShaderPath, 
 			std::string skyboxFragmentShaderPath
 		);
-		static void loadDefaultShaders();
+		static void loadDefaultShaders(float fogDensity, float fogGradient, float fogWeight, float fogBias);
 
 		static Shader *getTexturedShapePtr();
 		static Shader *getSkyboxPtr();

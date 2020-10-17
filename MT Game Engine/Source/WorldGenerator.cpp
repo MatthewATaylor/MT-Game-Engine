@@ -2,9 +2,8 @@
 
 namespace mtge {
 	//Constructor
-	WorldGenerator::WorldGenerator(Player *player) {
-		this->player = player;
-	}
+	WorldGenerator::WorldGenerator(Player *player, std::function<float(float, float)> terrainFunc) : 
+		player(player), terrainFunc(terrainFunc) {}
 
 	//Private
 	void WorldGenerator::setNeighborChunks(Chunk *addedChunk, bool testLeft, bool testRight, bool testFront, bool testBack) {
@@ -77,16 +76,24 @@ namespace mtge {
 		}
 
 		if (!baseChunk->leftNeighbor && !leftChunkInQueue) {
-			chunkGenQueue.push_back({ baseChunk, cubeCharacterizer, leftChunkPosition, leftChunkPositionIndices, ChunkNeighborDirection::LEFT });
+			chunkGenQueue.push_back(
+				{ baseChunk, cubeCharacterizer, leftChunkPosition, leftChunkPositionIndices, ChunkNeighborDirection::LEFT }
+			);
 		}
 		if (!baseChunk->rightNeighbor && !rightChunkInQueue) {
-			chunkGenQueue.push_back({ baseChunk, cubeCharacterizer, rightChunkPosition, rightChunkPositionIndices, ChunkNeighborDirection::RIGHT });
+			chunkGenQueue.push_back(
+				{ baseChunk, cubeCharacterizer, rightChunkPosition, rightChunkPositionIndices, ChunkNeighborDirection::RIGHT }
+			);
 		}
 		if (!baseChunk->frontNeighbor && !frontChunkInQueue) {
-			chunkGenQueue.push_back({ baseChunk, cubeCharacterizer, frontChunkPosition, frontChunkPositionIndices, ChunkNeighborDirection::FRONT });
+			chunkGenQueue.push_back(
+				{ baseChunk, cubeCharacterizer, frontChunkPosition, frontChunkPositionIndices, ChunkNeighborDirection::FRONT }
+			);
 		}
 		if (!baseChunk->backNeighbor && !backChunkInQueue) {
-			chunkGenQueue.push_back({ baseChunk, cubeCharacterizer, backChunkPosition, backChunkPositionIndices, ChunkNeighborDirection::BACK });
+			chunkGenQueue.push_back(
+				{ baseChunk, cubeCharacterizer, backChunkPosition, backChunkPositionIndices, ChunkNeighborDirection::BACK }
+			);
 		}
 	}
 	void WorldGenerator::generateChunksForBaseNeighbors(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk, unsigned int levels) {
@@ -114,11 +121,11 @@ namespace mtge {
 	}
 
 	//Public
-	void WorldGenerator::generateChunks(CubeCharacterizer *cubeCharacterizer) {
+	void WorldGenerator::generateChunks(CubeCharacterizer *cubeCharacterizer, unsigned int levels, bool frustumCull) {
 		Chunk *currentChunk = player->getCurrentChunk();
 		if (currentChunk) {
 			generateChunksFromBase(cubeCharacterizer, currentChunk);
-			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 5);
+			generateChunksForBaseNeighbors(cubeCharacterizer, currentChunk, 8);
 		}
 
 		bool chunkAdded = false;
@@ -133,7 +140,7 @@ namespace mtge {
 			math::Vec2 point4(chunkGenQueue[0].position.getX() + Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getX(),
 				chunkGenQueue[0].position.getY() + Chunk::CHUNK_SIZE / 2.0f - player->getPosition().getZ());
 			
-			if (true || //Disable frustum culling
+			if (!frustumCull ||
 				viewFrustum.pointIsInFrustum(point1) ||
 				viewFrustum.pointIsInFrustum(point2) || 
 				viewFrustum.pointIsInFrustum(point3) || 
@@ -142,28 +149,28 @@ namespace mtge {
 				Chunk *baseChunk = chunkGenQueue[0].baseChunk;
 				switch (chunkGenQueue[0].direction) {
 				case ChunkNeighborDirection::LEFT: {
-					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position, terrainFunc);
 					baseChunk->setLeftNeighbor(newChunk);
 					WorldMap::addChunk(newChunk);
 					setNeighborChunks(newChunk, true, false, true, true);
 					break;
 				}
 				case ChunkNeighborDirection::RIGHT: {
-					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position, terrainFunc);
 					baseChunk->setRightNeighbor(newChunk);
 					WorldMap::addChunk(newChunk);
 					setNeighborChunks(newChunk, false, true, true, true);
 					break;
 				}
 				case ChunkNeighborDirection::FRONT: {
-					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position, terrainFunc);
 					baseChunk->setFrontNeighbor(newChunk);
 					WorldMap::addChunk(newChunk);
 					setNeighborChunks(newChunk, true, true, true, false);
 					break;
 				}
 				case ChunkNeighborDirection::BACK: {
-					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position);
+					Chunk *newChunk = new Chunk(chunkGenQueue[0].cubeCharacterizer, chunkGenQueue[0].position, terrainFunc);
 					baseChunk->setBackNeighbor(newChunk);
 					WorldMap::addChunk(newChunk);
 					setNeighborChunks(newChunk, true, true, false, true);

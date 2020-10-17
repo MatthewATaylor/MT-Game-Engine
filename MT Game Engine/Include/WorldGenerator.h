@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 #include "Interaction/Player.h"
 #include "CubeCharacterizer.h"
@@ -23,6 +24,7 @@ namespace mtge {
 			ChunkNeighborDirection direction;
 		};
 		Player *player = nullptr;
+		std::function<float(float, float)> terrainFunc;
 		std::vector<ChunkGenQueueMember> chunkGenQueue;
 		unsigned int framesSinceLastNewChunk = 0;
 
@@ -31,7 +33,7 @@ namespace mtge {
 		void generateChunksForBaseNeighbors(CubeCharacterizer *cubeCharacterizer, Chunk *baseChunk, unsigned int levels);
 
 	public:
-		WorldGenerator(Player *player);
-		void generateChunks(CubeCharacterizer *cubeCharacterizer);
+		WorldGenerator(Player *player, std::function<float(float, float)> terrainFunc);
+		void generateChunks(CubeCharacterizer *cubeCharacterizer, unsigned int levels, bool frustumCull);
 	};
 }

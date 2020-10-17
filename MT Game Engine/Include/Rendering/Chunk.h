@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <functional>
 
 #include <GL/glew.h>
 
@@ -18,11 +19,7 @@
 
 namespace mtge {
 	class Chunk {
-	public:
-		static const unsigned int LENGTH_IN_CUBES = 16;
-
 	private:
-		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
 		char ***cubes = nullptr; //(i, j, k) = (x, y, z)    +i -> +x    +j -> +y    +k -> +z
 		
 		unsigned int solidCubesVertexArrayID;
@@ -53,6 +50,8 @@ namespace mtge {
 		static bool isCubeTransparent(char typeSymbol);
 
 	public:
+		static const unsigned int LENGTH_IN_CUBES = 16;
+		static const unsigned int NUM_CUBES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES;
 		static const float CUBE_SIZE;
 		static const float CHUNK_SIZE;
 
@@ -61,7 +60,10 @@ namespace mtge {
 		Chunk *leftNeighbor = nullptr;
 		Chunk *rightNeighbor = nullptr;
 
-		Chunk(CubeCharacterizer *cubeCharacterizer, math::Vec2 position);
+		Chunk(
+			CubeCharacterizer *cubeCharacterizer, math::Vec2 position,
+			std::function<float(float, float)> terrainFunc
+		);
 
 		bool cubeHasTopNeighbor(const math::Vec<unsigned int, 3> &indices);
 		bool cubeHasBottomNeighbor(const math::Vec<unsigned int, 3> &indices);

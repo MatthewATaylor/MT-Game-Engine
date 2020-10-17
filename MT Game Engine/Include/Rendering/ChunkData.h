@@ -9,7 +9,7 @@
 namespace mtge {
 	class ChunkData {
 	private:
-		static const unsigned int LENGTH_IN_CUBES = 8;
+		static const unsigned int LENGTH_IN_CUBES = 12;
 		static const unsigned int NUM_FACES = LENGTH_IN_CUBES * LENGTH_IN_CUBES * LENGTH_IN_CUBES * 6;
 		static const unsigned int MAX_VERTEX_BUFFER_SIZE = NUM_FACES * CubeData::FACE_VERTEX_BUFFER_LENGTH;
 
