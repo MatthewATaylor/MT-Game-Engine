@@ -52,30 +52,30 @@ namespace mtge {
 		}
 
 		template<typename T>
-		Vec<T, 3> &Vec<T, 3>::operator+=(const T addend) {
+		Vec<T, 3> &Vec<T, 3>::operator+=(const T value) {
 			for (unsigned int i = 0; i < 3; i++) {
-				elements[i] += addend;
+				elements[i] += value;
 			}
 			return *this;
 		}
 		template<typename T>
-		Vec<T, 3> &Vec<T, 3>::operator-=(const T addend) {
+		Vec<T, 3> &Vec<T, 3>::operator-=(const T value) {
 			for (unsigned int i = 0; i < 3; i++) {
-				elements[i] -= addend;
+				elements[i] -= value;
 			}
 			return *this;
 		}
 		template<typename T>
-		Vec<T, 3> &Vec<T, 3>::operator*=(const T addend) {
+		Vec<T, 3> &Vec<T, 3>::operator*=(const T value) {
 			for (unsigned int i = 0; i < 3; i++) {
-				elements[i] *= addend;
+				elements[i] *= value;
 			}
 			return *this;
 		}
 		template<typename T>
-		Vec<T, 3> &Vec<T, 3>::operator/=(const T addend) {
+		Vec<T, 3> &Vec<T, 3>::operator/=(const T value) {
 			for (unsigned int i = 0; i < 3; i++) {
-				elements[i] /= addend;
+				elements[i] /= value;
 			}
 			return *this;
 		}
@@ -92,24 +92,24 @@ namespace mtge {
 		}
 
 		template<typename T>
-		Vec<T, 3> Vec<T, 3>::operator+(const T addend) const {
+		Vec<T, 3> Vec<T, 3>::operator+(const T value) const {
 			Vec<T, 3> vectorResult = *this;
-			return vectorResult += addend;
+			return vectorResult += value;
 		}
 		template<typename T>
-		Vec<T, 3> Vec<T, 3>::operator-(const T addend) const {
+		Vec<T, 3> Vec<T, 3>::operator-(const T value) const {
 			Vec<T, 3> vectorResult = *this;
-			return vectorResult -= addend;
+			return vectorResult -= value;
 		}
 		template<typename T>
-		Vec<T, 3> Vec<T, 3>::operator*(const T addend) const {
+		Vec<T, 3> Vec<T, 3>::operator*(const T value) const {
 			Vec<T, 3> vectorResult = *this;
-			return vectorResult *= addend;
+			return vectorResult *= value;
 		}
 		template<typename T>
-		Vec<T, 3> Vec<T, 3>::operator/(const T addend) const {
+		Vec<T, 3> Vec<T, 3>::operator/(const T value) const {
 			Vec<T, 3> vectorResult = *this;
-			return vectorResult /= addend;
+			return vectorResult /= value;
 		}
 
 		template<typename T>

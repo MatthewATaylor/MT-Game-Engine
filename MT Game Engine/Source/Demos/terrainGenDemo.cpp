@@ -116,8 +116,8 @@ int main() {
 	mtge::ResourceManager::startOpenGL();
 
 	//Load shader with fog effect
-	float fogDensity = 0.07f;
-	float fogGradient = 0.5f;
+	float fogDensity = 0.04f;
+	float fogGradient = 0.6f;
 	float fogWeight = 0.0f;
 	float fogBias = 1.0f;
 	if (USE_EFFECTS) {

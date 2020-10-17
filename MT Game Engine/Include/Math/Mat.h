@@ -45,7 +45,7 @@ namespace mtge {
 			T *getPtr();
 			void set(unsigned int row, unsigned int col, T newElement);
 
-			Mat<T, COLS, ROWS> altMajorOrder() const;
+			Mat<T, COLS, ROWS> transpose() const;
 		};
 
 		typedef Mat<float, 2, 2> Mat2;

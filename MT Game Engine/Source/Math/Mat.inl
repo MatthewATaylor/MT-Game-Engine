@@ -141,7 +141,7 @@ namespace mtge {
 		}
 
 		template<typename T, unsigned int ROWS, unsigned int COLS>
-		Mat<T, COLS, ROWS> Mat<T, ROWS, COLS>::altMajorOrder() const {
+		Mat<T, COLS, ROWS> Mat<T, ROWS, COLS>::transpose() const {
 			T newElements[COLS][ROWS];
 			for (unsigned int i = 0; i < ROWS; i++) {
 				for (unsigned int j = 0; j < COLS; j++) {

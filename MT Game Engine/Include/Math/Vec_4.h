@@ -23,18 +23,18 @@ namespace mtge {
 			Vec<T, 4> &operator+=(const Vec<T, 4> &otherVec);
 			Vec<T, 4> &operator-=(const Vec<T, 4> &otherVec);
 
-			Vec<T, 4> &operator+=(const T addend);
-			Vec<T, 4> &operator-=(const T addend);
-			Vec<T, 4> &operator*=(const T addend);
-			Vec<T, 4> &operator/=(const T addend);
+			Vec<T, 4> &operator+=(const T value);
+			Vec<T, 4> &operator-=(const T value);
+			Vec<T, 4> &operator*=(const T value);
+			Vec<T, 4> &operator/=(const T value);
 
 			Vec<T, 4> operator+(const Vec<T, 4> &otherVec) const;
 			Vec<T, 4> operator-(const Vec<T, 4> &otherVec) const;
 
-			Vec<T, 4> operator+(const T addend) const;
-			Vec<T, 4> operator-(const T addend) const;
-			Vec<T, 4> operator*(const T addend) const;
-			Vec<T, 4> operator/(const T addend) const;
+			Vec<T, 4> operator+(const T value) const;
+			Vec<T, 4> operator-(const T value) const;
+			Vec<T, 4> operator*(const T value) const;
+			Vec<T, 4> operator/(const T value) const;
 
 			bool operator==(const Vec<T, 4> &otherVec) const;
 
